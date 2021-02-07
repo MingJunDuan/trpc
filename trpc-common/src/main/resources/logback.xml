@@ -1,0 +1,100 @@
+<configuration>
+
+	<!-- variables -->
+	<property name="logDir" value="/tmp/this-log-can-been-deleted-log" />
+	<property name="subDir" value="sub" />
+	<property name="info" value="info" />
+	<property name="warn" value="warn" />
+	<property name="error" value="error" />
+	<property name="suffix" value=".log" />
+
+	<!-- timestamp, precise to the day -->
+	<timestamp key="date" datePattern="yyyyMMdd" />
+	<!-- timestamp, precise to milliseconds -->
+	<timestamp key="time" datePattern="yyyyMMddHHmmssSSS" />
+
+	<!-- write INFO-level message to file  -->
+	<appender name="FILE_INFO" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logDir}/${date}/${info}/${info}${suffix}</file>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${logDir}/${date}/${info}/${subDir}/${info}%i-${time}${suffix}</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>3</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>1MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} %M\(\) %L %msg %n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	
+	
+	<!-- write WARN-level message to file -->
+	<appender name="FILE_WARN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logDir}/${date}/${warn}/${warn}${suffix}</file>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${logDir}/${date}/${warn}/${subDir}/${warn}%i-${time}${suffix}</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>3</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>1MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} %M\(\) %L %msg %n</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+	
+	<!-- write ERROR-level message to file -->
+	<appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logDir}/${date}/${error}/${error}${suffix}</file>
+		<append>true</append>
+		<rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+			<fileNamePattern>${logDir}/${date}/${error}/${subDir}/${error}%i-${time}${suffix}</fileNamePattern>
+			<minIndex>1</minIndex>
+			<maxIndex>3</maxIndex>
+		</rollingPolicy>
+
+		<triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+			<maxFileSize>1MB</maxFileSize>
+		</triggeringPolicy>
+		<encoder> <!-- '%ex{full}' outputs all stack of exception -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} %M\(\) %L %msg %n%ex{full}</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<!-- write all message to console -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder><!-- '%M' outputs the annotation name where the logging request was issued, '%L' ouputs lineNumber, '%n' means \n or \r\n. -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{35} %M\(\) %L %msg %n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- TRACE < DEBUG < INFO < WARN < ERROR -->
+	<root level="info">
+		<appender-ref ref="FILE_INFO"/>
+		<!--<appender-ref ref="FILE_WARN" />
+		<appender-ref ref="FILE_ERROR" />-->
+		<appender-ref ref="STDOUT" />
+	</root>
+</configuration>
