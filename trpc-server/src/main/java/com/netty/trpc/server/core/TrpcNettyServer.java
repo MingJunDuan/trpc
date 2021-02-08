@@ -28,9 +28,9 @@ public class TrpcNettyServer extends TrpcAbstractServer {
     private ServiceRegistry serviceRegistry;
     private Map<String, Object> serviceMap = new HashMap<>();
 
-    public TrpcNettyServer(String serverAddress) {
+    public TrpcNettyServer(String serverAddress,String registryAddress) {
         this.serverAddress = serverAddress;
-        this.serviceRegistry = new ServiceRegistry(serverAddress);
+        this.serviceRegistry = new ServiceRegistry(registryAddress);
     }
 
     public void addService(String interfaceName, String version, Object serviceBean) {
