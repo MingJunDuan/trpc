@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author DuanMingJun
@@ -117,6 +118,8 @@ public class CuratorClientTest extends BaseTest {
         client.updatePathData(newRealPath,"newValue2".getBytes());
         client.deletePath(realPath);
         client.deletePath(newRealPath);
+        List<String> children = client.getChildren("/");
+        assertTrue(children.isEmpty());
 
         TimeUnit.SECONDS.sleep(5);
     }
