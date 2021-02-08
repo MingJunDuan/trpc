@@ -1,11 +1,8 @@
-package com.netty.trpc;
+package com.netty.trpc.log;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Hans 2017-09-23 00:37
- */
 public final class LOG {
     private static final Logger LOGGER = LoggerFactory.getLogger(LOG.class);
 

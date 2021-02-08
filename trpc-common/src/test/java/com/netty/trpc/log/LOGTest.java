@@ -1,4 +1,4 @@
-package com.netty.trpc;
+package com.netty.trpc.log;
 
 import org.junit.Test;
 import org.slf4j.Logger;
