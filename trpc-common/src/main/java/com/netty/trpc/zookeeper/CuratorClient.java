@@ -71,8 +71,9 @@ public class CuratorClient {
         client.delete().forPath(path);
     }
 
-    public void watchNode(String path, Watcher watcher) throws Exception {
-        client.getData().usingWatcher(watcher).forPath(path);
+    public String watchNode(String path, Watcher watcher) throws Exception {
+        byte[] bytes = client.getData().usingWatcher(watcher).forPath(path);
+        return new String(bytes);
     }
 
     public byte[] getData(String path) throws Exception {
