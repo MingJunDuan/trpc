@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 public class TrpcRequest implements Serializable {
     private String requestId;
-    private String className;
+    private String interfaceName;
     private String methodName;
     private String version;
     private Class<?>[] parameterTypes;

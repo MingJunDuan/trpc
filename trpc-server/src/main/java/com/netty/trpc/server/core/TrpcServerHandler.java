@@ -60,7 +60,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
     }
 
     private Object handle(TrpcRequest trpcRequest) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        String className = trpcRequest.getClassName();
+        String className = trpcRequest.getInterfaceName();
         String version = trpcRequest.getVersion();
         String serviceKey = ServiceUtil.serviceKey(className, version);
         Object serviceBean = handlerMap.get(serviceKey);
