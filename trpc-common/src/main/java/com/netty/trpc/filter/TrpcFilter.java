@@ -10,9 +10,9 @@ import com.netty.trpc.codec.TrpcResponse;
  */
 public interface TrpcFilter {
 
-    default boolean prePost(TrpcRequest request){
+    default boolean preFilter(TrpcRequest request){
         return true;
     }
 
-    void afterPost(TrpcRequest request, TrpcResponse response,Throwable throwable);
+    TrpcResponse postFilter(TrpcRequest request, TrpcResponse response,Throwable throwable);
 }

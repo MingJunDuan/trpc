@@ -38,9 +38,7 @@ public class TrpcServer extends TrpcNettyServer implements ApplicationContextAwa
         }
         Map<String, TrpcFilter> filterMap = ctx.getBeansOfType(TrpcFilter.class);
         List<TrpcFilter> filters = new ArrayList<>(filterMap.size());
-        for (TrpcFilter filter: filterMap.values()){
-            filters.add(filter);
-        }
+        filters.addAll(filterMap.values());
         FilterOrderUtil.sort(filters);
         super.setFilters(filters);
     }

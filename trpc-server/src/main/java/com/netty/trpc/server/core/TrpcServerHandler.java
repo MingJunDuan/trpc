@@ -6,8 +6,6 @@ import com.netty.trpc.codec.TrpcResponse;
 import com.netty.trpc.filter.TrpcFilter;
 import com.netty.trpc.log.LOG;
 import com.netty.trpc.util.ServiceUtil;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -46,8 +44,8 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
                 LOG.info("Service request:{}", trpcRequest.getRequestId());
                 TrpcResponse response = new TrpcResponse();
                 response.setRequestId(trpcRequest.getRequestId());
-                if (applyPrePost(trpcRequest)){
-                    Exception ex = null;
+                Exception ex = null;
+                if (applyPreFilter(trpcRequest)){
                     try {
                         Object result = doHandle(trpcRequest);
                         response.setResult(result);
@@ -56,24 +54,19 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
                         ex = e;
                         LOG.error(e);
                     }
-                    applyAfterPost(trpcRequest, response, ex);
+                    response=applyPostFilter(trpcRequest, response, ex);
                 }
-                context.writeAndFlush(response).addListener(new ChannelFutureListener() {
-                    @Override
-                    public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                        LOG.info("Send response for request:{}", response.getRequestId());
-                    }
-                });
+                context.writeAndFlush(response).addListener(new CustomChannelFutureListener(trpcRequest,response,ex));
             }
         });
     }
 
-    private boolean applyPrePost(TrpcRequest trpcRequest) {
+    private boolean applyPreFilter(TrpcRequest trpcRequest) {
         if (filters==null||filters.isEmpty()){
             return true;
         }
         for (int i = 0; i < filters.size(); i++) {
-            boolean canPost = filters.get(i).prePost(trpcRequest);
+            boolean canPost = filters.get(i).preFilter(trpcRequest);
             if (!canPost) {
                 LOG.info("Filter return false, return directly");
                 return false;
@@ -82,13 +75,15 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
         return true;
     }
 
-    private void applyAfterPost(TrpcRequest trpcRequest, TrpcResponse response, Throwable throwable) {
+    private TrpcResponse applyPostFilter(TrpcRequest trpcRequest, TrpcResponse response, Throwable throwable) {
         if (filters==null||filters.isEmpty()){
-            return;
+            return response;
         }
+        TrpcResponse res=response;
         for (int i = filters.size() - 1; i > -0; i--) {
-            filters.get(i).afterPost(trpcRequest, response, throwable);
+            res=filters.get(i).postFilter(trpcRequest, res, throwable);
         }
+        return res;
     }
 
     private Object doHandle(TrpcRequest trpcRequest) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
