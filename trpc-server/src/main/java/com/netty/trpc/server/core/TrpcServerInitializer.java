@@ -5,6 +5,7 @@ import com.netty.trpc.codec.TrpcDecoder;
 import com.netty.trpc.codec.TrpcEncoder;
 import com.netty.trpc.codec.TrpcRequest;
 import com.netty.trpc.codec.TrpcResponse;
+import com.netty.trpc.filter.TrpcFilter;
 import com.netty.trpc.serializer.hessian.HessianSerializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -12,6 +13,7 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -23,10 +25,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class TrpcServerInitializer extends ChannelInitializer<SocketChannel> {
     private Map<String,Object> handlerMap;
+    private List<TrpcFilter> filters;
     private ThreadPoolExecutor executor;
 
-    public TrpcServerInitializer(Map<String, Object> handlerMap, ThreadPoolExecutor executor) {
+    public TrpcServerInitializer(Map<String, Object> handlerMap,List<TrpcFilter> filters, ThreadPoolExecutor executor) {
         this.handlerMap = handlerMap;
+        this.filters = filters;
         this.executor = executor;
     }
 
@@ -38,6 +42,6 @@ public class TrpcServerInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new LengthFieldBasedFrameDecoder(65536,0,4,0,0));
         pipeline.addLast(new TrpcDecoder(TrpcRequest.class,serializer));
         pipeline.addLast(new TrpcEncoder(TrpcResponse.class,serializer));
-        pipeline.addLast(new TrpcServerHandler(handlerMap,executor));
+        pipeline.addLast(new TrpcServerHandler(handlerMap,filters,executor));
     }
 }

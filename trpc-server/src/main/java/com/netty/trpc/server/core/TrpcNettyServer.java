@@ -1,5 +1,6 @@
 package com.netty.trpc.server.core;
 
+import com.netty.trpc.filter.TrpcFilter;
 import com.netty.trpc.log.LOG;
 import com.netty.trpc.server.registry.ServiceRegistry;
 import com.netty.trpc.util.ServiceUtil;
@@ -14,6 +15,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -23,10 +25,10 @@ import java.util.concurrent.TimeUnit;
  * @date 2021-02-08 14:27
  */
 public class TrpcNettyServer extends TrpcAbstractServer {
-    private Thread thread;
     private String serverAddress;
     private ServiceRegistry serviceRegistry;
     private Map<String, Object> serviceMap = new HashMap<>();
+    private List<TrpcFilter> filters;
 
     public TrpcNettyServer(String serverAddress,String registryAddress) {
         this.serverAddress = serverAddress;
@@ -49,7 +51,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workGroup).channel(NioServerSocketChannel.class)
-                    .childHandler(new TrpcServerInitializer(serviceMap, executor))
+                    .childHandler(new TrpcServerInitializer(serviceMap,filters, executor))
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
             String[] items = serverAddress.split(":");
@@ -72,10 +74,12 @@ public class TrpcNettyServer extends TrpcAbstractServer {
         }
     }
 
+    public void setFilters(List<TrpcFilter> filters) {
+        this.filters = filters;
+    }
+
     @Override
     public void stop() {
-        if (thread != null && thread.isAlive()) {
-            thread.interrupt();
-        }
+
     }
 }
