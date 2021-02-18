@@ -1,12 +1,11 @@
 package com.netty.trpc.client.handler;
 
 import com.netty.trpc.client.connect.ConnectionManager;
-import com.netty.trpc.codec.PingPongRequest;
-import com.netty.trpc.codec.TrpcRequest;
-import com.netty.trpc.codec.TrpcResponse;
-import com.netty.trpc.constant.TrpcConstant;
-import com.netty.trpc.log.LOG;
-import com.netty.trpc.protocol.RpcProtocol;
+import com.netty.trpc.common.codec.PingPongRequest;
+import com.netty.trpc.common.codec.TrpcRequest;
+import com.netty.trpc.common.codec.TrpcResponse;
+import com.netty.trpc.common.log.LOG;
+import com.netty.trpc.common.protocol.RpcProtocol;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

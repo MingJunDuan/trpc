@@ -2,7 +2,7 @@ package com.netty.trpc.client.route.impl;
 
 import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.route.TrpcLoadBalance;
-import com.netty.trpc.protocol.RpcProtocol;
+import com.netty.trpc.common.protocol.RpcProtocol;
 
 import java.util.Map;
 

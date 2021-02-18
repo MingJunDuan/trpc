@@ -1,11 +1,11 @@
 package com.netty.trpc.client.handler;
 
-import com.netty.trpc.codec.PingPongRequest;
-import com.netty.trpc.codec.TrpcDecoder;
-import com.netty.trpc.codec.TrpcEncoder;
-import com.netty.trpc.codec.TrpcRequest;
-import com.netty.trpc.codec.TrpcResponse;
-import com.netty.trpc.serializer.hessian.HessianSerializer;
+import com.netty.trpc.common.codec.PingPongRequest;
+import com.netty.trpc.common.codec.TrpcDecoder;
+import com.netty.trpc.common.codec.TrpcEncoder;
+import com.netty.trpc.common.codec.TrpcRequest;
+import com.netty.trpc.common.codec.TrpcResponse;
+import com.netty.trpc.common.serializer.hessian.HessianSerializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;

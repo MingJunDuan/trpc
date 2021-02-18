@@ -1,9 +1,9 @@
 package com.netty.trpc.client.handler;
 
 import com.netty.trpc.client.TrpcClient;
-import com.netty.trpc.codec.TrpcRequest;
-import com.netty.trpc.codec.TrpcResponse;
-import com.netty.trpc.log.LOG;
+import com.netty.trpc.common.codec.TrpcRequest;
+import com.netty.trpc.common.codec.TrpcResponse;
+import com.netty.trpc.common.log.LOG;
 
 import java.util.LinkedList;
 import java.util.List;

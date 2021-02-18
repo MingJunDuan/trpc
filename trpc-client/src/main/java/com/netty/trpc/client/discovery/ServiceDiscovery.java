@@ -1,10 +1,10 @@
 package com.netty.trpc.client.discovery;
 
 import com.alibaba.fastjson.JSONObject;
-import com.netty.trpc.constant.TrpcConstant;
-import com.netty.trpc.log.LOG;
-import com.netty.trpc.protocol.RpcProtocol;
-import com.netty.trpc.zookeeper.CuratorClient;
+import com.netty.trpc.common.constant.TrpcConstant;
+import com.netty.trpc.common.log.LOG;
+import com.netty.trpc.common.protocol.RpcProtocol;
+import com.netty.trpc.common.zookeeper.CuratorClient;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
