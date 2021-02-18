@@ -11,7 +11,7 @@ public class ServiceUtil {
     public static final String service_connect_token="#";
 
     public static String serviceKey(String interfaceName,String version){
-        if (StringUtils.isBlank(version)){
+        if (!StringUtils.isBlank(version)){
             return interfaceName+service_connect_token+version;
         }
         return interfaceName;
