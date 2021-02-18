@@ -46,6 +46,20 @@ public class TrpcFuture implements Future<Object> {
         }
     }
 
+    public TrpcFuture addCallback(AsyncTrpcCallBack callback) {
+        lock.lock();
+        try {
+            if (isDone()) {
+                doCallback(callback);
+            } else {
+                this.pendingCallbacks.add(callback);
+            }
+        } finally {
+            lock.unlock();
+        }
+        return this;
+    }
+
     private void invokeCallbacks() {
         lock.lock();
         try {
