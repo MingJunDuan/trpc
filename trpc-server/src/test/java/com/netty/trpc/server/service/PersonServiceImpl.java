@@ -1,6 +1,6 @@
 package com.netty.trpc.server.service;
 
-import com.netty.trpc.annotation.TrpcService;
+import com.netty.trpc.common.annotation.TrpcService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;

@@ -1,12 +1,12 @@
 package com.netty.trpc.server.registry;
 
 import com.alibaba.fastjson.JSONObject;
-import com.netty.trpc.constant.TrpcConstant;
-import com.netty.trpc.log.LOG;
-import com.netty.trpc.protocol.RpcProtocol;
-import com.netty.trpc.protocol.RpcServiceInfo;
-import com.netty.trpc.util.ServiceUtil;
-import com.netty.trpc.zookeeper.CuratorClient;
+import com.netty.trpc.common.constant.TrpcConstant;
+import com.netty.trpc.common.log.LOG;
+import com.netty.trpc.common.protocol.RpcProtocol;
+import com.netty.trpc.common.protocol.RpcServiceInfo;
+import com.netty.trpc.common.util.ServiceUtil;
+import com.netty.trpc.common.zookeeper.CuratorClient;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.state.ConnectionState;
 import org.apache.curator.framework.state.ConnectionStateListener;

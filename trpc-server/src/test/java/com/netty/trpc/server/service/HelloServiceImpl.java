@@ -1,6 +1,6 @@
 package com.netty.trpc.server.service;
 
-import com.netty.trpc.annotation.TrpcService;
+import com.netty.trpc.common.annotation.TrpcService;
 
 @TrpcService(value = IHelloService.class, version = "1.0")
 public class HelloServiceImpl implements IHelloService {
