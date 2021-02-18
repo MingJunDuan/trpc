@@ -1,8 +1,6 @@
 # Trpc
 
-#### 介绍
-RPC framework.
+A rpc framework based on Netty
 
-#### 软件架构
-软件架构说明
+Reference: https://github.com/luxiaoxun/NettyRpc
 
