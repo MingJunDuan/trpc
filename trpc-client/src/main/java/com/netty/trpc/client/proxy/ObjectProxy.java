@@ -84,7 +84,7 @@ public class ObjectProxy<T> implements InvocationHandler,TrpcService<T,Serializa
 
     @Override
     public TrpcFuture call(SerializableFunction<T> tSerializableFunction, Object... args) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 }

@@ -169,4 +169,19 @@ public class ConnectionManager {
             lock.unlock();
         }
     }
+
+    public void stop(){
+        isRunning=false;
+        for (RpcProtocol rpcProtocol : rpcProtocolSet) {
+            TrpcClientHandler handler = connectedServerNodes.get(rpcProtocol);
+            if (handler!=null){
+                handler.close();
+            }
+            connectedServerNodes.remove(rpcProtocol);
+            rpcProtocolSet.remove(rpcProtocol);
+        }
+        signalAvailableHandler();
+        threadPoolExecutor.shutdown();
+        eventLoopGroup.shutdownGracefully();
+    }
 }

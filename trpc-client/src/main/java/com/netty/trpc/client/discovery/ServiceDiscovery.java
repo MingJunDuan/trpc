@@ -75,7 +75,7 @@ public class ServiceDiscovery {
 
     }
 
-    private void stop() {
+    public void stop() {
         this.curatorClient.close();
     }
 }
