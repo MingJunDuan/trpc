@@ -31,8 +31,8 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
     private static EagerThreadPoolExecutor threadPoolExecutor=new EagerThreadPoolExecutor(4,8,600L, TimeUnit.SECONDS, new TaskQueue<>(1000),
             new NamedThreadFactory("trpcClientEagerThread"),new CallerRejectedExecutionHandler());
 
-    public TrpcClient(ServiceDiscovery serviceDiscovery) {
-        this.serviceDiscovery = serviceDiscovery;
+    public TrpcClient(String registryAddress) {
+        this.serviceDiscovery = new ServiceDiscovery(registryAddress);
     }
 
     public static <T> T createService(Class<T> interfaceClass,String version){

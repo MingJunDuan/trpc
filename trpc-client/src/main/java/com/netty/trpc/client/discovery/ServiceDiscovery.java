@@ -1,6 +1,7 @@
 package com.netty.trpc.client.discovery;
 
 import com.alibaba.fastjson.JSONObject;
+import com.netty.trpc.client.connect.ConnectionManager;
 import com.netty.trpc.common.constant.TrpcConstant;
 import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.protocol.RpcProtocol;
@@ -66,13 +67,14 @@ public class ServiceDiscovery {
                 rpcProtocols.add(rpcProtocol);
             }
             LOG.info("Service node data: {}", rpcProtocols);
+            updateConnectedServer(rpcProtocols);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     private void updateConnectedServer(List<RpcProtocol> rpcProtocols) {
-
+        ConnectionManager.getInstance().updateConnectedServer(rpcProtocols);
     }
 
     public void stop() {

@@ -50,8 +50,9 @@ public class ObjectProxy<T> implements InvocationHandler,TrpcService<T,Serializa
 
         String serviceKey = ServiceUtil.serviceKey(method.getDeclaringClass().getName(), version);
         TrpcClientHandler handler = ConnectionManager.getInstance().chooseHandler(serviceKey);
+
         TrpcFuture trpcFuture = handler.sendRequest(request);
-        return trpcFuture;
+        return trpcFuture.get();
     }
 
     @Override

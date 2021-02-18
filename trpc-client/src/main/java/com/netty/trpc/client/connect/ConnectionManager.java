@@ -95,7 +95,7 @@ public class ConnectionManager {
             tmpRpcProtocolSet.addAll(rpcProtocols);
 
             for (RpcProtocol rpcProtocol : tmpRpcProtocolSet) {
-                if (!tmpRpcProtocolSet.contains(rpcProtocol)){
+                if (!rpcProtocolSet.contains(rpcProtocol)){
                     connectServerNode(rpcProtocol);
                 }
             }

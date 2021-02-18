@@ -41,6 +41,8 @@ public class TrpcFuture implements Future<Object> {
         long responseTime = System.currentTimeMillis() - startTime;
         if (responseTime>this.responseTimeThreshold){
             LOG.warn("Service response time is too slow. Request id="+response.getRequestId()+", response time="+responseTime+"ms");
+        }else {
+            LOG.info("Service response time is {}ms",responseTime);
         }
     }
 
