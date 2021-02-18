@@ -1,8 +1,10 @@
 package com.netty.trpc.test.service;
 
 import com.netty.trpc.common.annotation.TrpcService;
+import org.springframework.stereotype.Service;
 
 @TrpcService(value = IHelloService.class, version = "1.0")
+@Service("helloService")
 public class HelloServiceImpl implements IHelloService {
 
     @Override

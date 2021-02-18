@@ -80,7 +80,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
             return response;
         }
         TrpcResponse res=response;
-        for (int i = filters.size() - 1; i > -0; i--) {
+        for (int i = filters.size() - 1; i >= 0; i--) {
             res=filters.get(i).postFilter(trpcRequest, res, throwable);
         }
         return res;

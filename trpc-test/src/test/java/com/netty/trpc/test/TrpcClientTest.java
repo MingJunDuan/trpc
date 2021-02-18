@@ -3,8 +3,12 @@ package com.netty.trpc.test;
 import com.netty.trpc.client.TrpcClient;
 import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.test.service.IHelloService;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author DuanMingJun
@@ -20,9 +24,22 @@ public class TrpcClientTest {
     }
 
     @Test
-    public void test(){
+    public void test() throws InterruptedException {
         IHelloService helloService = trpcClient.createService(IHelloService.class, "1.0");
-        String result = helloService.hello("Jack");
+        String jack = "Jack";
+        String result = helloService.hello(jack);
+        Assert.assertEquals("Hello "+jack,result);
         LOG.info(result);
+
+        String tom = "Tom";
+        result = helloService.hello(tom);
+        Assert.assertEquals("Hello "+tom,result);
+        LOG.info(result);
+        TimeUnit.SECONDS.sleep(3);
+    }
+
+    @After
+    public void after() throws Exception {
+        trpcClient.destroy();
     }
 }

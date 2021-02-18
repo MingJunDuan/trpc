@@ -1,8 +1,8 @@
 package com.netty.trpc.test.service;
 
 import com.netty.trpc.common.annotation.TrpcService;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 @TrpcService(IPersonService.class)
 public class PersonServiceImpl implements IPersonService {
-    @Autowired
+    @Resource(name = "helloService2")
     private IHelloService helloService;
 
     @Override
