@@ -14,4 +14,8 @@ public class TrpcResponse implements Serializable {
     private String requestId;
     private String error;
     private Object result;
+
+    public boolean isError(){
+        return error!=null;
+    }
 }
