@@ -20,11 +20,11 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version 1.0
  * @date 2021-02-18 14:50
  */
-public class TrpcClientBenchTest extends BaseTest{
+public class TrpcClientBenchmarkTest extends BaseTest{
     private TrpcClient trpcClient;
     private ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(16,16,60L,TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(),new NamedThreadFactory("benchTestClientThread"));
-    private final int requestNumPeerThread = 10;
+    private final int requestNumPeerThread = 100;
     private int taskNum = 100;
     private final AtomicInteger count=new AtomicInteger(0);
     private int totalCount=taskNum*requestNumPeerThread;
@@ -41,7 +41,7 @@ public class TrpcClientBenchTest extends BaseTest{
             threadPoolExecutor.execute(new ClientThread(trpcClient,countDownLatch));
         }
         threadPoolExecutor.shutdown();
-        countDownLatch.await(20,TimeUnit.SECONDS);
+        countDownLatch.await(30,TimeUnit.SECONDS);
         Assert.assertEquals(totalCount,count.get());
     }
 
