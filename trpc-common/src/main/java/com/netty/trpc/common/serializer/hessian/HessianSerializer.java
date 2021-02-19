@@ -45,44 +45,6 @@ public class HessianSerializer implements Serializer {
             throw new RuntimeException();
         }
     }
-//
-//    @Override
-//    public <T> byte[] serialize(T obj) {
-//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-//        Hessian2Output hessian2Output = new Hessian2Output(outputStream);
-//        try {
-//            hessian2Output.writeObject(obj);
-//            hessian2Output.flush();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        } finally {
-//            try {
-//                hessian2Output.close();
-//            } catch (IOException e) {
-//                LOG.error(e);
-//            }
-//            close(outputStream);
-//        }
-//        return new byte[0];
-//    }
-//
-//    @Override
-//    public <T> T deserialize(byte[] bytes, Class<T> clazz) {
-//        ByteArrayInputStream inputStream = new ByteArrayInputStream(bytes);
-//        Hessian2Input hessian2Input = new Hessian2Input(inputStream);
-//        try {
-//            return (T) hessian2Input.readObject();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }finally {
-//            try {
-//                hessian2Input.close();
-//            } catch (IOException e) {
-//                LOG.error(e);
-//            }
-//            close(inputStream);
-//        }
-//    }
 
     private void close(Closeable closeable){
         if (closeable!=null){
