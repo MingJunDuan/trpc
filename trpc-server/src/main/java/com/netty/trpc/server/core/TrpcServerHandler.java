@@ -108,7 +108,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOG.warn("server caught exception: {}", cause.getMessage());
+        LOG.warn("server caught exception: {}", cause.getCause());
         ctx.close();
     }
 

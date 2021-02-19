@@ -44,8 +44,10 @@ public class TrpcNettyServer extends TrpcAbstractServer {
     @Override
     public void start() {
         int coreNum = Runtime.getRuntime().availableProcessors();
-        EagerThreadPoolExecutor executor = new EagerThreadPoolExecutor(coreNum, coreNum * 2, 60, TimeUnit.SECONDS, new TaskQueue<>(1000),
+        TaskQueue<Runnable> workQueue = new TaskQueue<>(1000);
+        EagerThreadPoolExecutor executor = new EagerThreadPoolExecutor(coreNum, coreNum * 2, 60, TimeUnit.SECONDS, workQueue,
                 new NamedThreadFactory("server"), new CallerRejectedExecutionHandler());
+        workQueue.setExecutor(executor);
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workGroup = new NioEventLoopGroup();
         try {

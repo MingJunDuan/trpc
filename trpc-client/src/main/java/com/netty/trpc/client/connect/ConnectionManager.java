@@ -62,12 +62,17 @@ public class ConnectionManager {
 
     public TrpcClientHandler chooseHandler(String serviceKey) throws Exception {
         int size = connectedServerNodes.values().size();
+        int count=0,limit=3;
         while (isRunning&&size<=0){
             try {
                 waitingForHandler();
                 size=connectedServerNodes.values().size();
             }catch (InterruptedException e){
                 LOG.error("Waiting for avaiable service is interrupted!",e);
+            }
+            count++;
+            if (count>=limit){
+                throw new Exception("Waiting for available service time out");
             }
         }
         RpcProtocol rpcProtocol=loadBalance.route(serviceKey,connectedServerNodes);

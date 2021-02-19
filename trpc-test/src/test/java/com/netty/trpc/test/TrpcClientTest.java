@@ -15,12 +15,12 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2021-02-18 14:50
  */
-public class TrpcClientTest {
+public class TrpcClientTest extends BaseTest{
     private TrpcClient trpcClient;
 
     @Before
     public void before(){
-        trpcClient = new TrpcClient("localhost:2181");
+        trpcClient = new TrpcClient(getRegistryAddress());
     }
 
     @Test

@@ -35,13 +35,13 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
         this.serviceDiscovery = new ServiceDiscovery(registryAddress);
     }
 
-    public static <T> T createService(Class<T> interfaceClass,String version){
+    public <T> T createService(Class<T> interfaceClass,String version){
         return (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(),
                 new Class<?>[]{interfaceClass},
                 new ObjectProxy<T>(interfaceClass,version));
     }
 
-    public static <T> TrpcService<T, SerializableFunction<T>> createAsyncService(Class<T> interfaces, String version){
+    public <T> TrpcService<T, SerializableFunction<T>> createAsyncService(Class<T> interfaces, String version){
         return new ObjectProxy<T>(interfaces,version);
     }
 
