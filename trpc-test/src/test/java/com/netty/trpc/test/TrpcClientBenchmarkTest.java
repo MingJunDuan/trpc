@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TrpcClientBenchmarkTest extends BaseTest{
     private TrpcClient trpcClient;
     private ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(16,16,60L,TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(),new NamedThreadFactory("benchTestClientThread"));
+            new LinkedBlockingQueue<>(), new NamedThreadFactory("benchmarkClientThread"));
     private final int requestNumPeerThread = 100;
     private int taskNum = 100;
     private final AtomicInteger count=new AtomicInteger(0);
