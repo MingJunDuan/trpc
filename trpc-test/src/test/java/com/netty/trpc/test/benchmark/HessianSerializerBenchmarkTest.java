@@ -31,9 +31,6 @@ public class HessianSerializerBenchmarkTest {
     private static final int threadCount = 5;
     private static RpcProtocol projoBean = getPojoBean();
 
-    private static byte[] hessianSerializeBytes = hessianSerializer.serialize(getInnerProjoBean());
-    private static byte[] hessian2SerializeBytes = hessian2Serializer.serialize(getInnerProjoBean());
-
     public static void main(String[] args) throws RunnerException {
         Options options = new OptionsBuilder().include(HessianSerializerBenchmarkTest.class.getCanonicalName()).forks(1).build();
         new Runner(options).run();
