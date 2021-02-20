@@ -9,6 +9,14 @@ public final class LOG {
     private LOG() {
     }
 
+    public static boolean isDebugEnabled() {
+        return LOGGER.isDebugEnabled();
+    }
+
+    public static void debug(String str) {
+        LOGGER.debug(str);
+    }
+
     public static void info(final Object arg) {
         if (arg == null) {
             return;
