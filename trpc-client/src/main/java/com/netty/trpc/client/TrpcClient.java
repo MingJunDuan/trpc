@@ -28,8 +28,8 @@ import java.util.concurrent.TimeUnit;
 public class TrpcClient implements ApplicationContextAware, DisposableBean {
 
     private ServiceDiscovery serviceDiscovery;
-    private static EagerThreadPoolExecutor threadPoolExecutor=new EagerThreadPoolExecutor(4,8,600L, TimeUnit.SECONDS, new TaskQueue<>(1000),
-            new NamedThreadFactory("trpcClientEagerThread"),new CallerRejectedExecutionHandler());
+    private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(1, 8, 600L, TimeUnit.SECONDS, new TaskQueue<>(1000),
+            new NamedThreadFactory("TrpcClientEagerThread"), new CallerRejectedExecutionHandler());
 
     public TrpcClient(String registryAddress) {
         this.serviceDiscovery = new ServiceDiscovery(registryAddress);
