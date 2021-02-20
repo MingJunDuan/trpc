@@ -4,7 +4,7 @@ import com.netty.trpc.client.TrpcClient;
 import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
 import com.netty.trpc.test.BaseTest;
-import com.netty.trpc.test.interfaces.IHelloService;
+import com.netty.trpc.test.api.IHelloService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;

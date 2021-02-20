@@ -2,8 +2,8 @@ package com.netty.trpc.test.service;
 
 import com.netty.trpc.common.annotation.TrpcService;
 import com.netty.trpc.common.log.LOG;
-import com.netty.trpc.test.interfaces.IHelloService;
-import com.netty.trpc.test.interfaces.IPersonService;
+import com.netty.trpc.test.api.IHelloService;
+import com.netty.trpc.test.api.IPersonService;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;

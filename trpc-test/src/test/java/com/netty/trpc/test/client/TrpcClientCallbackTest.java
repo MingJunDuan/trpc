@@ -7,7 +7,7 @@ import com.netty.trpc.client.proxy.SerializableFunction;
 import com.netty.trpc.client.proxy.TrpcService;
 import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.test.BaseTest;
-import com.netty.trpc.test.interfaces.IPersonService;
+import com.netty.trpc.test.api.IPersonService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

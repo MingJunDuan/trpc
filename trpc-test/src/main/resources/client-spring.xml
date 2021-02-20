@@ -9,7 +9,7 @@
 
     <!--scan service package-->
     <context:component-scan base-package="com.netty.trpc.test.client"/>
-    <context:component-scan base-package="com.netty.trpc.test.interfaces"/>
+    <context:component-scan base-package="com.netty.trpc.test.api"/>
 
     <context:property-placeholder location="classpath:rpc.properties"/>
 

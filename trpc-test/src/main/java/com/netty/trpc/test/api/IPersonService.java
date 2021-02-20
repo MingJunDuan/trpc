@@ -1,4 +1,4 @@
-package com.netty.trpc.test.interfaces;
+package com.netty.trpc.test.api;
 
 import com.netty.trpc.test.service.Person;
 
