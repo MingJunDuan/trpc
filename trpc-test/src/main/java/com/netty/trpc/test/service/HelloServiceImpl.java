@@ -1,6 +1,7 @@
 package com.netty.trpc.test.service;
 
 import com.netty.trpc.common.annotation.TrpcService;
+import com.netty.trpc.test.interfaces.IHelloService;
 import org.springframework.stereotype.Service;
 
 @TrpcService(value = IHelloService.class, version = "1.0")

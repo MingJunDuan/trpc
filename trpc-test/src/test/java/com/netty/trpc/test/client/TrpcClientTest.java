@@ -1,8 +1,9 @@
-package com.netty.trpc.test;
+package com.netty.trpc.test.client;
 
 import com.netty.trpc.client.TrpcClient;
 import com.netty.trpc.common.log.LOG;
-import com.netty.trpc.test.service.IHelloService;
+import com.netty.trpc.test.BaseTest;
+import com.netty.trpc.test.interfaces.IHelloService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -15,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * @version 1.0
  * @date 2021-02-18 14:50
  */
-public class TrpcClientTest extends BaseTest{
+public class TrpcClientTest extends BaseTest {
     private TrpcClient trpcClient;
 
     @Before

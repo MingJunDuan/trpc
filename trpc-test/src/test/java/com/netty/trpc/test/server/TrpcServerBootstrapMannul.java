@@ -2,10 +2,10 @@ package com.netty.trpc.test.server;
 
 import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.server.TrpcServer;
+import com.netty.trpc.test.interfaces.IHelloService;
+import com.netty.trpc.test.interfaces.IPersonService;
 import com.netty.trpc.test.service.HelloServiceImpl;
 import com.netty.trpc.test.service.HelloServiceImpl2;
-import com.netty.trpc.test.service.IHelloService;
-import com.netty.trpc.test.service.IPersonService;
 import com.netty.trpc.test.service.PersonServiceImpl;
 
 /**

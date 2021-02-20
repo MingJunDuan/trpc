@@ -1,7 +1,7 @@
 package com.netty.trpc.test.client;
 
 import com.netty.trpc.common.annotation.TrpcAutowired;
-import com.netty.trpc.test.service.IHelloService;
+import com.netty.trpc.test.interfaces.IHelloService;
 import org.springframework.stereotype.Service;
 
 /**

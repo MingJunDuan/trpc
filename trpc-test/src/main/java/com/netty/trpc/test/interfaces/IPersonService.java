@@ -1,4 +1,6 @@
-package com.netty.trpc.test.service;
+package com.netty.trpc.test.interfaces;
+
+import com.netty.trpc.test.service.Person;
 
 import java.util.List;
 

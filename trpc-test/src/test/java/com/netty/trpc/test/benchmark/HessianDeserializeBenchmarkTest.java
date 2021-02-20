@@ -46,15 +46,15 @@ public class HessianDeserializeBenchmarkTest {
 
         List<RpcServiceInfo> rpcServiceInfoList = new LinkedList<>();
         RpcServiceInfo rpcServiceInfo=new RpcServiceInfo();
-        rpcServiceInfo.setServiceName("com.netty.trpc.test.service.IHelloService");
+        rpcServiceInfo.setServiceName("com.netty.trpc.test.interfaces.IHelloService");
         rpcServiceInfo.setVersion("1.3");
         rpcServiceInfoList.add(rpcServiceInfo);
         rpcServiceInfo=new RpcServiceInfo();
-        rpcServiceInfo.setServiceName("com.netty.trpc.test.service.IPersonService");
+        rpcServiceInfo.setServiceName("com.netty.trpc.test.interfaces.IPersonService");
         rpcServiceInfo.setVersion("1.0");
         rpcServiceInfoList.add(rpcServiceInfo);
         rpcServiceInfo=new RpcServiceInfo();
-        rpcServiceInfo.setServiceName("com.netty.trpc.test.service.IHelloService");
+        rpcServiceInfo.setServiceName("com.netty.trpc.test.interfaces.IHelloService");
         rpcServiceInfo.setVersion("1.1");
         rpcServiceInfoList.add(rpcServiceInfo);
         rpcProtocol.setServiceInfoList(rpcServiceInfoList);

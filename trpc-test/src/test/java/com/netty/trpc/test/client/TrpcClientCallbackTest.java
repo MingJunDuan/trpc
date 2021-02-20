@@ -1,4 +1,4 @@
-package com.netty.trpc.test;
+package com.netty.trpc.test.client;
 
 import com.netty.trpc.client.TrpcClient;
 import com.netty.trpc.client.handler.AsyncTrpcCallBack;
@@ -6,7 +6,8 @@ import com.netty.trpc.client.handler.TrpcFuture;
 import com.netty.trpc.client.proxy.SerializableFunction;
 import com.netty.trpc.client.proxy.TrpcService;
 import com.netty.trpc.common.log.LOG;
-import com.netty.trpc.test.service.IPersonService;
+import com.netty.trpc.test.BaseTest;
+import com.netty.trpc.test.interfaces.IPersonService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

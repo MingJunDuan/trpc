@@ -1,9 +1,10 @@
-package com.netty.trpc.test;
+package com.netty.trpc.test.client;
 
 import com.netty.trpc.client.TrpcClient;
 import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
-import com.netty.trpc.test.service.IHelloService;
+import com.netty.trpc.test.BaseTest;
+import com.netty.trpc.test.interfaces.IHelloService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @version 1.0
  * @date 2021-02-18 14:50
  */
-public class TrpcClientBenchmarkTest extends BaseTest{
+public class TrpcClientBenchmarkTest extends BaseTest {
     private TrpcClient trpcClient;
     private ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(16,16,60L,TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(), new NamedThreadFactory("benchmarkClientThread"));
