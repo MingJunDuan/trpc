@@ -5,10 +5,11 @@ import com.netty.trpc.common.protocol.RpcProtocol;
 import com.netty.trpc.common.protocol.RpcServiceInfo;
 import com.netty.trpc.common.util.ServiceUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author DuanMingJun
@@ -18,14 +19,15 @@ import java.util.Map;
 public abstract class TrpcLoadBalance {
 
     protected Map<String, List<RpcProtocol>> getServiceMap(Map<RpcProtocol,TrpcClientHandler> connectedServerNodes){
-        Map<String,List<RpcProtocol>> serviceMap=new HashMap<>();
+        Map<String, List<RpcProtocol>> serviceMap = new HashMap<>(32);
         if (connectedServerNodes!=null&&connectedServerNodes.size()>0){
-            for (RpcProtocol rpcProtocol : connectedServerNodes.keySet()) {
+            Set<RpcProtocol> rpcProtocolsKeySet = connectedServerNodes.keySet();
+            for (RpcProtocol rpcProtocol : rpcProtocolsKeySet) {
                 for (RpcServiceInfo rpcServiceInfo : rpcProtocol.getServiceInfoList()) {
                     String serviceKey = ServiceUtil.serviceKey(rpcServiceInfo.getServiceName(), rpcServiceInfo.getVersion());
                     List<RpcProtocol> rpcProtocolList = serviceMap.get(serviceKey);
                     if (rpcProtocolList==null){
-                        rpcProtocolList=new LinkedList<>();
+                        rpcProtocolList = new ArrayList<>(rpcProtocolsKeySet.size());
                     }
                     rpcProtocolList.add(rpcProtocol);
                     serviceMap.putIfAbsent(serviceKey,rpcProtocolList);
