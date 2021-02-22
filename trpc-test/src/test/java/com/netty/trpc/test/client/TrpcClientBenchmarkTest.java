@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 
 /**
  * @author DuanMingJun
@@ -22,12 +22,13 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date 2021-02-18 14:50
  */
 public class TrpcClientBenchmarkTest extends BaseTest {
+    private static final int threadNum = 16;
     private TrpcClient trpcClient;
-    private ThreadPoolExecutor threadPoolExecutor=new ThreadPoolExecutor(16,16,60L,TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(), new NamedThreadFactory("benchmarkClientThread"));
+    private final LongAdder count = new LongAdder();
     private final int requestNumPeerThread = 100;
     private int taskNum = 100;
-    private final AtomicInteger count=new AtomicInteger(0);
+    private ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(threadNum, threadNum, 60L, TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(), new NamedThreadFactory("BenchmarkClientThread"));
     private int totalCount=taskNum*requestNumPeerThread;
 
     @Before
@@ -43,7 +44,7 @@ public class TrpcClientBenchmarkTest extends BaseTest {
         }
         threadPoolExecutor.shutdown();
         countDownLatch.await(30,TimeUnit.SECONDS);
-        Assert.assertEquals(totalCount,count.get());
+        Assert.assertEquals(totalCount, count.intValue());
     }
 
     @After
@@ -73,7 +74,7 @@ public class TrpcClientBenchmarkTest extends BaseTest {
                 result = helloService.hello(tom);
                 Assert.assertEquals("Hello "+tom,result);
                 LOG.info(result);
-                count.addAndGet(1);
+                count.add(1);
             }
             countDownLatch.countDown();
         }
