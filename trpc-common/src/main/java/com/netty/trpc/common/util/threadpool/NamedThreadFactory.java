@@ -19,19 +19,26 @@ public class NamedThreadFactory implements ThreadFactory {
 
     protected final ThreadGroup mGroup;
 
+    protected final int priority;
+
     public NamedThreadFactory() {
-        this("pool-" + POOL_SEQ.getAndIncrement(), false);
+        this("pool-" + POOL_SEQ.getAndIncrement());
     }
 
     public NamedThreadFactory(String prefix) {
-        this(prefix, false);
+        this(prefix, 5);
     }
 
-    public NamedThreadFactory(String prefix, boolean daemon) {
+    public NamedThreadFactory(String prefix, int priority) {
+        this(prefix, priority, false);
+    }
+
+    public NamedThreadFactory(String prefix, int priority, boolean daemon) {
         mPrefix = prefix + "-thread-";
         mDaemon = daemon;
         SecurityManager s = System.getSecurityManager();
         mGroup = (s == null) ? Thread.currentThread().getThreadGroup() : s.getThreadGroup();
+        this.priority = priority;
     }
 
     @Override
@@ -39,6 +46,7 @@ public class NamedThreadFactory implements ThreadFactory {
         String name = mPrefix + mThreadNum.getAndIncrement();
         Thread ret = new Thread(mGroup, runnable, name, 0);
         ret.setDaemon(mDaemon);
+        ret.setPriority(priority);
         return ret;
     }
 }
