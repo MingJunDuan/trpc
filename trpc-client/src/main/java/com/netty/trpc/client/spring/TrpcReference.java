@@ -42,6 +42,9 @@ public class TrpcReference implements ApplicationContextAware, FactoryBean, Init
         if (StringUtils.isBlank(interfaceName)) {
             throw new IllegalStateException("Interface name can not blank!");
         }
+        if (trpcClient == null) {
+            throw new IllegalStateException("TrpcClient can not null!");
+        }
     }
 
     @Override

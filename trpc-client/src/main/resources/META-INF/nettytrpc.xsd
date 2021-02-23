@@ -21,8 +21,8 @@
             <xsd:complexContent>
                 <xsd:extension base="beans:identifiedType">
                     <xsd:attribute name="interfaceName" type="xsd:string" use="required"/>
-                    <xsd:attribute name="ipAddr" type="xsd:string" use="required"/>
-                    <xsd:attribute name="protocol" type="xsd:string" use="required"/>
+                    <xsd:attribute name="version" type="xsd:string" use="optional"/>
+                    <xsd:attribute name="protocol" type="xsd:string" use="optional"/>
                 </xsd:extension>
             </xsd:complexContent>
         </xsd:complexType>

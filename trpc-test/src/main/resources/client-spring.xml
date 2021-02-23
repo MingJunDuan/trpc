@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:nettytrpc="http://www.netty.com/trpc"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.netty.com/trpc
+       http://www.netty.com/trpc/nettytrpc.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
 
@@ -11,9 +14,11 @@
     <context:component-scan base-package="com.netty.trpc.test.client"/>
     <context:component-scan base-package="com.netty.trpc.test.api"/>
 
+    <nettytrpc:reference id="helloService1" interfaceName="com.netty.trpc.test.api.IHelloService" version="1.0"/>
+
     <context:property-placeholder location="classpath:rpc.properties"/>
 
-    <bean id="rpcServer" class="com.netty.trpc.client.TrpcClient">
+    <bean id="trpcClient" class="com.netty.trpc.client.TrpcClient">
         <constructor-arg name="registryAddress" value="${registry.address}"/>
     </bean>
 

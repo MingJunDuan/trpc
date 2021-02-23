@@ -1,5 +1,6 @@
 package com.netty.trpc.test.client;
 
+import com.netty.trpc.common.log.LOG;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -9,10 +10,12 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class TrpcClientBootstrapSpring {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("client-spring.xml");
-        applicationContext.refresh();
         HelloServiceConsumer bean = applicationContext.getBean(HelloServiceConsumer.class);
-        //TODO 加上注解编程，使用FactoryBean将接口纳入Spring的管理
+        String result = bean.sayHello("Alice");
+        LOG.info("result:{}", result);
+
+        applicationContext.close();
     }
 }

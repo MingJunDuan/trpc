@@ -1,6 +1,5 @@
 package com.netty.trpc.client.spring;
 
-import com.netty.trpc.common.spring.TrpcReference;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -23,7 +22,7 @@ public class TrpcReferenceParser implements BeanDefinitionParser {
 
         RootBeanDefinition beanDefinition = new RootBeanDefinition();
         beanDefinition.setBeanClass(TrpcReference.class);
-        beanDefinition.setLazyInit(false);
+        beanDefinition.setLazyInit(true);
 
         beanDefinition.getPropertyValues().addPropertyValue("interfaceName", interfaceName);
         beanDefinition.getPropertyValues().addPropertyValue("version", version);
