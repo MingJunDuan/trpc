@@ -38,7 +38,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ConnectionManager {
     private EventLoopGroup eventLoopGroup=new NioEventLoopGroup(4);
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(4, 8, 600L, TimeUnit.SECONDS,
-            new TaskQueue<>(1000), new NamedThreadFactory("connectionManager", 10), new CallerRejectedExecutionHandler());
+            new TaskQueue<>(1000), new NamedThreadFactory("ConnectionManager", 10), new CallerRejectedExecutionHandler());
     private Map<RpcProtocol, TrpcClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
     private CopyOnWriteArraySet<RpcProtocol> rpcProtocolSet = new CopyOnWriteArraySet<>();
     private ReentrantLock lock=new ReentrantLock();
