@@ -1,4 +1,4 @@
-package com.netty.trpc.client.falttolerance;
+package com.netty.trpc.client.faulttolerance;
 
 /**
  * @author DuanMingJun
