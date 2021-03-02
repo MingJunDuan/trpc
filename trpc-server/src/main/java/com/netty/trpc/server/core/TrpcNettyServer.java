@@ -2,12 +2,12 @@ package com.netty.trpc.server.core;
 
 import com.netty.trpc.common.filter.TrpcFilter;
 import com.netty.trpc.common.log.LOG;
-import com.netty.trpc.server.registry.ServiceRegistry;
 import com.netty.trpc.common.util.ServiceUtil;
 import com.netty.trpc.common.util.threadpool.CallerRejectedExecutionHandler;
 import com.netty.trpc.common.util.threadpool.EagerThreadPoolExecutor;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
 import com.netty.trpc.common.util.threadpool.TaskQueue;
+import com.netty.trpc.server.registry.ServiceRegistry;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -54,7 +54,9 @@ public class TrpcNettyServer extends TrpcAbstractServer {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workGroup).channel(NioServerSocketChannel.class)
                     .childHandler(new TrpcServerInitializer(serviceMap,filters, executor))
+                    //用于调整linux中accept queue的大小，在tcp三次连接时使用，参考：https://www.cnblogs.com/qiumingcheng/p/9492962.html
                     .option(ChannelOption.SO_BACKLOG, 128)
+                    //这是tcp层面的keepalive，不是应用层面的心跳，但是tcp层面的keepalive是有缺陷的，所以我们还需要应用层层面的心跳
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
             String[] items = serverAddress.split(":");
             String host = items[0];
