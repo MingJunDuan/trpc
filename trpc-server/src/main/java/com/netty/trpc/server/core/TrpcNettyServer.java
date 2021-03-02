@@ -56,6 +56,11 @@ public class TrpcNettyServer extends TrpcAbstractServer {
                     .childHandler(new TrpcServerInitializer(serviceMap,filters, executor))
                     //用于调整linux中accept queue的大小，在tcp三次连接时使用，参考：https://www.cnblogs.com/qiumingcheng/p/9492962.html
                     .option(ChannelOption.SO_BACKLOG, 128)
+                    //so_linger的值是-1、0、非0值
+                    //-1表示socket.close()方法立即返回，但OS底层会将发送缓冲区全部发送到对端
+                    //0表示socket.close方法立即返回，OS放弃发送缓冲区的数据直接向对端发送RST包，对端收到复位错误
+                    //非0整数值表示调用socket.close()方法的线程被阻塞直到延迟时间到或发送缓冲区中的数据发送完毕，若超时，则对端会收到复位错误。
+                    .option(ChannelOption.SO_LINGER, -1)
                     //Nagle算法，设置为true关闭Nagle算法，Nagle算法会将多个小的tcp包合并为大的包之后一块发送，所以开启Nagle算法会有延迟
                     .option(ChannelOption.TCP_NODELAY, true)
                     //这是tcp层面的keepalive，不是应用层面的心跳，但是tcp层面的keepalive是有缺陷的，所以我们还需要应用层层面的心跳
