@@ -15,6 +15,7 @@ import com.netty.trpc.common.util.threadpool.TaskQueue;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -146,6 +147,7 @@ public class ConnectionManager {
                 Bootstrap bootstrap = new Bootstrap();
                 bootstrap.group(eventLoopGroup)
                         .channel(NioSocketChannel.class)
+                        .option(ChannelOption.TCP_NODELAY, true)
                         .handler(new TrpcClientInitializer());
                 ChannelFuture channelFuture = bootstrap.connect(remotePeer);
                 channelFuture.addListener(new ChannelFutureListener() {
