@@ -69,6 +69,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
             String host = items[0];
             int port = Integer.valueOf(items[1]);
             ChannelFuture future = bootstrap.bind(host, port).sync();
+            //启动完成之后再进行服务注册
             serviceRegistry.registryService(host, port, serviceMap);
             LOG.info("Server started on port {}", port);
             future.channel().closeFuture().sync();
