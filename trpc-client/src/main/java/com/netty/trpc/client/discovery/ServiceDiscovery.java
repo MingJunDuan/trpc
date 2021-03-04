@@ -7,6 +7,7 @@ import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.protocol.RpcProtocol;
 import com.netty.trpc.common.zookeeper.CuratorClient;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 
@@ -37,16 +38,24 @@ public class ServiceDiscovery {
                 @Override
                 public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent pathChildrenCacheEvent) throws Exception {
                     PathChildrenCacheEvent.Type type = pathChildrenCacheEvent.getType();
-                    switch (type){
+                    ChildData childData = pathChildrenCacheEvent.getData();
+                    String path = null;
+                    byte[] data = null;
+                    if (childData != null) {
+                        path = childData.getPath();
+                        data = childData.getData();
+                    }
+                    switch (type) {
                         case CONNECTION_RECONNECTED:
                             LOG.info("Reconnected to zk, try to get latest service list");
                             getServiceAndUpdateServer();
                             break;
                         case CHILD_ADDED:
+                            getServiceAndUpdateServer(path, data, PathChildrenCacheEvent.Type.CHILD_ADDED);
                         case CHILD_UPDATED:
+                            getServiceAndUpdateServer(path, data, PathChildrenCacheEvent.Type.CHILD_UPDATED);
                         case CHILD_REMOVED:
-                            LOG.info("Service info changed, try to get latest service list");
-                            getServiceAndUpdateServer();
+                            getServiceAndUpdateServer(path, data, PathChildrenCacheEvent.Type.CHILD_REMOVED);
                             break;
                     }
                 }
@@ -54,6 +63,13 @@ public class ServiceDiscovery {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void getServiceAndUpdateServer(String path, byte[] data, PathChildrenCacheEvent.Type type) {
+        String str = new String(data, StandardCharsets.UTF_8);
+        LOG.info("Child data updated, path:{},data:{},type:{}", path, str, type);
+        RpcProtocol rpcProtocol = JSONObject.parseObject(str, RpcProtocol.class);
+        updateConnectedServer(rpcProtocol, type);
     }
 
     private void getServiceAndUpdateServer() {
@@ -75,6 +91,10 @@ public class ServiceDiscovery {
 
     private void updateConnectedServer(List<RpcProtocol> rpcProtocols) {
         ConnectionManager.getInstance().updateConnectedServer(rpcProtocols);
+    }
+
+    private void updateConnectedServer(RpcProtocol rpcProtocol, PathChildrenCacheEvent.Type type) {
+        ConnectionManager.getInstance().updateConnectedServer(rpcProtocol, type);
     }
 
     public void stop() {

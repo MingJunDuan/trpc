@@ -19,6 +19,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.springframework.util.CollectionUtils;
 
 import java.net.InetSocketAddress;
@@ -37,19 +38,20 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2021-02-18 11:20
  */
 public class ConnectionManager {
-    private EventLoopGroup eventLoopGroup=new NioEventLoopGroup(4);
+    private static final ConnectionManager instance = new ConnectionManager();
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(4, 8, 600L, TimeUnit.SECONDS,
             new TaskQueue<>(1000), new NamedThreadFactory("ConnectionManager", 10), new CallerRejectedExecutionHandler());
     private Map<RpcProtocol, TrpcClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
     private CopyOnWriteArraySet<RpcProtocol> rpcProtocolSet = new CopyOnWriteArraySet<>();
-    private ReentrantLock lock=new ReentrantLock();
-    private Condition connected=lock.newCondition();
-    private long waitTimeout=5_000;
+    private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
+    private ReentrantLock lock = new ReentrantLock();
+    private Condition connected = lock.newCondition();
     private TrpcLoadBalance loadBalance = new TrpcLoadBalanceRoundRobin();
-    private volatile boolean isRunning=true;
-    private static final ConnectionManager instance=new ConnectionManager();
+    private long waitTimeout = 5_000;
+    private volatile boolean isRunning = true;
 
-    private ConnectionManager(){}
+    private ConnectionManager() {
+    }
 
     public static ConnectionManager getInstance() {
         return instance;
@@ -58,61 +60,78 @@ public class ConnectionManager {
     public void removeHandler(RpcProtocol rpcProtocol) {
         rpcProtocolSet.remove(rpcProtocol);
         connectedServerNodes.remove(rpcProtocol);
-        LOG.info("Remove one connection, host:{},port:{}",rpcProtocol.getHost(),rpcProtocol.getPort());
+        LOG.info("Remove one connection, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
     }
 
     public TrpcClientHandler chooseHandler(String serviceKey) throws Exception {
         int size = connectedServerNodes.values().size();
-        int count=0,limit=3;
-        while (isRunning&&size<=0){
+        int count = 0, limit = 3;
+        while (isRunning && size <= 0) {
             try {
                 waitingForHandler();
-                size=connectedServerNodes.values().size();
-            }catch (InterruptedException e){
-                LOG.error("Waiting for avaiable service is interrupted!",e);
+                size = connectedServerNodes.values().size();
+            } catch (InterruptedException e) {
+                LOG.error("Waiting for avaiable service is interrupted!", e);
             }
             count++;
-            if (count>=limit){
+            if (count >= limit) {
                 throw new Exception("Waiting for available service time out");
             }
         }
-        RpcProtocol rpcProtocol=loadBalance.route(serviceKey,connectedServerNodes);
+        RpcProtocol rpcProtocol = loadBalance.route(serviceKey, connectedServerNodes);
         TrpcClientHandler trpcClientHandler = connectedServerNodes.get(rpcProtocol);
-        if (trpcClientHandler!=null){
+        if (trpcClientHandler != null) {
             return trpcClientHandler;
-        }else {
+        } else {
             throw new Exception("Can not get available connection");
         }
     }
 
-    private boolean waitingForHandler() throws InterruptedException{
+    private boolean waitingForHandler() throws InterruptedException {
         lock.lock();
         try {
             LOG.warn("Waiting for available service");
-            return connected.await(this.waitTimeout,TimeUnit.MILLISECONDS);
-        }finally {
+            return connected.await(this.waitTimeout, TimeUnit.MILLISECONDS);
+        } finally {
             lock.unlock();
         }
     }
 
-    public void updateConnectedServer(List<RpcProtocol> rpcProtocols){
-        if (rpcProtocols!=null&&rpcProtocols.size()>0){
+    public void updateConnectedServer(RpcProtocol rpcProtocol, PathChildrenCacheEvent.Type type) {
+        if (rpcProtocol == null) {
+            return;
+        }
+        if (type == PathChildrenCacheEvent.Type.CHILD_ADDED && !rpcProtocolSet.contains(rpcProtocol)) {
+            connectServerNode(rpcProtocol);
+        } else if (type == PathChildrenCacheEvent.Type.CHILD_UPDATED) {
+            //TODO 这里可以优化,如果IP和端口不变，那是不是不用重新进行connect操作
+            removeAndCloseHandler(rpcProtocol);
+            connectServerNode(rpcProtocol);
+        } else if (type == PathChildrenCacheEvent.Type.CHILD_REMOVED) {
+            removeAndCloseHandler(rpcProtocol);
+        } else {
+            throw new IllegalArgumentException("Unknow type:" + type);
+        }
+    }
+
+    public void updateConnectedServer(List<RpcProtocol> rpcProtocols) {
+        if (rpcProtocols != null && rpcProtocols.size() > 0) {
             HashSet<RpcProtocol> tmpRpcProtocolSet = new HashSet<>(rpcProtocols.size());
             tmpRpcProtocolSet.addAll(rpcProtocols);
 
             for (RpcProtocol rpcProtocol : tmpRpcProtocolSet) {
-                if (!rpcProtocolSet.contains(rpcProtocol)){
+                if (!rpcProtocolSet.contains(rpcProtocol)) {
                     connectServerNode(rpcProtocol);
                 }
             }
 
             for (RpcProtocol rpcProtocol : rpcProtocolSet) {
-                if (!tmpRpcProtocolSet.contains(rpcProtocol)){
+                if (!tmpRpcProtocolSet.contains(rpcProtocol)) {
                     LOG.info("Remove invalid service:{}", JSONObject.toJSONString(rpcProtocol));
                     removeAndCloseHandler(rpcProtocol);
                 }
             }
-        }else {
+        } else {
             //No available service
             for (RpcProtocol rpcProtocol : rpcProtocolSet) {
                 removeAndCloseHandler(rpcProtocol);
@@ -129,15 +148,15 @@ public class ConnectionManager {
         rpcProtocolSet.remove(rpcProtocol);
     }
 
-    private void connectServerNode(RpcProtocol rpcProtocol){
-        if (CollectionUtils.isEmpty(rpcProtocol.getServiceInfoList())){
-            LOG.info("No service on node, host:{},port:{}",rpcProtocol.getHost(),rpcProtocol.getPort());
+    private void connectServerNode(RpcProtocol rpcProtocol) {
+        if (CollectionUtils.isEmpty(rpcProtocol.getServiceInfoList())) {
+            LOG.info("No service on node, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
             return;
         }
         rpcProtocolSet.add(rpcProtocol);
-        LOG.info("New server node, host:{},port:{}",rpcProtocol.getHost(),rpcProtocol.getPort());
+        LOG.info("New server node, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
         for (RpcServiceInfo rpcServiceInfo : rpcProtocol.getServiceInfoList()) {
-            LOG.info("New service info, name:{},version:{}",rpcServiceInfo.getServiceName(),rpcServiceInfo.getVersion());
+            LOG.info("New service info, name:{},version:{}", rpcServiceInfo.getServiceName(), rpcServiceInfo.getVersion());
         }
         final InetSocketAddress remotePeer = new InetSocketAddress(rpcProtocol.getHost(), rpcProtocol.getPort());
         //用netty客户端建立与Server的连接
@@ -153,14 +172,14 @@ public class ConnectionManager {
                 channelFuture.addListener(new ChannelFutureListener() {
                     @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
-                        if (channelFuture.isSuccess()){
-                            LOG.info("Successfully connect to remote server, remote peer={}",remotePeer);
+                        if (channelFuture.isSuccess()) {
+                            LOG.info("Successfully connect to remote server, remote peer={}", remotePeer);
                             TrpcClientHandler trpcClientHandler = channelFuture.channel().pipeline().get(TrpcClientHandler.class);
-                            connectedServerNodes.put(rpcProtocol,trpcClientHandler);
+                            connectedServerNodes.put(rpcProtocol, trpcClientHandler);
                             trpcClientHandler.setRpcProtocol(rpcProtocol);
                             signalAvailableHandler();
-                        }else {
-                            LOG.error("Can not connect to remote server, remote peer={}",remotePeer);
+                        } else {
+                            LOG.error("Can not connect to remote server, remote peer={}", remotePeer);
                         }
                     }
                 });
@@ -168,20 +187,20 @@ public class ConnectionManager {
         });
     }
 
-    private void signalAvailableHandler(){
+    private void signalAvailableHandler() {
         lock.lock();
         try {
             connected.signalAll();
-        }finally {
+        } finally {
             lock.unlock();
         }
     }
 
-    public void stop(){
-        isRunning=false;
+    public void stop() {
+        isRunning = false;
         for (RpcProtocol rpcProtocol : rpcProtocolSet) {
             TrpcClientHandler handler = connectedServerNodes.get(rpcProtocol);
-            if (handler!=null){
+            if (handler != null) {
                 handler.close();
             }
             connectedServerNodes.remove(rpcProtocol);
