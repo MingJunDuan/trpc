@@ -39,23 +39,17 @@ public class ServiceDiscovery {
                 public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent pathChildrenCacheEvent) throws Exception {
                     PathChildrenCacheEvent.Type type = pathChildrenCacheEvent.getType();
                     ChildData childData = pathChildrenCacheEvent.getData();
-                    String path = null;
-                    byte[] data = null;
-                    if (childData != null) {
-                        path = childData.getPath();
-                        data = childData.getData();
-                    }
                     switch (type) {
                         case CONNECTION_RECONNECTED:
                             LOG.info("Reconnected to zk, try to get latest service list");
                             getServiceAndUpdateServer();
                             break;
                         case CHILD_ADDED:
-                            getServiceAndUpdateServer(path, data, PathChildrenCacheEvent.Type.CHILD_ADDED);
+                            getServiceAndUpdateServer(childData, PathChildrenCacheEvent.Type.CHILD_ADDED);
                         case CHILD_UPDATED:
-                            getServiceAndUpdateServer(path, data, PathChildrenCacheEvent.Type.CHILD_UPDATED);
+                            getServiceAndUpdateServer(childData, PathChildrenCacheEvent.Type.CHILD_UPDATED);
                         case CHILD_REMOVED:
-                            getServiceAndUpdateServer(path, data, PathChildrenCacheEvent.Type.CHILD_REMOVED);
+                            getServiceAndUpdateServer(childData, PathChildrenCacheEvent.Type.CHILD_REMOVED);
                             break;
                     }
                 }
@@ -65,10 +59,11 @@ public class ServiceDiscovery {
         }
     }
 
-    private void getServiceAndUpdateServer(String path, byte[] data, PathChildrenCacheEvent.Type type) {
-        String str = new String(data, StandardCharsets.UTF_8);
-        LOG.info("Child data updated, path:{},data:{},type:{}", path, str, type);
-        RpcProtocol rpcProtocol = JSONObject.parseObject(str, RpcProtocol.class);
+    private void getServiceAndUpdateServer(ChildData childData, PathChildrenCacheEvent.Type type) {
+        String path = childData.getPath();
+        String data = new String(childData.getData(), StandardCharsets.UTF_8);
+        LOG.info("Child data updated, path:{},type:{},data:{},", path, type, data);
+        RpcProtocol rpcProtocol = JSONObject.parseObject(data, RpcProtocol.class);
         updateConnectedServer(rpcProtocol, type);
     }
 
@@ -85,7 +80,7 @@ public class ServiceDiscovery {
             LOG.info("Service node data: {}", rpcProtocols);
             updateConnectedServer(rpcProtocols);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
     }
 
