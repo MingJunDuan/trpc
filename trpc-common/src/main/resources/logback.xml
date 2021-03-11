@@ -1,7 +1,7 @@
 <configuration>
 
 	<!-- variables -->
-	<property name="logDir" value="/tmp/this-log-can-been-deleted-log" />
+    <property name="logDir" value="logs/this-log-can-been-deleted-log"/>
 	<property name="subDir" value="sub" />
 	<property name="info" value="info" />
 	<property name="warn" value="warn" />
