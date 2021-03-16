@@ -2,7 +2,6 @@
 
 * Add fail-over support
 * 微内核+插件架构
-* Heart beat? Do we need it?
 
 # Done list
 
