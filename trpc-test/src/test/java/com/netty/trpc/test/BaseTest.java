@@ -10,4 +10,5 @@ public class BaseTest {
     protected String getRegistryAddress(){
         return "localhost:2181";
     }
+    
 }
