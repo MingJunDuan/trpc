@@ -43,5 +43,4 @@ public class TrpcClientTest extends BaseTest {
     public void after() throws Exception {
         trpcClient.destroy();
     }
-    
 }
