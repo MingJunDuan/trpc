@@ -13,4 +13,5 @@ public class TrpcServerBootstrapSpring {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("server-spring.xml");
         applicationContext.refresh();
     }
+
 }
