@@ -5,5 +5,5 @@ package com.netty.trpc.client.faulttolerance;
  * @version 1.0
  * @date 2021-02-25 23:06
  */
-public class FailOverInvoker implements Invoker {
+public class FailOverInvoker {
 }

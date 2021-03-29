@@ -50,7 +50,8 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
                         Object result = doHandle(trpcRequest);
                         response.setResult(result);
                     } catch (Exception e) {
-                        response.setError(e.getMessage());
+                        String errorMsg = ((InvocationTargetException) e).getTargetException().getMessage();
+                        response.setError(errorMsg);
                         ex = e;
                         LOG.error(e);
                     }

@@ -16,10 +16,10 @@ public class TrpcClientBootstrapSpring {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("client-spring.xml");
         HelloServiceConsumer bean = applicationContext.getBean(HelloServiceConsumer.class);
         for (int i = 0; i < 6; i++) {
-            String result = bean.sayHello("Alice");
+            String result = bean.sayHello("Jack");
             LOG.info("result:{}", result);
         }
-        TimeUnit.DAYS.sleep(2);
+        //TimeUnit.DAYS.sleep(2);
         applicationContext.close();
     }
 }

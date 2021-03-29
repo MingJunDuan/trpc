@@ -110,6 +110,15 @@ public class TrpcFuture implements Future<Object> {
         }
     }
 
+    public TrpcResponse getResponse() throws InterruptedException, ExecutionException {
+        sync.acquire(1);
+        if (this.response!=null){
+            return this.response;
+        }else {
+            return null;
+        }
+    }
+
     @Override
     public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         boolean success = sync.tryAcquireNanos(1, unit.toNanos(timeout));

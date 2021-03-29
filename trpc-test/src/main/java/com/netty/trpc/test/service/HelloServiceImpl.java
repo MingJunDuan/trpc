@@ -10,6 +10,9 @@ public class HelloServiceImpl implements IHelloService {
 
     @Override
     public String hello(String name) {
+        if ("jack".equalsIgnoreCase(name)){
+            throw new IllegalStateException("有意的抛出异常");
+        }
         return "Hello " + name;
     }
 
