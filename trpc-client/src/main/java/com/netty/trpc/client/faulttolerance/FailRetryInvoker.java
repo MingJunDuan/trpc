@@ -5,7 +5,6 @@ import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcFuture;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
-import com.netty.trpc.common.util.ServiceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,7 @@ public class FailRetryInvoker implements Invoker{
             }
         }while (count++ < retryCount);
         if (response.isError()){
-            LOGGER.error("Call service error, {}",response.getError());
+            LOGGER.error("Call service error after retry {} times, {}",retryCount,response.getError());
         }
         return response.getResult();
     }
