@@ -30,9 +30,4 @@ public class FailFastInvoker implements Invoker{
         }
         return null;
     }
-
-    private TrpcResponse doRequest(TrpcClientHandler handler, TrpcRequest request) throws ExecutionException, InterruptedException {
-        TrpcFuture trpcFuture = handler.sendRequest(request);
-        return trpcFuture.getResponse();
-    }
 }
