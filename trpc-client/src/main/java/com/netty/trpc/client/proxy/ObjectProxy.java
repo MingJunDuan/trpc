@@ -1,7 +1,7 @@
 package com.netty.trpc.client.proxy;
 
 import com.netty.trpc.client.connect.ConnectionManager;
-import com.netty.trpc.client.faulttolerance.FailRetryInvoker;
+import com.netty.trpc.client.faulttolerance.FailOverInvoker;
 import com.netty.trpc.client.faulttolerance.Invoker;
 import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcFuture;
@@ -18,7 +18,7 @@ import java.util.UUID;
  * @date 2021-02-18 13:54
  */
 public class ObjectProxy<T> implements InvocationHandler,TrpcService<T,SerializableFunction<T>> {
-    private static Invoker invoker = new FailRetryInvoker();
+    private static Invoker invoker = new FailOverInvoker();
     private Class<T> clazz;
     private String version;
 

@@ -16,10 +16,18 @@ import java.util.concurrent.ExecutionException;
  * @date 2021-02-25 23:07
  */
 public class FailSafeInvoker implements Invoker {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FailRetryInvoker.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FailSafeInvoker.class);
 
     @Override
     public Object invoke(String serviceKey, TrpcRequest request) {
+        TrpcClientHandler handler = null;
+        try {
+            handler = ConnectionManager.getInstance().chooseHandler(serviceKey);
+            TrpcFuture trpcFuture = handler.sendRequest(request);
+            return trpcFuture.get();
+        } catch (Exception e) {
+            LOGGER.error("Call service fail", e);
+        }
         return null;
     }
 }

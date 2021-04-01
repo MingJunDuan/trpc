@@ -4,11 +4,9 @@ import com.netty.trpc.client.connect.ConnectionManager;
 import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcFuture;
 import com.netty.trpc.common.codec.TrpcRequest;
-import com.netty.trpc.common.codec.TrpcResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author DuanMingJun
@@ -27,7 +25,7 @@ public class FailFastInvoker implements Invoker{
             return trpcFuture.get();
         } catch (Exception e) {
             LOGGER.error("Call service fail", e);
+            throw new RuntimeException("Call service fail for requestId:"+request.getRequestId());
         }
-        return null;
     }
 }
