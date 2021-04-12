@@ -1,10 +1,9 @@
 package com.netty.trpc.common.util.timer;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.*;
 
 /**
  * @author DuanMingJun
@@ -18,5 +17,6 @@ public class ClassUtilsTest {
     public void simpleClassName() {
         String className = ClassUtils.simpleClassName(ClassUtils.class);
         LOGGER.info(className);
+        Assert.assertEquals("ClassUtils",className);
     }
 }
