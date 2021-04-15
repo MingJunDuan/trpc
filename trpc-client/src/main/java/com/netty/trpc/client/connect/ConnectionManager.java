@@ -38,23 +38,19 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2021-02-18 11:20
  */
 public class ConnectionManager {
-    private static final ConnectionManager instance = new ConnectionManager();
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(4, 8, 600L, TimeUnit.SECONDS,
             new TaskQueue<>(1000), new NamedThreadFactory("ConnectionManager", 10), new CallerRejectedExecutionHandler());
-    private Map<RpcProtocol, TrpcClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
+    protected Map<RpcProtocol, TrpcClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
     private CopyOnWriteArraySet<RpcProtocol> rpcProtocolSet = new CopyOnWriteArraySet<>();
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
     private ReentrantLock lock = new ReentrantLock();
     private Condition connected = lock.newCondition();
-    private TrpcLoadBalance loadBalance = new TrpcLoadBalanceRoundRobin();
+    protected TrpcLoadBalance loadBalance;
     private long waitTimeout = 5_000;
-    private volatile boolean isRunning = true;
+    protected volatile boolean isRunning = true;
 
-    private ConnectionManager() {
-    }
-
-    public static ConnectionManager getInstance() {
-        return instance;
+    ConnectionManager() {
+        loadBalance = new TrpcLoadBalanceRoundRobin();
     }
 
     public void removeHandler(RpcProtocol rpcProtocol) {
@@ -87,7 +83,7 @@ public class ConnectionManager {
         }
     }
 
-    private boolean waitingForHandler() throws InterruptedException {
+    protected boolean waitingForHandler() throws InterruptedException {
         lock.lock();
         try {
             LOG.warn("Waiting for available service");

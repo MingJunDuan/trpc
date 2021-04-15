@@ -6,6 +6,7 @@ import com.netty.trpc.common.protocol.RpcServiceInfo;
 import com.netty.trpc.common.util.ServiceUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,4 +40,8 @@ public abstract class TrpcLoadBalance {
 
 
     public abstract RpcProtocol route(String serviceKey, Map<RpcProtocol, TrpcClientHandler> connectedServerNodes) throws Exception;
+
+    public List<RpcProtocol> routes(String serviceKey, Map<RpcProtocol, TrpcClientHandler> connectedServerNodes) throws Exception{
+        return Collections.emptyList();
+    }
 }

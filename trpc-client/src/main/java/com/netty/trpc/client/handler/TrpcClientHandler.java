@@ -1,6 +1,7 @@
 package com.netty.trpc.client.handler;
 
 import com.netty.trpc.client.connect.ConnectionManager;
+import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.common.codec.PingPongRequest;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
@@ -96,6 +97,6 @@ public class TrpcClientHandler extends SimpleChannelInboundHandler<TrpcResponse>
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
-        ConnectionManager.getInstance().removeHandler(rpcProtocol);
+        ConnectionManagerFactory.getConnectionManager().removeHandler(rpcProtocol);
     }
 }

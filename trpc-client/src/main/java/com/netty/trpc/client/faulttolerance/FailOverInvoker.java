@@ -1,6 +1,7 @@
 package com.netty.trpc.client.faulttolerance;
 
 import com.netty.trpc.client.connect.ConnectionManager;
+import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcFuture;
 import com.netty.trpc.common.codec.TrpcRequest;
@@ -26,7 +27,7 @@ public class FailOverInvoker implements Invoker{
         int count=0;
         do{
             try {
-                handler = ConnectionManager.getInstance().chooseHandler(serviceKey);
+                handler = ConnectionManagerFactory.getConnectionManager().chooseHandler(serviceKey);
                 response = doRequest(handler,request);
             } catch (Exception e) {
                 LOGGER.error("Call service fail",e);

@@ -1,6 +1,7 @@
 package com.netty.trpc.client.faulttolerance;
 
 import com.netty.trpc.client.connect.ConnectionManager;
+import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcFuture;
 import com.netty.trpc.common.codec.TrpcRequest;
@@ -31,7 +32,7 @@ public class FailBackInvoker implements Invoker{
     public Object invoke(String serviceKey, TrpcRequest request) {
         TrpcClientHandler handler = null;
         try {
-            handler = ConnectionManager.getInstance().chooseHandler(serviceKey);
+            handler = ConnectionManagerFactory.getConnectionManager().chooseHandler(serviceKey);
             TrpcFuture trpcFuture = handler.sendRequest(request);
             return trpcFuture.get();
         } catch (Exception e) {
