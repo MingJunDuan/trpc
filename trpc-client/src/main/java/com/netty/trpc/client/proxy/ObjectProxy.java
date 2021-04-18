@@ -1,9 +1,7 @@
 package com.netty.trpc.client.proxy;
 
-import com.netty.trpc.client.connect.ConnectionManager;
 import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.client.faulttolerance.FailBackInvoker;
-import com.netty.trpc.client.faulttolerance.FailOverInvoker;
 import com.netty.trpc.client.faulttolerance.Invoker;
 import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcFuture;
