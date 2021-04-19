@@ -2,6 +2,7 @@ package com.netty.trpc.client.discovery;
 
 import com.alibaba.fastjson.JSONObject;
 import com.netty.trpc.client.connect.ConnectionManager;
+import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.common.constant.TrpcConstant;
 import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.protocol.RpcProtocol;
@@ -85,11 +86,11 @@ public class ServiceDiscovery {
     }
 
     private void updateConnectedServer(List<RpcProtocol> rpcProtocols) {
-        ConnectionManager.getInstance().updateConnectedServer(rpcProtocols);
+        ConnectionManagerFactory.getConnectionManager().updateConnectedServer(rpcProtocols);
     }
 
     private void updateConnectedServer(RpcProtocol rpcProtocol, PathChildrenCacheEvent.Type type) {
-        ConnectionManager.getInstance().updateConnectedServer(rpcProtocol, type);
+        ConnectionManagerFactory.getConnectionManager().updateConnectedServer(rpcProtocol, type);
     }
 
     public void stop() {
