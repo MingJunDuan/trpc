@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by luxiaoxun on 2016-03-10.
  */
 @TrpcService(value = IPersonService.class,version = "1.2")
 public class PersonServiceImpl implements IPersonService {
