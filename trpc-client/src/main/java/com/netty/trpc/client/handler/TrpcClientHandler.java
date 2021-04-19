@@ -30,7 +30,6 @@ public class TrpcClientHandler extends SimpleChannelInboundHandler<TrpcResponse>
     private SocketAddress remotePeer;
     private RpcProtocol rpcProtocol;
 
-
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
@@ -42,7 +41,6 @@ public class TrpcClientHandler extends SimpleChannelInboundHandler<TrpcResponse>
         super.channelActive(ctx);
         this.remotePeer = this.channel.remoteAddress();
     }
-
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TrpcResponse response) throws Exception {
