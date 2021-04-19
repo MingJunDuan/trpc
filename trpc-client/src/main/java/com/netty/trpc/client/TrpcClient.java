@@ -1,6 +1,7 @@
 package com.netty.trpc.client;
 
 import com.netty.trpc.client.connect.ConnectionManager;
+import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.client.discovery.ServiceDiscovery;
 import com.netty.trpc.client.proxy.ObjectProxy;
 import com.netty.trpc.client.proxy.SerializableFunction;
@@ -52,7 +53,8 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
     public void stop(){
         threadPoolExecutor.shutdown();
         serviceDiscovery.stop();
-        ConnectionManager.getInstance().stop();
+        ConnectionManagerFactory.getConnectionManager().stop();
+        ConnectionManagerFactory.getForkingConnectionManager().stop();
     }
 
     @Override

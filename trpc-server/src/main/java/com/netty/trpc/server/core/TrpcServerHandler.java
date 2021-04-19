@@ -4,11 +4,12 @@ import com.netty.trpc.common.codec.PingPongRequest;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
 import com.netty.trpc.common.filter.TrpcFilter;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.util.ServiceUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,6 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @date 2021-02-08 14:42
  */
 public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcServerHandler.class);
     private Map<String, Object> handlerMap;
     private List<TrpcFilter> filters;
     private ThreadPoolExecutor handlerPool;
@@ -35,13 +37,13 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
     @Override
     protected void channelRead0(ChannelHandlerContext context, TrpcRequest trpcRequest) throws Exception {
         if (trpcRequest.getRequestId().equalsIgnoreCase(PingPongRequest.BEAT_ID)) {
-            LOG.info("Server read heartbeat ping pong");
+            LOGGER.info("Server read heartbeat ping pong");
             return;
         }
         handlerPool.execute(new Runnable() {
             @Override
             public void run() {
-                LOG.info("Service request:{}", trpcRequest.getRequestId());
+                LOGGER.info("Service request:{}", trpcRequest.getRequestId());
                 TrpcResponse response = new TrpcResponse();
                 response.setRequestId(trpcRequest.getRequestId());
                 Exception ex = null;
@@ -53,7 +55,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
                         String errorMsg = ((InvocationTargetException) e).getTargetException().getMessage();
                         response.setError(errorMsg);
                         ex = e;
-                        LOG.error(e);
+                        LOGGER.error(e.getMessage(),e);
                     }
                     response=applyPostFilter(trpcRequest, response, ex);
                 }
@@ -69,7 +71,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
         for (int i = 0; i < filters.size(); i++) {
             boolean canPost = filters.get(i).preFilter(trpcRequest);
             if (!canPost) {
-                LOG.info("Filter return false, return directly");
+                LOGGER.info("Filter return false, return directly");
                 return false;
             }
         }
@@ -94,7 +96,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
         Object serviceBean = handlerMap.get(serviceKey);
         if (serviceBean == null) {
             String msg = "Can not find service implement with interface name: " + className + " and version: " + version;
-            LOG.error(msg);
+            LOGGER.error(msg);
             throw new IllegalStateException(msg);
         }
 
@@ -109,7 +111,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOG.warn("server caught exception: {}", cause.getCause());
+        LOGGER.warn("server caught exception: {}", cause.getCause());
         ctx.close();
     }
 
@@ -117,7 +119,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             ctx.channel().closeFuture();
-            LOG.warn("Channel idle in last {} seconds, close it", PingPongRequest.BEAT_TIMEOUT);
+            LOGGER.warn("Channel idle in last {} seconds, close it", PingPongRequest.BEAT_TIMEOUT);
         } else {
             super.userEventTriggered(ctx, evt);
         }
