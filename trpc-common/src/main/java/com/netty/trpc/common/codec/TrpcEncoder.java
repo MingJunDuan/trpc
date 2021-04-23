@@ -1,10 +1,11 @@
 package com.netty.trpc.common.codec;
 
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.serializer.Serializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author DuanMingJun
@@ -12,6 +13,7 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @date 2021-02-08 13:15
  */
 public class TrpcEncoder extends MessageToByteEncoder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcEncoder.class);
     private Class<?> clazz;
     private Serializer serializer;
 
@@ -28,7 +30,7 @@ public class TrpcEncoder extends MessageToByteEncoder {
                 out.writeInt(data.length);
                 out.writeBytes(data);
             }catch (Exception e){
-                LOG.error("Encode error",e);
+                LOGGER.error("Encode error",e);
             }
         }
     }

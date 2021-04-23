@@ -1,8 +1,9 @@
 package com.netty.trpc.common.serializer.hessian;
 
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.protocol.RpcProtocol;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.LinkedList;
 
@@ -12,6 +13,7 @@ import java.util.LinkedList;
  * @date 2021-02-19 10:38
  */
 public class Hessian2SerializerTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Hessian2SerializerTest.class);
 
     @Test
     public void serialize() {
@@ -23,7 +25,7 @@ public class Hessian2SerializerTest {
         Hessian2Serializer serializer = new Hessian2Serializer();
         byte[] data = serializer.serialize(rpcProtocol);
         RpcProtocol result = serializer.deserialize(data, RpcProtocol.class);
-        LOG.info(result);
+        LOGGER.info(result.toString());
     }
 
 }

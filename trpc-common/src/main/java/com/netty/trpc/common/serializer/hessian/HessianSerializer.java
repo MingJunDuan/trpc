@@ -2,8 +2,9 @@ package com.netty.trpc.common.serializer.hessian;
 
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.serializer.Serializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,10 +17,11 @@ import java.io.IOException;
  * @date 2021-02-08 13:02
  */
 public class HessianSerializer implements Serializer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HessianSerializer.class);
 
     @Override
     public <T> byte[] serialize(T obj) {
-        if (obj==null) {
+        if (obj == null) {
             throw new NullPointerException();
         }
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -34,7 +36,7 @@ public class HessianSerializer implements Serializer {
 
     @Override
     public <T> T deserialize(byte[] data, Class<T> clazz) {
-        if (data==null) {
+        if (data == null) {
             throw new NullPointerException();
         }
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
@@ -46,12 +48,12 @@ public class HessianSerializer implements Serializer {
         }
     }
 
-    private void close(Closeable closeable){
-        if (closeable!=null){
+    private void close(Closeable closeable) {
+        if (closeable != null) {
             try {
                 closeable.close();
             } catch (IOException e) {
-                LOG.error(e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }

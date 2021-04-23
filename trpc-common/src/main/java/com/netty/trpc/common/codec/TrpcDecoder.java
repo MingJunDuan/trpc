@@ -1,10 +1,11 @@
 package com.netty.trpc.common.codec;
 
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.serializer.Serializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * @date 2021-02-08 13:15
  */
 public class TrpcDecoder extends ByteToMessageDecoder {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcDecoder.class);
     private Class clazz;
     private Serializer serializer;
 
@@ -40,8 +42,7 @@ public class TrpcDecoder extends ByteToMessageDecoder {
             obj = serializer.deserialize(data, clazz);
             out.add(obj);
         } catch (Exception e) {
-            LOG.error("Decoder error", e);
+            LOGGER.error("Decoder error", e);
         }
-
     }
 }
