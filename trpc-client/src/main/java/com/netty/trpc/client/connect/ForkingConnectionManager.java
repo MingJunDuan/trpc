@@ -4,6 +4,8 @@ import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.route.impl.TrpcForkingLoadBalance;
 import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.protocol.RpcProtocol;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.List;
  * @date 2021-04-15 22:25
  */
 public class ForkingConnectionManager extends ConnectionManager {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ForkingConnectionManager.class);
     public ForkingConnectionManager() {
         loadBalance = new TrpcForkingLoadBalance();
     }
@@ -27,7 +29,7 @@ public class ForkingConnectionManager extends ConnectionManager {
                 waitingForHandler();
                 size = connectedServerNodes.values().size();
             } catch (InterruptedException e) {
-                LOG.error("Waiting for avaiable service is interrupted!", e);
+                LOGGER.error("Waiting for avaiable service is interrupted!", e);
             }
             count++;
             if (count >= limit) {
