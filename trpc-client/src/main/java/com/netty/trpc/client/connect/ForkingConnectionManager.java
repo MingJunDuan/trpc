@@ -2,7 +2,6 @@ package com.netty.trpc.client.connect;
 
 import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.route.impl.TrpcForkingLoadBalance;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.protocol.RpcProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
