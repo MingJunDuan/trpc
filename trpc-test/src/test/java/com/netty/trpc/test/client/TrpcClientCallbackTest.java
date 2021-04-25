@@ -5,12 +5,13 @@ import com.netty.trpc.client.handler.AsyncTrpcCallBack;
 import com.netty.trpc.client.handler.TrpcFuture;
 import com.netty.trpc.client.proxy.SerializableFunction;
 import com.netty.trpc.client.proxy.TrpcService;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.test.BaseTest;
 import com.netty.trpc.test.api.IPersonService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021-02-18 16:57
  */
 public class TrpcClientCallbackTest extends BaseTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcClientCallbackTest.class);
     private TrpcClient trpcClient;
 
     @Before
@@ -34,21 +36,21 @@ public class TrpcClientCallbackTest extends BaseTest {
         trpcFuture.addCallback(new AsyncTrpcCallBack() {
             @Override
             public void success(Object result) {
-                LOG.info("success,result:{}",result);
+                LOGGER.info("success,result:{}",result);
             }
 
             @Override
             public void fail(Exception e) {
-                LOG.error("Error,exception:{}",e);
+                LOGGER.error("Error,exception:{}",e);
             }
         });
 
         Object result = trpcFuture.get(3, TimeUnit.SECONDS);
-        LOG.info("result:{}",result);
+        LOGGER.info("result:{}",result);
 
         for (int i = 0; i < 10; i++) {
             result = doGetResult(service);
-            LOG.info("result:{}",result);
+            LOGGER.info("result:{}",result);
         }
     }
 

@@ -1,9 +1,10 @@
 package com.netty.trpc.client.spring;
 
 import com.netty.trpc.client.TrpcClient;
-import com.netty.trpc.common.log.LOG;
 import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -17,6 +18,7 @@ import org.springframework.context.ApplicationContextAware;
  */
 @Data
 public class TrpcReference implements ApplicationContextAware, FactoryBean, InitializingBean {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcReference.class);
     private String interfaceName;
     private String version;
     private String protocol;
@@ -32,7 +34,7 @@ public class TrpcReference implements ApplicationContextAware, FactoryBean, Init
         try {
             return this.getClass().getClassLoader().loadClass(interfaceName);
         } catch (ClassNotFoundException e) {
-            LOG.error("Class not found exception", e);
+            LOGGER.error("Class not found exception", e);
             throw new IllegalStateException(e);
         }
     }

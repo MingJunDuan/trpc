@@ -5,7 +5,6 @@ import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcClientInitializer;
 import com.netty.trpc.client.route.TrpcLoadBalance;
 import com.netty.trpc.client.route.impl.TrpcLoadBalanceRoundRobin;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.protocol.RpcProtocol;
 import com.netty.trpc.common.protocol.RpcServiceInfo;
 import com.netty.trpc.common.util.threadpool.CallerRejectedExecutionHandler;
@@ -20,6 +19,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
 import java.net.InetSocketAddress;
@@ -38,6 +39,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2021-02-18 11:20
  */
 public class ConnectionManager {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(4, 8, 600L, TimeUnit.SECONDS,
             new TaskQueue<>(1000), new NamedThreadFactory("ConnectionManager", 10), new CallerRejectedExecutionHandler());
     protected Map<RpcProtocol, TrpcClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
@@ -56,7 +58,7 @@ public class ConnectionManager {
     public void removeHandler(RpcProtocol rpcProtocol) {
         rpcProtocolSet.remove(rpcProtocol);
         connectedServerNodes.remove(rpcProtocol);
-        LOG.info("Remove one connection, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
+        LOGGER.info("Remove one connection, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
     }
 
     public TrpcClientHandler chooseHandler(String serviceKey) throws Exception {
@@ -67,7 +69,7 @@ public class ConnectionManager {
                 waitingForHandler();
                 size = connectedServerNodes.values().size();
             } catch (InterruptedException e) {
-                LOG.error("Waiting for avaiable service is interrupted!", e);
+                LOGGER.error("Waiting for avaiable service is interrupted!", e);
             }
             count++;
             if (count >= limit) {
@@ -86,7 +88,7 @@ public class ConnectionManager {
     protected boolean waitingForHandler() throws InterruptedException {
         lock.lock();
         try {
-            LOG.warn("Waiting for available service");
+            LOGGER.warn("Waiting for available service");
             return connected.await(this.waitTimeout, TimeUnit.MILLISECONDS);
         } finally {
             lock.unlock();
@@ -123,7 +125,7 @@ public class ConnectionManager {
 
             for (RpcProtocol rpcProtocol : rpcProtocolSet) {
                 if (!tmpRpcProtocolSet.contains(rpcProtocol)) {
-                    LOG.info("Remove invalid service:{}", JSONObject.toJSONString(rpcProtocol));
+                    LOGGER.info("Remove invalid service:{}", JSONObject.toJSONString(rpcProtocol));
                     removeAndCloseHandler(rpcProtocol);
                 }
             }
@@ -146,13 +148,13 @@ public class ConnectionManager {
 
     private void connectServerNode(RpcProtocol rpcProtocol) {
         if (CollectionUtils.isEmpty(rpcProtocol.getServiceInfoList())) {
-            LOG.info("No service on node, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
+            LOGGER.info("No service on node, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
             return;
         }
         rpcProtocolSet.add(rpcProtocol);
-        LOG.info("New server node, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
+        LOGGER.info("New server node, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
         for (RpcServiceInfo rpcServiceInfo : rpcProtocol.getServiceInfoList()) {
-            LOG.info("New service info, name:{},version:{}", rpcServiceInfo.getServiceName(), rpcServiceInfo.getVersion());
+            LOGGER.info("New service info, name:{},version:{}", rpcServiceInfo.getServiceName(), rpcServiceInfo.getVersion());
         }
         final InetSocketAddress remotePeer = new InetSocketAddress(rpcProtocol.getHost(), rpcProtocol.getPort());
         //用netty客户端建立与Server的连接
@@ -169,13 +171,13 @@ public class ConnectionManager {
                     @Override
                     public void operationComplete(ChannelFuture future) throws Exception {
                         if (channelFuture.isSuccess()) {
-                            LOG.info("Successfully connect to remote server, remote peer={}", remotePeer);
+                            LOGGER.info("Successfully connect to remote server, remote peer={}", remotePeer);
                             TrpcClientHandler trpcClientHandler = channelFuture.channel().pipeline().get(TrpcClientHandler.class);
                             connectedServerNodes.put(rpcProtocol, trpcClientHandler);
                             trpcClientHandler.setRpcProtocol(rpcProtocol);
                             signalAvailableHandler();
                         } else {
-                            LOG.error("Can not connect to remote server, remote peer={}", remotePeer);
+                            LOGGER.error("Can not connect to remote server, remote peer={}", remotePeer);
                         }
                     }
                 });

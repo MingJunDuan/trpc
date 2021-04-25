@@ -1,13 +1,14 @@
 package com.netty.trpc.test.client;
 
 import com.netty.trpc.client.TrpcClient;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.test.BaseTest;
 import com.netty.trpc.test.api.IHelloService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
@@ -17,6 +18,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021-02-18 14:50
  */
 public class TrpcClientTest extends BaseTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcClientTest.class);
     private TrpcClient trpcClient;
 
     @Before
@@ -30,12 +32,12 @@ public class TrpcClientTest extends BaseTest {
         String jack = "Jack";
         String result = helloService.hello(jack);
         Assert.assertEquals("Hello "+jack,result);
-        LOG.info(result);
+        LOGGER.info(result);
 
         String tom = "Tom";
         result = helloService.hello(tom);
         Assert.assertEquals("Hello "+tom,result);
-        LOG.info(result);
+        LOGGER.info(result);
         TimeUnit.SECONDS.sleep(3);
     }
 

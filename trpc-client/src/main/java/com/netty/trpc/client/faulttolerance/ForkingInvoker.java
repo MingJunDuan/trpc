@@ -5,7 +5,6 @@ import com.netty.trpc.client.connect.ForkingConnectionManager;
 import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcFuture;
 import com.netty.trpc.common.codec.TrpcRequest;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

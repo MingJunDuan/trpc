@@ -1,7 +1,6 @@
 package com.netty.trpc.server.core;
 
 import com.netty.trpc.common.filter.TrpcFilter;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.util.ServiceUtil;
 import com.netty.trpc.common.util.threadpool.CallerRejectedExecutionHandler;
 import com.netty.trpc.common.util.threadpool.EagerThreadPoolExecutor;
@@ -13,6 +12,8 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021-02-08 14:27
  */
 public class TrpcNettyServer extends TrpcAbstractServer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcNettyServer.class);
     private String serverAddress;
     private ServiceRegistry serviceRegistry;
     private Map<String, Object> serviceMap = new HashMap<>();
@@ -36,7 +38,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
     }
 
     public void addService(String interfaceName, String version, Object serviceBean) {
-        LOG.info("Add service,interface:{},version:{},bean:{}", interfaceName, version, serviceBean);
+        LOGGER.info("Add service,interface:{},version:{},bean:{}", interfaceName, version, serviceBean);
         String serviceKey = ServiceUtil.serviceKey(interfaceName, version);
         serviceMap.put(serviceKey, serviceBean);
     }
@@ -54,7 +56,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workGroup).channel(NioServerSocketChannel.class)
                     .childHandler(new TrpcServerInitializer(serviceMap,filters, executor))
-                    //用于调整linux中accept queue的大小，在tcp三次连接时使用，参考：https://www.cnblogs.com/qiumingcheng/p/9492962.html
+                    //用于调整linux中accept queue的大小，在tcp三次连接时使用，参考：https://www.cnbLOGGERs.com/qiumingcheng/p/9492962.html
                     .option(ChannelOption.SO_BACKLOG, 128)
                     //so_linger的值是-1、0、非0值
                     //-1表示socket.close()方法立即返回，但OS底层会将发送缓冲区全部发送到对端
@@ -71,17 +73,17 @@ public class TrpcNettyServer extends TrpcAbstractServer {
             ChannelFuture future = bootstrap.bind(host, port).sync();
             //启动完成之后再进行服务注册
             serviceRegistry.registryService(host, port, serviceMap);
-            LOG.info("Server started on port {}", port);
+            LOGGER.info("Server started on port {}", port);
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            LOG.error(e);
+            LOGGER.error(e.getMessage(),e);
         } finally {
             try {
                 serviceRegistry.unregistryService();
                 workGroup.shutdownGracefully();
                 bossGroup.shutdownGracefully();
             } catch (Exception e) {
-                LOG.error(e);
+                LOGGER.error(e.getMessage(),e);
             }
         }
     }

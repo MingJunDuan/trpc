@@ -1,7 +1,6 @@
 package com.netty.trpc.test.client;
 
 import com.netty.trpc.client.TrpcClient;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
 import com.netty.trpc.test.BaseTest;
 import com.netty.trpc.test.api.IHelloService;
@@ -9,6 +8,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -22,6 +23,7 @@ import java.util.concurrent.atomic.LongAdder;
  * @date 2021-02-18 14:50
  */
 public class TrpcClientBenchmarkTest extends BaseTest {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcClientBenchmarkTest.class);
     private static final int threadNum = 16;
     private TrpcClient trpcClient;
     private final LongAdder count = new LongAdder();
@@ -68,12 +70,12 @@ public class TrpcClientBenchmarkTest extends BaseTest {
                 String jack = "Jack";
                 String result = helloService.hello(jack);
                 Assert.assertEquals("Hello "+jack,result);
-                LOG.info(result);
+                LOGGER.info(result);
 
                 String tom = "Tom";
                 result = helloService.hello(tom);
                 Assert.assertEquals("Hello "+tom,result);
-                LOG.info(result);
+                LOGGER.info(result);
                 count.add(1);
             }
             countDownLatch.countDown();

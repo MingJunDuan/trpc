@@ -1,16 +1,16 @@
 package com.netty.trpc.client.discovery;
 
 import com.alibaba.fastjson.JSONObject;
-import com.netty.trpc.client.connect.ConnectionManager;
 import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.common.constant.TrpcConstant;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.protocol.RpcProtocol;
 import com.netty.trpc.common.zookeeper.CuratorClient;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -22,6 +22,7 @@ import java.util.List;
  * @date 2021-02-18 10:31
  */
 public class ServiceDiscovery {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceDiscovery.class);
     private CuratorClient curatorClient;
 
     public ServiceDiscovery(String registryAddress) {
@@ -32,7 +33,7 @@ public class ServiceDiscovery {
     private void discoveryService() {
         try {
             //Get initial service ingo
-            LOG.info("Get initial service info");
+            LOGGER.info("Get initial service info");
             getServiceAndUpdateServer();
             //Add watch listener
             curatorClient.watchPathChildrenNode(TrpcConstant.ZK_REGISTRY_PATH, new PathChildrenCacheListener() {
@@ -42,7 +43,7 @@ public class ServiceDiscovery {
                     ChildData childData = pathChildrenCacheEvent.getData();
                     switch (type) {
                         case CONNECTION_RECONNECTED:
-                            LOG.info("Reconnected to zk, try to get latest service list");
+                            LOGGER.info("Reconnected to zk, try to get latest service list");
                             getServiceAndUpdateServer();
                             break;
                         case CHILD_ADDED:
@@ -56,14 +57,14 @@ public class ServiceDiscovery {
                 }
             });
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
     private void getServiceAndUpdateServer(ChildData childData, PathChildrenCacheEvent.Type type) {
         String path = childData.getPath();
         String data = new String(childData.getData(), StandardCharsets.UTF_8);
-        LOG.info("Child data updated, path:{},type:{},data:{},", path, type, data);
+        LOGGER.info("Child data updated, path:{},type:{},data:{},", path, type, data);
         RpcProtocol rpcProtocol = JSONObject.parseObject(data, RpcProtocol.class);
         updateConnectedServer(rpcProtocol, type);
     }
@@ -78,10 +79,10 @@ public class ServiceDiscovery {
                 RpcProtocol rpcProtocol = JSONObject.parseObject(str, RpcProtocol.class);
                 rpcProtocols.add(rpcProtocol);
             }
-            LOG.info("Service node data: {}", rpcProtocols);
+            LOGGER.info("Service node data: {}", rpcProtocols);
             updateConnectedServer(rpcProtocols);
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

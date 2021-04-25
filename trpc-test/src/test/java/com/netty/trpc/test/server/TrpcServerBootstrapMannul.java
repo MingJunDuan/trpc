@@ -1,12 +1,13 @@
 package com.netty.trpc.test.server;
 
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.server.TrpcServer;
 import com.netty.trpc.test.api.IHelloService;
 import com.netty.trpc.test.api.IPersonService;
 import com.netty.trpc.test.service.HelloServiceImpl;
 import com.netty.trpc.test.service.HelloServiceImpl2;
 import com.netty.trpc.test.service.PersonServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author DuanMingJun
@@ -14,6 +15,7 @@ import com.netty.trpc.test.service.PersonServiceImpl;
  * @date 2021-02-18 14:42
  */
 public class TrpcServerBootstrapMannul {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcServerBootstrapMannul.class);
 
     public static void main(String[] args){
         String serverAddress = "127.0.0.1:18878";
@@ -28,7 +30,7 @@ public class TrpcServerBootstrapMannul {
         try {
             rpcServer.start();
         } catch (Exception ex) {
-            LOG.error("Exception: {}", ex);
+            LOGGER.error("Exception: {}", ex);
         }
     }
 }

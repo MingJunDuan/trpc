@@ -1,17 +1,17 @@
 package com.netty.trpc.client;
 
-import com.netty.trpc.client.connect.ConnectionManager;
 import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.client.discovery.ServiceDiscovery;
 import com.netty.trpc.client.proxy.ObjectProxy;
 import com.netty.trpc.client.proxy.SerializableFunction;
 import com.netty.trpc.client.proxy.TrpcService;
 import com.netty.trpc.common.annotation.TrpcAutowired;
-import com.netty.trpc.common.log.LOG;
 import com.netty.trpc.common.util.threadpool.CallerRejectedExecutionHandler;
 import com.netty.trpc.common.util.threadpool.EagerThreadPoolExecutor;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
 import com.netty.trpc.common.util.threadpool.TaskQueue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021-02-18 9:46
  */
 public class TrpcClient implements ApplicationContextAware, DisposableBean {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrpcClient.class);
 
     private ServiceDiscovery serviceDiscovery;
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(1, 8, 600L, TimeUnit.SECONDS, new TaskQueue<>(1000),
@@ -77,7 +78,7 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
                         field.set(bean,createService(field.getType(),version));
                     }
                 } catch (IllegalAccessException e) {
-                    LOG.error(e);
+                    LOGGER.error(e.getMessage(),e);
                 }
             }
         }
