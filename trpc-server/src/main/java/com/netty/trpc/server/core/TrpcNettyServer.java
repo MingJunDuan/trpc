@@ -55,7 +55,6 @@ public class TrpcNettyServer extends TrpcAbstractServer {
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workGroup).channel(NioServerSocketChannel.class)
-                    .childHandler(new TrpcServerInitializer(serviceMap,filters, executor))
                     //用于调整linux中accept queue的大小，在tcp三次连接时使用，参考：https://www.cnbLOGGERs.com/qiumingcheng/p/9492962.html
                     .option(ChannelOption.SO_BACKLOG, 128)
                     //so_linger的值是-1、0、非0值
@@ -66,7 +65,9 @@ public class TrpcNettyServer extends TrpcAbstractServer {
                     //Nagle算法，设置为true关闭Nagle算法，Nagle算法会将多个小的tcp包合并为大的包之后一块发送，所以开启Nagle算法会有延迟
                     .option(ChannelOption.TCP_NODELAY, true)
                     //这是tcp层面的keepalive，不是应用层面的心跳，但是tcp层面的keepalive是有缺陷的，所以我们还需要应用层层面的心跳
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+                    .childOption(ChannelOption.SO_KEEPALIVE, true)
+                    .childHandler(new TrpcServerInitializer(serviceMap,filters, executor));
+
             String[] items = serverAddress.split(":");
             String host = items[0];
             int port = Integer.valueOf(items[1]);

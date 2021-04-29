@@ -2,7 +2,6 @@ package com.netty.trpc.server.core;
 
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
-import com.netty.trpc.common.log.LOG;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import org.slf4j.Logger;
