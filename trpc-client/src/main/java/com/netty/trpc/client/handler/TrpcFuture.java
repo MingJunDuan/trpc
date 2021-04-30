@@ -3,6 +3,7 @@ package com.netty.trpc.client.handler;
 import com.netty.trpc.client.TrpcClient;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
+import com.netty.trpc.common.util.SystemClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,14 +34,14 @@ public class TrpcFuture implements Future<Object> {
     public TrpcFuture(TrpcRequest request) {
         this.sync = new Sync();
         this.request = request;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = SystemClock.currentTimeMillis();
     }
 
     public void done(TrpcResponse response){
         this.response = response;
         sync.release(1);
         invokeCallbacks();
-        long responseTime = System.currentTimeMillis() - startTime;
+        long responseTime = SystemClock.currentTimeMillis() - startTime;
         if (responseTime>this.responseTimeThreshold){
             LOGGER.warn("Service response time is too slow. Request id="+response.getRequestId()+", response time="+responseTime+"ms");
         }else {
