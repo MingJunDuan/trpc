@@ -18,7 +18,7 @@ public class NamedThreadFactory implements ThreadFactory {
     protected final boolean mDaemon;
 
     protected final ThreadGroup mGroup;
-
+    //max priority is 10, it will get more cpu time
     protected final int priority;
 
     public NamedThreadFactory() {
