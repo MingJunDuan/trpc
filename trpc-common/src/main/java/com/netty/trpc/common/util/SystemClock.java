@@ -6,6 +6,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * Optimize System.currentTimeMillis() issue in high concurrent, why System.currentTimeMillis() is slow, because it
+ * call system kernel to get current time
+ *
  * @author DuanMingJun
  * @version 1.0
  * @date 2021-04-30 09:28
