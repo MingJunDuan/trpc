@@ -7,6 +7,8 @@ import io.netty.util.CharsetUtil;
 import java.util.UUID;
 
 /**
+ * https://www.jianshu.com/p/068f82d2cf2f
+ *
  * @author DuanMingJun
  * @version 1.0
  * @date 2021-05-11 17:07
