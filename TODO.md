@@ -2,6 +2,7 @@
 
 * Add fail-over support
 * 微内核+插件架构
+* 自定义协议，考虑传入文本，图片，多媒体，文件
 
 # Done list
 
