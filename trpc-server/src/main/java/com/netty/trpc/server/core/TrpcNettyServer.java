@@ -50,6 +50,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
         EagerThreadPoolExecutor executor = new EagerThreadPoolExecutor(coreNum, coreNum * 2, 60, TimeUnit.SECONDS, workQueue,
                 new NamedThreadFactory("server"), new CallerRejectedExecutionHandler());
         workQueue.setExecutor(executor);
+
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workGroup = new NioEventLoopGroup();
         try {
@@ -64,6 +65,8 @@ public class TrpcNettyServer extends TrpcAbstractServer {
                     .option(ChannelOption.SO_LINGER, -1)
                     //Nagle算法，设置为true关闭Nagle算法，Nagle算法会将多个小的tcp包合并为大的包之后一块发送，所以开启Nagle算法会有延迟
                     .option(ChannelOption.TCP_NODELAY, true)
+                    //复用time_wait的socket
+                    .option(ChannelOption.SO_REUSEADDR,true)
                     //这是tcp层面的keepalive，不是应用层面的心跳，但是tcp层面的keepalive是有缺陷的，所以我们还需要应用层层面的心跳
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .childHandler(new TrpcServerInitializer(serviceMap,filters, executor));
