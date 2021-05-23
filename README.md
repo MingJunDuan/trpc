@@ -13,7 +13,3 @@ Any contribution is welcome!
 ## Contact
 
 Email: `dmj1161859184@126.com`
-
-## Reference
-
-* https://github.com/luxiaoxun/NettyRpc
