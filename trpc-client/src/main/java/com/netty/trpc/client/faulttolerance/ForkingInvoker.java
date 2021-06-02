@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ForkingInvoker implements Invoker{
     private static final Logger LOGGER = LoggerFactory.getLogger(ForkingInvoker.class);
     /**
-     * Use daemon thread
+     * Use daemon thread,10优先级最高
      */
     private final ExecutorService executor = Executors.newCachedThreadPool(
             new NamedThreadFactory("Forking-cluster-timer",4, true));
