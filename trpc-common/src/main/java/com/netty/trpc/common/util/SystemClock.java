@@ -29,6 +29,8 @@ public class SystemClock {
         ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(runnable -> {
             Thread thread = new Thread(runnable, "SystemClock");
             thread.setDaemon(true);
+            //Need to have high priority
+            thread.setPriority(10);
             return thread;
         });
         scheduler.scheduleAtFixedRate(() -> now.set(System.currentTimeMillis()), period, period, TimeUnit.MILLISECONDS);
