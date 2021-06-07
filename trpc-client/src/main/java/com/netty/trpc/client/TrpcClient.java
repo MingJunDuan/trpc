@@ -1,5 +1,6 @@
 package com.netty.trpc.client;
 
+import com.netty.trpc.client.common.Holder;
 import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.client.discovery.ServiceDiscovery;
 import com.netty.trpc.client.proxy.ObjectProxy;
@@ -19,6 +20,8 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -28,7 +31,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class TrpcClient implements ApplicationContextAware, DisposableBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrpcClient.class);
-
+    private List<Object> serviceBeanCache = new LinkedList<>();
     private ServiceDiscovery serviceDiscovery;
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(1, 8, 600L, TimeUnit.SECONDS, new TaskQueue<>(1000),
             new NamedThreadFactory("TrpcClientEagerThread"), new CallerRejectedExecutionHandler());
@@ -37,21 +40,25 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
         this.serviceDiscovery = new ServiceDiscovery(registryAddress);
     }
 
-    public <T> T createService(Class<T> interfaceClass,String version){
-        return (T)Proxy.newProxyInstance(interfaceClass.getClassLoader(),
-                new Class<?>[]{interfaceClass},
-                new ObjectProxy<T>(interfaceClass,version));
+    public <T> T createService(Class<T> interfaceClass, String version) {
+        T serviceBean = Holder.getServiceBean(interfaceClass, version);
+        if (serviceBean == null) {
+            Object instance = Proxy.newProxyInstance(interfaceClass.getClassLoader(),
+                    new Class<?>[]{interfaceClass}, new ObjectProxy<T>(interfaceClass, version));
+            Holder.addServiceBean(interfaceClass, version, instance);
+        }
+        return Holder.getServiceBean(interfaceClass, version);
     }
 
-    public <T> TrpcService<T, SerializableFunction<T>> createAsyncService(Class<T> interfaces, String version){
-        return new ObjectProxy<T>(interfaces,version);
+    public <T> TrpcService<T, SerializableFunction<T>> createAsyncService(Class<T> interfaces, String version) {
+        return new ObjectProxy<T>(interfaces, version);
     }
 
-    public static void submit(Runnable runnable){
+    public static void submit(Runnable runnable) {
         threadPoolExecutor.submit(runnable);
     }
 
-    public void stop(){
+    public void stop() {
         threadPoolExecutor.shutdown();
         serviceDiscovery.stop();
         ConnectionManagerFactory.getConnectionManager().stop();
@@ -72,13 +79,13 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
             for (Field field : fields) {
                 try {
                     TrpcAutowired trpcAutowired = field.getAnnotation(TrpcAutowired.class);
-                    if (trpcAutowired!=null){
+                    if (trpcAutowired != null) {
                         String version = trpcAutowired.version();
                         field.setAccessible(true);
-                        field.set(bean,createService(field.getType(),version));
+                        field.set(bean, createService(field.getType(), version));
                     }
                 } catch (IllegalAccessException e) {
-                    LOGGER.error(e.getMessage(),e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }
