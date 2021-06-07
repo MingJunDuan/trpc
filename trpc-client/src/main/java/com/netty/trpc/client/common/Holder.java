@@ -47,7 +47,8 @@ public class Holder {
 
         @Override
         public int hashCode() {
-            return this.interfaceNames.hashCode() ^ this.version.hashCode();
+            int hashCode = this.interfaceNames.hashCode() ^ this.version.hashCode();
+            return hashCode ^ (hashCode>>>16);
         }
     }
 
