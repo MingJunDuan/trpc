@@ -20,8 +20,6 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -31,7 +29,6 @@ import java.util.concurrent.TimeUnit;
  */
 public class TrpcClient implements ApplicationContextAware, DisposableBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrpcClient.class);
-    private List<Object> serviceBeanCache = new LinkedList<>();
     private ServiceDiscovery serviceDiscovery;
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(1, 8, 600L, TimeUnit.SECONDS, new TaskQueue<>(1000),
             new NamedThreadFactory("TrpcClientEagerThread"), new CallerRejectedExecutionHandler());
