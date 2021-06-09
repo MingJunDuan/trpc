@@ -4,6 +4,7 @@ import com.netty.trpc.common.codec.PingPongRequest;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
 import com.netty.trpc.common.filter.TrpcFilter;
+import com.netty.trpc.common.util.MethodUtils;
 import com.netty.trpc.common.util.ServiceUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -12,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -104,9 +104,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
         String methodName = trpcRequest.getMethodName();
         Class<?>[] parameterTypes = trpcRequest.getParameterTypes();
         Object[] parameters = trpcRequest.getParameters();
-        Method method = beanClass.getMethod(methodName, parameterTypes);
-        method.setAccessible(true);
-        return method.invoke(serviceBean, parameters);
+        return MethodUtils.invokeMethod(serviceBean, beanClass, methodName, parameterTypes, parameters);
     }
 
     @Override
