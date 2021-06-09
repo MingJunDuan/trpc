@@ -17,7 +17,7 @@ public class Holder {
     public static <T> T getServiceBean(Class<T> interfaceName, String version) {
         Object serviceBean = cache.get(new Tuple2(interfaceName, version));
         if (serviceBean != null) {
-            return (T) serviceBean;
+            return interfaceName.cast(serviceBean);
         }
         return null;
     }
