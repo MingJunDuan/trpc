@@ -11,3 +11,10 @@
 * Add protostuff serialzier support
 * Add client service interface integrate with spring 
 * 调研Zookeeper事件变更会不会主动推送变更内容
+
+
+service+version作为key，之后value是ip和port
+    来做服务发现，放弃之前zk上使用的注册所有url信息
+
+nacos上使用临时节点模式
+而zk上则需要手动删除?也有临时模式的，需要临时有序模式吗? 
