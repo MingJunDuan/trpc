@@ -21,3 +21,8 @@ nacos上使用临时节点模式
 而zk上则需要手动删除?也有临时模式的，需要临时有序模式吗? 
 
 可以加上链路追踪的，接入PingCat
+
+# Dubbo问题记录
+
+URL是什么，一般的都是有request和response的bean来封装请求和返回数据，但是dubbo中的URL是什么
+
