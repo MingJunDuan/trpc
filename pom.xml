@@ -13,6 +13,7 @@
         <module>trpc-client</module>
         <module>trpc-server</module>
         <module>trpc-test</module>
+        <module>trpc-dependencies</module>
     </modules>
 
     <name>trpc</name>
