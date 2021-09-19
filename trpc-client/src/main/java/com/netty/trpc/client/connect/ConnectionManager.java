@@ -53,7 +53,9 @@ public class ConnectionManager {
 
     ConnectionManager() {
         loadBalance = new TrpcLoadBalanceRoundRobin();
-        threadPoolExecutor.prestartAllCoreThreads();
+
+        //FIX ME 打开会有问题，待解决
+        //threadPoolExecutor.prestartAllCoreThreads();
     }
 
     public void removeHandler(RpcProtocol rpcProtocol) {
