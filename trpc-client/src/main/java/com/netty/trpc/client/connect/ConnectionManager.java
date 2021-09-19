@@ -202,16 +202,16 @@ public class ConnectionManager {
 
     public void stop() {
         isRunning = false;
-        Iterator<RpcProtocol> iterator = rpcProtocolSet.iterator();
-        while (iterator.hasNext()){
-            RpcProtocol rpcProtocol = iterator.next();
+        for (RpcProtocol rpcProtocol : rpcProtocolSet) {
             TrpcClientHandler handler = connectedServerNodes.get(rpcProtocol);
             if (handler != null) {
                 handler.close();
             }
             connectedServerNodes.remove(rpcProtocol);
-            iterator.remove();
+            //CopyOnWriteArraySet support remove in for-loop
+            rpcProtocolSet.remove(rpcProtocol);
         }
+
         signalAvailableHandler();
         threadPoolExecutor.shutdown();
         eventLoopGroup.shutdownGracefully();

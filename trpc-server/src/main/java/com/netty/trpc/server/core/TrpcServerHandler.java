@@ -1,21 +1,23 @@
 package com.netty.trpc.server.core;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import com.netty.trpc.common.codec.PingPongRequest;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
 import com.netty.trpc.common.filter.TrpcFilter;
 import com.netty.trpc.common.util.MethodUtils;
 import com.netty.trpc.common.util.ServiceUtil;
+import com.netty.trpc.common.util.SystemClock;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @author DuanMingJun
@@ -44,10 +46,11 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
             @Override
             public void run() {
                 LOGGER.info("Service request:{}", trpcRequest.getRequestId());
+                long startTime = SystemClock.currentTimeMillis();
                 TrpcResponse response = new TrpcResponse();
                 response.setRequestId(trpcRequest.getRequestId());
                 Exception ex = null;
-                if (applyPreFilter(trpcRequest)){
+                if (applyPreFilter(trpcRequest)) {
                     try {
                         Object result = doHandle(trpcRequest);
                         response.setResult(result);
@@ -55,17 +58,17 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
                         String errorMsg = ((InvocationTargetException) e).getTargetException().getMessage();
                         response.setError(errorMsg);
                         ex = e;
-                        LOGGER.error(e.getMessage(),e);
+                        LOGGER.error(e.getMessage(), e);
                     }
-                    response=applyPostFilter(trpcRequest, response, ex);
+                    response = applyPostFilter(trpcRequest, response, ex);
                 }
-                context.writeAndFlush(response).addListener(new CustomChannelFutureListener(trpcRequest,response,ex));
+                context.writeAndFlush(response).addListener(new CustomChannelFutureListener(trpcRequest, response, ex, startTime));
             }
         });
     }
 
     private boolean applyPreFilter(TrpcRequest trpcRequest) {
-        if (filters==null||filters.isEmpty()){
+        if (filters == null || filters.isEmpty()) {
             return true;
         }
         for (int i = 0; i < filters.size(); i++) {
@@ -79,17 +82,18 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
     }
 
     private TrpcResponse applyPostFilter(TrpcRequest trpcRequest, TrpcResponse response, Throwable throwable) {
-        if (filters==null||filters.isEmpty()){
+        if (filters == null || filters.isEmpty()) {
             return response;
         }
-        TrpcResponse res=response;
+        TrpcResponse res = response;
         for (int i = filters.size() - 1; i >= 0; i--) {
-            res=filters.get(i).postFilter(trpcRequest, res, throwable);
+            res = filters.get(i).postFilter(trpcRequest, res, throwable);
         }
         return res;
     }
 
-    private Object doHandle(TrpcRequest trpcRequest) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    private Object doHandle(TrpcRequest trpcRequest) throws NoSuchMethodException, IllegalAccessException,
+            InvocationTargetException, ClassNotFoundException {
         String className = trpcRequest.getInterfaceName();
         String version = trpcRequest.getVersion();
         String serviceKey = ServiceUtil.serviceKey(className, version);
@@ -102,9 +106,22 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
 
         Class<?> beanClass = serviceBean.getClass();
         String methodName = trpcRequest.getMethodName();
-        Class<?>[] parameterTypes = trpcRequest.getParameterTypes();
+        Class<?>[] parameterTypes = getParameterTypes(trpcRequest);
         Object[] parameters = trpcRequest.getParameters();
         return MethodUtils.invokeMethod(serviceBean, beanClass, methodName, parameterTypes, parameters);
+    }
+
+    private Class<?>[] getParameterTypes(TrpcRequest trpcRequest) throws ClassNotFoundException {
+        if (trpcRequest.isGeneric()) {
+            String[] list = trpcRequest.getParameterTypeStrList();
+            ClassLoader classLoader = trpcRequest.getClass().getClassLoader();
+            Class<?>[] parameterTypes = new Class[list.length];
+            for (int i = 0; i < list.length; i++) {
+                parameterTypes[i] = classLoader.loadClass(list[i]);
+            }
+            return parameterTypes;
+        }
+        return trpcRequest.getParameterTypes();
     }
 
     @Override

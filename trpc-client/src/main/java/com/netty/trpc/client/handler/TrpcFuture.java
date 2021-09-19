@@ -1,12 +1,5 @@
 package com.netty.trpc.client.handler;
 
-import com.netty.trpc.client.TrpcClient;
-import com.netty.trpc.common.codec.TrpcRequest;
-import com.netty.trpc.common.codec.TrpcResponse;
-import com.netty.trpc.common.util.SystemClock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -15,6 +8,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.ReentrantLock;
+
+import com.netty.trpc.client.TrpcClient;
+import com.netty.trpc.common.codec.TrpcRequest;
+import com.netty.trpc.common.codec.TrpcResponse;
+import com.netty.trpc.common.util.SystemClock;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author DuanMingJun
@@ -37,15 +38,15 @@ public class TrpcFuture implements Future<Object> {
         this.startTime = SystemClock.currentTimeMillis();
     }
 
-    public void done(TrpcResponse response){
+    public void done(TrpcResponse response) {
         this.response = response;
         sync.release(1);
         invokeCallbacks();
         long responseTime = SystemClock.currentTimeMillis() - startTime;
-        if (responseTime>this.responseTimeThreshold){
-            LOGGER.warn("Service response time is too slow. Request id="+response.getRequestId()+", response time="+responseTime+"ms");
-        }else {
-            LOGGER.info("Service response time is {}ms",responseTime);
+        if (responseTime > this.responseTimeThreshold) {
+            LOGGER.warn("Service response time is too slow. Request id=" + response.getRequestId() + ", response time=" + responseTime + "ms");
+        } else {
+            LOGGER.info("Service response time, requestId:{}, consume: {}ms", request.getRequestId(), responseTime);
         }
     }
 
@@ -69,7 +70,7 @@ public class TrpcFuture implements Future<Object> {
             for (AsyncTrpcCallBack callback : pendingCallbacks) {
                 doCallback(callback);
             }
-        }finally {
+        } finally {
             lock.unlock();
         }
     }
@@ -79,9 +80,9 @@ public class TrpcFuture implements Future<Object> {
         TrpcClient.submit(new Runnable() {
             @Override
             public void run() {
-                if (response.isError()){
-                    callback.fail(new RuntimeException("Response error,"+response.getError()));
-                }else {
+                if (response.isError()) {
+                    callback.fail(new RuntimeException("Response error," + response.getError()));
+                } else {
                     callback.success(response.getResult());
                 }
             }
@@ -106,18 +107,18 @@ public class TrpcFuture implements Future<Object> {
     @Override
     public Object get() throws InterruptedException, ExecutionException {
         sync.acquire(1);
-        if (this.response!=null){
+        if (this.response != null) {
             return this.response.getResult();
-        }else {
+        } else {
             return null;
         }
     }
 
     public TrpcResponse getResponse() throws InterruptedException, ExecutionException {
         sync.acquire(1);
-        if (this.response!=null){
+        if (this.response != null) {
             return this.response;
-        }else {
+        } else {
             return null;
         }
     }
@@ -125,37 +126,37 @@ public class TrpcFuture implements Future<Object> {
     @Override
     public Object get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
         boolean success = sync.tryAcquireNanos(1, unit.toNanos(timeout));
-        if (success){
-            if (this.response!=null){
+        if (success) {
+            if (this.response != null) {
                 return this.response.getResult();
-            }else {
+            } else {
                 return null;
             }
         }
-        throw new RuntimeException("Timeout exception, request id: "+request.getRequestId()+", request class name: "+request.getInterfaceName()+
-                ", method: "+request.getMethodName()+", version: "+request.getVersion());
+        throw new RuntimeException("Timeout exception, request id: " + request.getRequestId() + ", request class name: " + request.getInterfaceName() +
+                ", method: " + request.getMethodName() + ", version: " + request.getVersion());
     }
 
-    static class Sync extends AbstractQueuedSynchronizer{
-        private final int done=1;
-        private final int pending=0;
+    static class Sync extends AbstractQueuedSynchronizer {
+        private final int done = 1;
+        private final int pending = 0;
 
         @Override
         protected boolean tryAcquire(int arg) {
-            return getState()==done;
+            return getState() == done;
         }
 
         @Override
         protected boolean tryRelease(int arg) {
-            if (getState()==pending){
-                return compareAndSetState(pending,done);
-            }else {
+            if (getState() == pending) {
+                return compareAndSetState(pending, done);
+            } else {
                 return true;
             }
         }
 
-        protected boolean isDone(){
-            return getState()==done;
+        protected boolean isDone() {
+            return getState() == done;
         }
     }
 }

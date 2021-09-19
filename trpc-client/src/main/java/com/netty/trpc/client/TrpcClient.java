@@ -1,8 +1,16 @@
 package com.netty.trpc.client;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
+import java.util.concurrent.TimeUnit;
+
 import com.netty.trpc.client.common.Holder;
 import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.client.discovery.ServiceDiscovery;
+import com.netty.trpc.client.genericinvoke.GenericConfig;
+import com.netty.trpc.client.genericinvoke.GenericReference;
+import com.netty.trpc.client.proxy.GenericObjectProxy;
 import com.netty.trpc.client.proxy.ObjectProxy;
 import com.netty.trpc.client.proxy.SerializableFunction;
 import com.netty.trpc.client.proxy.TrpcService;
@@ -11,16 +19,14 @@ import com.netty.trpc.common.util.threadpool.CallerRejectedExecutionHandler;
 import com.netty.trpc.common.util.threadpool.EagerThreadPoolExecutor;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
 import com.netty.trpc.common.util.threadpool.TaskQueue;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Proxy;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author DuanMingJun
@@ -29,19 +35,32 @@ import java.util.concurrent.TimeUnit;
  */
 public class TrpcClient implements ApplicationContextAware, DisposableBean {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrpcClient.class);
-    private ServiceDiscovery serviceDiscovery;
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(1, 8, 600L, TimeUnit.SECONDS, new TaskQueue<>(1000),
             new NamedThreadFactory("TrpcClientEagerThread"), new CallerRejectedExecutionHandler());
+    private ServiceDiscovery serviceDiscovery;
+    private GenericReference genericReference;
 
     public TrpcClient(String registryAddress) {
         this.serviceDiscovery = new ServiceDiscovery(registryAddress);
     }
 
+    public static void submit(Runnable runnable) {
+        threadPoolExecutor.submit(runnable);
+    }
+
     public <T> T createService(Class<T> interfaceClass, String version) {
         T serviceBean = Holder.getServiceBean(interfaceClass, version);
         if (serviceBean == null) {
+            InvocationHandler invocationHandler = null;
+            if (GenericConfig.class.isAssignableFrom(interfaceClass) ){
+                GenericObjectProxy<T> genericObjectProxy = new GenericObjectProxy<>(interfaceClass, version);
+                genericObjectProxy.setGenericReference(genericReference);
+                invocationHandler = genericObjectProxy;
+            }else {
+                invocationHandler = new ObjectProxy<T>(interfaceClass, version);
+            }
             Object instance = Proxy.newProxyInstance(interfaceClass.getClassLoader(),
-                    new Class<?>[]{interfaceClass}, new ObjectProxy<T>(interfaceClass, version));
+                    new Class<?>[]{interfaceClass}, invocationHandler);
             Holder.addServiceBean(interfaceClass, version, instance);
         }
         return Holder.getServiceBean(interfaceClass, version);
@@ -49,10 +68,6 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
 
     public <T> TrpcService<T, SerializableFunction<T>> createAsyncService(Class<T> interfaces, String version) {
         return new ObjectProxy<T>(interfaces, version);
-    }
-
-    public static void submit(Runnable runnable) {
-        threadPoolExecutor.submit(runnable);
     }
 
     public void stop() {
@@ -86,5 +101,9 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
                 }
             }
         }
+    }
+
+    public void setGenericReference(GenericReference genericReference) {
+        this.genericReference = genericReference;
     }
 }

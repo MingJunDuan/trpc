@@ -1,5 +1,9 @@
 package com.netty.trpc.client.proxy;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.UUID;
+
 import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.client.faulttolerance.FailBackInvoker;
 import com.netty.trpc.client.faulttolerance.Invoker;
@@ -7,10 +11,6 @@ import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcFuture;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.util.ServiceUtil;
-
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.util.UUID;
 
 /**
  * @author DuanMingJun
@@ -31,7 +31,7 @@ public class ObjectProxy<T> implements InvocationHandler,TrpcService<T,Serializa
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Class<?> declaringClass = method.getDeclaringClass();
         if (Object.class==declaringClass){
-            String name = method.getName();
+            String name = getMethodName(method);
             if ("equals".equals(name)){
                 return proxy==args[0];
             }else if ("hashCode".equals(name)){
@@ -45,16 +45,37 @@ public class ObjectProxy<T> implements InvocationHandler,TrpcService<T,Serializa
         }
         TrpcRequest request = new TrpcRequest();
         request.setRequestId(UUID.randomUUID().toString());
-        request.setInterfaceName(method.getDeclaringClass().getName());
-        request.setMethodName(method.getName());
-        request.setParameterTypes(method.getParameterTypes());
-        request.setParameters(args);
+        request.setInterfaceName(getInterfaceName(method));
+        request.setMethodName(getMethodName(method));
+        request.setParameterTypes(getParameterTypes(method));
+        request.setParameters(getArgs(args));
         request.setVersion(version);
 
-        String serviceKey = ServiceUtil.serviceKey(method.getDeclaringClass().getName(), version);
+        extend(request);
+
+        String serviceKey = ServiceUtil.serviceKey(getInterfaceName(method), version);
+
         Object result = invoker.invoke(serviceKey, request);
         return result;
     }
+
+    protected Object[] getArgs(Object[] args) {
+        return args;
+    }
+
+    protected Class<?>[] getParameterTypes(Method method) {
+        return method.getParameterTypes();
+    }
+
+    protected String getMethodName(Method method) {
+        return method.getName();
+    }
+
+    protected String getInterfaceName(Method method) {
+        return method.getDeclaringClass().getName();
+    }
+
+    protected void extend(TrpcRequest request){ }
 
     @Override
     public TrpcFuture call(String funcName, Object... args) throws Exception {

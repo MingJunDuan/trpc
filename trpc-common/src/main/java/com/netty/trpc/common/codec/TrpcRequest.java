@@ -16,5 +16,9 @@ public class TrpcRequest implements Serializable {
     private String methodName;
     private String version;
     private Class<?>[] parameterTypes;
+
+    private boolean generic;
+    private String[] parameterTypeStrList;
+
     private Object[] parameters;
 }

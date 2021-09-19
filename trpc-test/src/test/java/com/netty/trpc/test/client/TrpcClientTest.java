@@ -50,9 +50,10 @@ public class TrpcClientTest extends BaseTest {
     public void test_personService() throws InterruptedException {
         IPersonService helloService = trpcClient.createService(IPersonService.class, "1.2");
         String jack = "Jack";
-        List<Person> personList = helloService.callPerson(jack, 3);
-
-        LOGGER.info(personList.toString());
+        for (int i = 0; i < 10; i++) {
+            List<Person> personList = helloService.callPerson(jack, 3);
+            LOGGER.info(personList.toString());
+        }
     }
 
     @After
