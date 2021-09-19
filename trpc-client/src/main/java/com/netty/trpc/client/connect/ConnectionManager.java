@@ -1,5 +1,16 @@
 package com.netty.trpc.client.connect;
 
+import java.net.InetSocketAddress;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
 import com.alibaba.fastjson.JSONObject;
 import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcClientInitializer;
@@ -18,20 +29,12 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
-import java.net.InetSocketAddress;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
+import org.springframework.util.CollectionUtils;
 
 /**
  * @author DuanMingJun
@@ -43,13 +46,13 @@ public class ConnectionManager {
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(4, 8, 600L, TimeUnit.SECONDS,
             new TaskQueue<>(1000), new NamedThreadFactory("ConnectionManager", 10), new CallerRejectedExecutionHandler());
     protected Map<RpcProtocol, TrpcClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
+    protected TrpcLoadBalance loadBalance;
+    protected volatile boolean isRunning = true;
     private CopyOnWriteArraySet<RpcProtocol> rpcProtocolSet = new CopyOnWriteArraySet<>();
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
     private ReentrantLock lock = new ReentrantLock();
     private Condition connected = lock.newCondition();
-    protected TrpcLoadBalance loadBalance;
     private long waitTimeout = 5_000;
-    protected volatile boolean isRunning = true;
 
     ConnectionManager() {
         loadBalance = new TrpcLoadBalanceRoundRobin();
@@ -199,13 +202,15 @@ public class ConnectionManager {
 
     public void stop() {
         isRunning = false;
-        for (RpcProtocol rpcProtocol : rpcProtocolSet) {
+        Iterator<RpcProtocol> iterator = rpcProtocolSet.iterator();
+        while (iterator.hasNext()){
+            RpcProtocol rpcProtocol = iterator.next();
             TrpcClientHandler handler = connectedServerNodes.get(rpcProtocol);
             if (handler != null) {
                 handler.close();
             }
             connectedServerNodes.remove(rpcProtocol);
-            rpcProtocolSet.remove(rpcProtocol);
+            iterator.remove();
         }
         signalAvailableHandler();
         threadPoolExecutor.shutdown();
