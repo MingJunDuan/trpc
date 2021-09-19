@@ -25,12 +25,12 @@
         <dependency>
             <groupId>com.netty.trpc</groupId>
             <artifactId>trpc-server</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.netty.trpc</groupId>
             <artifactId>trpc-client</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
