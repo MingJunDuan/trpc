@@ -45,7 +45,6 @@ public class TrpcClientHandler extends SimpleChannelInboundHandler<TrpcResponse>
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, TrpcResponse response) throws Exception {
         String requestId = response.getRequestId();
-        LOGGER.info("Receive response: {}",requestId);
         TrpcFuture trpcFuture = pendingRpc.get(requestId);
         if (trpcFuture!=null){
             pendingRpc.remove(requestId);
