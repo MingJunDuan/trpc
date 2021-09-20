@@ -27,6 +27,11 @@
         <dependencies>
             <dependency>
                 <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
                 <artifactId>trpc-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
