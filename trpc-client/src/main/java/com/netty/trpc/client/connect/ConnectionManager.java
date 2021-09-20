@@ -43,8 +43,9 @@ import org.springframework.util.CollectionUtils;
  */
 public class ConnectionManager {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectionManager.class);
+    private static TaskQueue taskQueue = new TaskQueue<>(1000);
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(4, 8, 600L, TimeUnit.SECONDS,
-            new TaskQueue<>(1000), new NamedThreadFactory("ConnectionManager", 10), new CallerRejectedExecutionHandler());
+            taskQueue, new NamedThreadFactory("ConnectionManager", 10), new CallerRejectedExecutionHandler());
     protected Map<RpcProtocol, TrpcClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
     protected TrpcLoadBalance loadBalance;
     protected volatile boolean isRunning = true;
@@ -54,11 +55,15 @@ public class ConnectionManager {
     private Condition connected = lock.newCondition();
     private long waitTimeout = 5_000;
 
+    static {
+        taskQueue.setExecutor(threadPoolExecutor);
+    }
+
     ConnectionManager() {
         loadBalance = new TrpcLoadBalanceRoundRobin();
 
-        //FIX ME 打开会有问题，待解决
-        //threadPoolExecutor.prestartAllCoreThreads();
+        threadPoolExecutor.prestartAllCoreThreads();
+        threadPoolExecutor.allowCoreThreadTimeOut(true);
     }
 
     public void removeHandler(RpcProtocol rpcProtocol) {
