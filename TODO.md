@@ -5,13 +5,14 @@
 * 自定义协议，考虑传入文本，图片，多媒体，文件
 * Dubbo中多协议是怎么做的，怎么实现协议转换
 * 注册中心接入Nacos、还有实现multicast实现广播
-* 泛化调用的实现
+* 服务预热
 
 # Done list
 
 * Add protostuff serialzier support
 * Add client service interface integrate with spring 
 * 调研Zookeeper事件变更会不会主动推送变更内容
+* 泛化调用的实现
 
 
 service+version作为key，之后value是ip和port
