@@ -17,7 +17,13 @@ Email: `dmj1161859184@126.com`
 
 ## 泛化调用
 
+泛化调用实现方式有俩种：
 
+1.客户端框架编译出要调用的类，获取Class然后传到服务端
+
+2.客户端只是带上String类型的类名、参数类型到服务端，服务端再通过ClassLoader进行load，然后进行反射调用
+
+如何使用：
 ```bash
 public interface IPersonService {
 
