@@ -62,7 +62,13 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
                     }
                     response = applyPostFilter(trpcRequest, response, ex);
                 }
-                context.writeAndFlush(response).addListener(new CustomChannelFutureListener(trpcRequest, response, ex, startTime));
+
+                if (context.channel().isActive()&&context.channel().isWritable()) {
+                    CustomChannelFutureListener listener = new CustomChannelFutureListener(trpcRequest, response, ex, startTime);
+                    context.channel().writeAndFlush(response).addListener(listener);
+                }else {
+                    LOGGER.error("Message dropped because channel is unwritable!");
+                }
             }
         });
     }

@@ -71,8 +71,6 @@ public class TrpcNettyServer extends TrpcAbstractServer {
                     //这是tcp层面的keepalive，不是应用层面的心跳，但是tcp层面的keepalive是有缺陷的，所以我们还需要应用层层面的心跳
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK,new WriteBufferWaterMark(1024*1024,1024*1024*8))
-                    //.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK,1024*1024*8)
-                    //.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK,1024*1024)
                     .childHandler(new TrpcServerInitializer(serviceMap,filters, executor));
 
             String[] items = serverAddress.split(":");
