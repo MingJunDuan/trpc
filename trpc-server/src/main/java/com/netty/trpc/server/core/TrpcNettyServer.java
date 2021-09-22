@@ -10,6 +10,7 @@ import com.netty.trpc.server.registry.ServiceRegistry;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.WriteBufferWaterMark;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.slf4j.Logger;
@@ -69,6 +70,9 @@ public class TrpcNettyServer extends TrpcAbstractServer {
                     .option(ChannelOption.SO_REUSEADDR,true)
                     //这是tcp层面的keepalive，不是应用层面的心跳，但是tcp层面的keepalive是有缺陷的，所以我们还需要应用层层面的心跳
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
+                    .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK,new WriteBufferWaterMark(1024*1024,1024*1024*8))
+                    //.childOption(ChannelOption.WRITE_BUFFER_HIGH_WATER_MARK,1024*1024*8)
+                    //.childOption(ChannelOption.WRITE_BUFFER_LOW_WATER_MARK,1024*1024)
                     .childHandler(new TrpcServerInitializer(serviceMap,filters, executor));
 
             String[] items = serverAddress.split(":");
