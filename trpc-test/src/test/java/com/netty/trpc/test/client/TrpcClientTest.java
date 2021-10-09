@@ -65,7 +65,7 @@ public class TrpcClientTest extends BaseTest {
         IPersonService helloService = trpcClient.createService(IPersonService.class, "1.2");
         String jack = "Jack";
         AtomicInteger count=new AtomicInteger(0);
-        int total=100000;
+        int total=1000;
         for (int i = 0; i < total; i++) {
             executor.submit(new CustomThread(helloService,jack+i,3,count));
         }

@@ -2,6 +2,7 @@ package com.netty.trpc.test.service;
 
 import java.io.Serializable;
 
+import io.protostuff.Tag;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -11,8 +12,14 @@ import lombok.ToString;
 @Setter
 public class Person implements Serializable {
     private static final long serialVersionUID = -3475626311941868983L;
+    @Tag(1)
     private String firstName;
+    @Tag(2)
     private String lastName;
+    @Tag(3)
+    private String card;
+    @Tag(4)
+    private String address;
 
     public Person() {
     }

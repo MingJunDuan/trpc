@@ -28,7 +28,9 @@ public class PersonServiceImpl implements IPersonService {
         List<Person> persons = new ArrayList<>(num);
         for (int i = 0; i < num; ++i) {
             String result = helloService.hello(name + i);
-            persons.add(new Person(Integer.toString(i), result));
+            Person person = new Person(Integer.toString(i), result);
+            person.setAddress(result);
+            persons.add(person);
         }
         return persons;
     }
