@@ -5,7 +5,7 @@ import com.netty.trpc.common.codec.TrpcDecoder;
 import com.netty.trpc.common.codec.TrpcEncoder;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
-import com.netty.trpc.common.serializer.protostuff.ProtostuffSerializer;
+import com.netty.trpc.common.serializer.dyuprotostuff.DyuProtostuffSerializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -23,7 +23,7 @@ public class TrpcClientInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ProtostuffSerializer serializer = new ProtostuffSerializer();
+        DyuProtostuffSerializer serializer = new DyuProtostuffSerializer();
         ChannelPipeline cp = ch.pipeline();
         cp.addLast(new IdleStateHandler(0,0, PingPongRequest.BEAT_INTERVAL, TimeUnit.SECONDS));
         cp.addLast(new TrpcEncoder(TrpcRequest.class,serializer));

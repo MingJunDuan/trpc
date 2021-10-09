@@ -1,4 +1,4 @@
-package com.netty.trpc.common.serializer.protostuff;
+package com.netty.trpc.common.serializer.dyuprotostuff;
 
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;
@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @version 1.0
  * @date 2021-02-08 13:11
  */
-public class ProtostuffSerializer implements Serializer {
+public class DyuProtostuffSerializer implements Serializer {
     private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();
 
     private <T> Schema<T> getSchema(Class<T> clazz) {

@@ -4,7 +4,7 @@ import com.netty.trpc.common.protocol.RpcProtocol;
 import com.netty.trpc.common.protocol.RpcServiceInfo;
 import com.netty.trpc.common.serializer.Serializer;
 import com.netty.trpc.common.serializer.hessian.Hessian2Serializer;
-import com.netty.trpc.common.serializer.protostuff.ProtostuffSerializer;
+import com.netty.trpc.common.serializer.dyuprotostuff.DyuProtostuffSerializer;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 public class ProtostuffHessian2SerializerBenchmarkTest {
     private static final int threadCount = 8;
-    private static Serializer protostuffSerializer = new ProtostuffSerializer();
+    private static Serializer protostuffSerializer = new DyuProtostuffSerializer();
     private static Serializer hessian2Serializer = new Hessian2Serializer();
     private static RpcProtocol projoBean = getPojoBean();
 
