@@ -73,6 +73,7 @@ public class TrpcClientTest extends BaseTest {
             Thread.yield();
         }
         executor.shutdownNow();
+        Assert.assertEquals(total,count.get());
     }
 
     @AllArgsConstructor
