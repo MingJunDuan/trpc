@@ -15,6 +15,7 @@
         <module>trpc-server</module>
         <module>trpc-test</module>
         <module>trpc-dependencies</module>
+        <module>trpc-registry-center</module>
     </modules>
 
     <name>trpc</name>
