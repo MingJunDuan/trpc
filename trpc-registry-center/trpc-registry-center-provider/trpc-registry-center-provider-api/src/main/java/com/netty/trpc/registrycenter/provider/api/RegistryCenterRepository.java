@@ -9,6 +9,8 @@ import com.netty.trpc.registrycenter.common.RegistryMetadata;
  */
 public interface RegistryCenterRepository {
 
+    void init(String serverList);
+
     /**
      * registry
      *

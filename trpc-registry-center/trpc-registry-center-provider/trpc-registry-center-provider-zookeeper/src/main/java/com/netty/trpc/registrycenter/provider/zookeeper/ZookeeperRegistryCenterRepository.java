@@ -23,8 +23,9 @@ public class ZookeeperRegistryCenterRepository implements RegistryCenterReposito
     private CuratorClient client;
     private List<String> pathList = new LinkedList<>();
 
-    public ZookeeperRegistryCenterRepository(String registryAddress){
-        this.client = new CuratorClient(registryAddress);
+    @Override
+    public void init(String serverList) {
+        this.client = new CuratorClient(serverList);
     }
 
     @Override
