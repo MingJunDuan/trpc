@@ -21,6 +21,7 @@
         <module>trpc-registry-center-provider/trpc-registry-center-provider-zookeeper</module>
         <module>trpc-registry-center-provider/trpc-registry-center-provider-nacos</module>
         <module>trpc-registry-center-provider/trpc-registry-center-provider-api</module>
+        <module>trpc-registry-center-consumer/trpc-registry-center-consumer-api</module>
     </modules>
 
     <properties>
