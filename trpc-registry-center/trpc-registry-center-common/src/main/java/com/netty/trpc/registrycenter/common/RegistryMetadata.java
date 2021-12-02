@@ -8,7 +8,9 @@ package com.netty.trpc.registrycenter.common;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 
 /**
  * @author dmj1161859184@126.com 2021-11-23 00:31
@@ -20,6 +22,7 @@ public class RegistryMetadata {
     private String host;
     private int port;
     private List<RpcServiceMetaInfo> serviceInfoList;
+    private Properties properties;
 
     public RegistryMetadata() {
     }

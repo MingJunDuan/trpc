@@ -1,5 +1,6 @@
 package com.netty.trpc.registrycenter.provider.api;
 
+import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
 
 /**
@@ -7,9 +8,9 @@ import com.netty.trpc.registrycenter.common.RegistryMetadata;
  * @version 1.0
  * @date 2021-12-01 12:23
  */
-public interface RegistryCenterRepository {
+public interface ProviderRegistryCenterRepository {
 
-    void init(String serverList);
+    void init(RegistryCenterMetadata metadata);
 
     /**
      * registry
