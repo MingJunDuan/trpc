@@ -21,6 +21,10 @@
   <dependencies>
     <dependency>
       <groupId>com.netty.trpc</groupId>
+      <artifactId>trpc-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.netty.trpc</groupId>
       <artifactId>trpc-registry-center-consumer-api</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
