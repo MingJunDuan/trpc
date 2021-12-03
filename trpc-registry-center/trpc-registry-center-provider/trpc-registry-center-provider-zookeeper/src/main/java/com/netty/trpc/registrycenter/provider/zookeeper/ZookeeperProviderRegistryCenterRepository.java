@@ -32,7 +32,7 @@ public class ZookeeperProviderRegistryCenterRepository implements ProviderRegist
     @Override
     public void registry(RegistryMetadata metadata) {
         byte[] bytes = JSONObject.toJSONString(metadata).getBytes(StandardCharsets.UTF_8);
-        String path = TrpcConstant.ZK_DATA_PATH + "-" + metadata.hashCode();
+        String path = TrpcConstant.ZK_DATA_PATH + "/" + metadata.getHost()+":"+metadata.getPort();
         try {
             client.createPathData(path,bytes);
             this.pathList.add(path);
