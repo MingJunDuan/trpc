@@ -5,6 +5,7 @@ import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.common.constant.TrpcConstant;
 import com.netty.trpc.common.protocol.RpcProtocol;
 import com.netty.trpc.common.zookeeper.CuratorClient;
+import com.netty.trpc.registrycenter.consumer.api.ServiceEventListener;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
@@ -23,6 +24,7 @@ import java.util.List;
  */
 public class ServiceDiscovery {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceDiscovery.class);
+    private ServiceEventListener serviceEventListener = new ServiceEventClientListener();
     private CuratorClient curatorClient;
 
     public ServiceDiscovery(String registryAddress) {
