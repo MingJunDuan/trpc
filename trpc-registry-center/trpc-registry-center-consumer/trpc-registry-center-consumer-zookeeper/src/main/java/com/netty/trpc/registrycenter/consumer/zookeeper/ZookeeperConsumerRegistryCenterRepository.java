@@ -5,6 +5,10 @@
  */
 package com.netty.trpc.registrycenter.consumer.zookeeper;
 
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.alibaba.fastjson.JSONObject;
 import com.netty.trpc.common.constant.TrpcConstant;
 import com.netty.trpc.common.zookeeper.CuratorClient;
@@ -12,16 +16,12 @@ import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
 import com.netty.trpc.registrycenter.consumer.api.ConsumerRegistryCenterRepository;
 import com.netty.trpc.registrycenter.consumer.api.ServiceEventListener;
+
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.imageio.spi.ServiceRegistry;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author dmj1161859184@126.com 2021-12-02 23:38
@@ -29,7 +29,7 @@ import java.util.List;
  * @since 1.0
  */
 public class ZookeeperConsumerRegistryCenterRepository implements ConsumerRegistryCenterRepository {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRegistry.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ZookeeperConsumerRegistryCenterRepository.class);
     private ServiceEventListener serviceEventListener;
     private CuratorClient curatorClient;
 
