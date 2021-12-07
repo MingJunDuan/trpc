@@ -2,7 +2,6 @@ package com.netty.trpc.client.connect;
 
 import java.net.InetSocketAddress;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,12 +15,12 @@ import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcClientInitializer;
 import com.netty.trpc.client.route.TrpcLoadBalance;
 import com.netty.trpc.client.route.impl.TrpcLoadBalanceRoundRobin;
-import com.netty.trpc.common.protocol.RpcProtocol;
-import com.netty.trpc.common.protocol.RpcServiceInfo;
 import com.netty.trpc.common.util.threadpool.CallerRejectedExecutionHandler;
 import com.netty.trpc.common.util.threadpool.EagerThreadPoolExecutor;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
 import com.netty.trpc.common.util.threadpool.TaskQueue;
+import com.netty.trpc.registrycenter.common.RegistryMetadata;
+import com.netty.trpc.registrycenter.common.RpcServiceMetaInfo;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -46,10 +45,10 @@ public class ConnectionManager {
     private static TaskQueue taskQueue = new TaskQueue<>(1000);
     private static EagerThreadPoolExecutor threadPoolExecutor = new EagerThreadPoolExecutor(4, 8, 600L, TimeUnit.SECONDS,
             taskQueue, new NamedThreadFactory("ConnectionManager", 10), new CallerRejectedExecutionHandler());
-    protected Map<RpcProtocol, TrpcClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
+    protected Map<RegistryMetadata, TrpcClientHandler> connectedServerNodes = new ConcurrentHashMap<>();
     protected TrpcLoadBalance loadBalance;
     protected volatile boolean isRunning = true;
-    private CopyOnWriteArraySet<RpcProtocol> rpcProtocolSet = new CopyOnWriteArraySet<>();
+    private CopyOnWriteArraySet<RegistryMetadata> rpcProtocolSet = new CopyOnWriteArraySet<>();
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
     private ReentrantLock lock = new ReentrantLock();
     private Condition connected = lock.newCondition();
@@ -66,7 +65,7 @@ public class ConnectionManager {
         threadPoolExecutor.allowCoreThreadTimeOut(true);
     }
 
-    public void removeHandler(RpcProtocol rpcProtocol) {
+    public void removeHandler(RegistryMetadata rpcProtocol) {
         rpcProtocolSet.remove(rpcProtocol);
         connectedServerNodes.remove(rpcProtocol);
         LOGGER.info("Remove one connection, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
@@ -87,7 +86,7 @@ public class ConnectionManager {
                 throw new Exception("Waiting for available service time out");
             }
         }
-        RpcProtocol rpcProtocol = loadBalance.route(serviceKey, connectedServerNodes);
+        RegistryMetadata rpcProtocol = loadBalance.route(serviceKey, connectedServerNodes);
         TrpcClientHandler trpcClientHandler = connectedServerNodes.get(rpcProtocol);
         if (trpcClientHandler != null) {
             return trpcClientHandler;
@@ -106,7 +105,7 @@ public class ConnectionManager {
         }
     }
 
-    public void updateConnectedServer(RpcProtocol rpcProtocol, PathChildrenCacheEvent.Type type) {
+    public void updateConnectedServer(RegistryMetadata rpcProtocol, PathChildrenCacheEvent.Type type) {
         if (rpcProtocol == null) {
             return;
         }
@@ -123,18 +122,18 @@ public class ConnectionManager {
         }
     }
 
-    public void updateConnectedServer(List<RpcProtocol> rpcProtocols) {
+    public void updateConnectedServer(List<RegistryMetadata> rpcProtocols) {
         if (rpcProtocols != null && rpcProtocols.size() > 0) {
-            HashSet<RpcProtocol> tmpRpcProtocolSet = new HashSet<>(rpcProtocols.size());
+            HashSet<RegistryMetadata> tmpRpcProtocolSet = new HashSet<>(rpcProtocols.size());
             tmpRpcProtocolSet.addAll(rpcProtocols);
 
-            for (RpcProtocol rpcProtocol : tmpRpcProtocolSet) {
+            for (RegistryMetadata rpcProtocol : tmpRpcProtocolSet) {
                 if (!rpcProtocolSet.contains(rpcProtocol)) {
                     connectServerNode(rpcProtocol);
                 }
             }
 
-            for (RpcProtocol rpcProtocol : rpcProtocolSet) {
+            for (RegistryMetadata rpcProtocol : rpcProtocolSet) {
                 if (!tmpRpcProtocolSet.contains(rpcProtocol)) {
                     LOGGER.info("Remove invalid service:{}", JSONObject.toJSONString(rpcProtocol));
                     removeAndCloseHandler(rpcProtocol);
@@ -142,13 +141,13 @@ public class ConnectionManager {
             }
         } else {
             //No available service
-            for (RpcProtocol rpcProtocol : rpcProtocolSet) {
+            for (RegistryMetadata rpcProtocol : rpcProtocolSet) {
                 removeAndCloseHandler(rpcProtocol);
             }
         }
     }
 
-    private void removeAndCloseHandler(RpcProtocol rpcProtocol) {
+    private void removeAndCloseHandler(RegistryMetadata rpcProtocol) {
         TrpcClientHandler handler = connectedServerNodes.get(rpcProtocol);
         if (handler != null) {
             handler.close();
@@ -157,14 +156,14 @@ public class ConnectionManager {
         rpcProtocolSet.remove(rpcProtocol);
     }
 
-    private void connectServerNode(RpcProtocol rpcProtocol) {
+    private void connectServerNode(RegistryMetadata rpcProtocol) {
         if (CollectionUtils.isEmpty(rpcProtocol.getServiceInfoList())) {
             LOGGER.info("No service on node, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
             return;
         }
         rpcProtocolSet.add(rpcProtocol);
         LOGGER.info("New server node, host:{},port:{}", rpcProtocol.getHost(), rpcProtocol.getPort());
-        for (RpcServiceInfo rpcServiceInfo : rpcProtocol.getServiceInfoList()) {
+        for (RpcServiceMetaInfo rpcServiceInfo : rpcProtocol.getServiceInfoList()) {
             LOGGER.info("New service info, name:{},version:{}", rpcServiceInfo.getServiceName(), rpcServiceInfo.getVersion());
         }
         final InetSocketAddress remotePeer = new InetSocketAddress(rpcProtocol.getHost(), rpcProtocol.getPort());
@@ -207,7 +206,7 @@ public class ConnectionManager {
 
     public void stop() {
         isRunning = false;
-        for (RpcProtocol rpcProtocol : rpcProtocolSet) {
+        for (RegistryMetadata rpcProtocol : rpcProtocolSet) {
             TrpcClientHandler handler = connectedServerNodes.get(rpcProtocol);
             if (handler != null) {
                 handler.close();

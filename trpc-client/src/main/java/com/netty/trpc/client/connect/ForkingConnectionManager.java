@@ -1,13 +1,14 @@
 package com.netty.trpc.client.connect;
 
-import com.netty.trpc.client.handler.TrpcClientHandler;
-import com.netty.trpc.client.route.impl.TrpcForkingLoadBalance;
-import com.netty.trpc.common.protocol.RpcProtocol;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.netty.trpc.client.handler.TrpcClientHandler;
+import com.netty.trpc.client.route.impl.TrpcForkingLoadBalance;
+import com.netty.trpc.registrycenter.common.RegistryMetadata;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author DuanMingJun
@@ -35,9 +36,9 @@ public class ForkingConnectionManager extends ConnectionManager {
                 throw new Exception("Waiting for available service time out");
             }
         }
-        List<RpcProtocol> rpcProtocols = loadBalance.routes(serviceKey, connectedServerNodes);
+        List<RegistryMetadata> rpcProtocols = loadBalance.routes(serviceKey, connectedServerNodes);
         List<TrpcClientHandler> clientHandlers = new ArrayList<>(rpcProtocols.size());
-        for (RpcProtocol rpcProtocol : rpcProtocols) {
+        for (RegistryMetadata rpcProtocol : rpcProtocols) {
             clientHandlers.add(connectedServerNodes.get(rpcProtocol));
         }
         if (!clientHandlers.isEmpty()) {

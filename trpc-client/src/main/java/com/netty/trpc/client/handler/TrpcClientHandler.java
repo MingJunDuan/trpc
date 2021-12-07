@@ -1,10 +1,13 @@
 package com.netty.trpc.client.handler;
 
+import java.net.SocketAddress;
+import java.util.concurrent.ConcurrentHashMap;
+
 import com.netty.trpc.client.connect.ConnectionManagerFactory;
 import com.netty.trpc.common.codec.PingPongRequest;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
-import com.netty.trpc.common.protocol.RpcProtocol;
+import com.netty.trpc.registrycenter.common.RegistryMetadata;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -12,11 +15,9 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.net.SocketAddress;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author DuanMingJun
@@ -28,7 +29,7 @@ public class TrpcClientHandler extends SimpleChannelInboundHandler<TrpcResponse>
     private ConcurrentHashMap<String,TrpcFuture> pendingRpc = new ConcurrentHashMap<>();
     private volatile Channel channel;
     private SocketAddress remotePeer;
-    private RpcProtocol rpcProtocol;
+    private RegistryMetadata rpcProtocol;
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
@@ -88,7 +89,7 @@ public class TrpcClientHandler extends SimpleChannelInboundHandler<TrpcResponse>
         channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }
 
-    public void setRpcProtocol(RpcProtocol rpcProtocol) {
+    public void setRpcProtocol(RegistryMetadata rpcProtocol) {
         this.rpcProtocol = rpcProtocol;
     }
 
