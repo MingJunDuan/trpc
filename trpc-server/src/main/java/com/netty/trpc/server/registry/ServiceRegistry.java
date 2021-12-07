@@ -24,6 +24,11 @@ public class ServiceRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRegistry.class);
     ProviderRegistryCenterRepository registryCenter;
 
+    public ServiceRegistry(RegistryCenterMetadata registryCenterMetadata){
+        registryCenter = new ZookeeperProviderRegistryCenterRepository();
+        registryCenter.init(registryCenterMetadata);
+    }
+
     public void registryService(String host, int port, Map<String,Object> serviceMap){
         Set<String> keySet = serviceMap.keySet();
         List<RpcServiceMetaInfo> serviceInfoList = new LinkedList<>();
@@ -41,8 +46,6 @@ public class ServiceRegistry {
         RegistryMetadata rpcProtocol = new RegistryMetadata(host, port);
         rpcProtocol.setServiceInfoList(serviceInfoList);
 
-        registryCenter = new ZookeeperProviderRegistryCenterRepository();
-        registryCenter.init(new RegistryCenterMetadata(rpcProtocol.getHost()+":"+rpcProtocol.getPort()));
         registryCenter.registry(rpcProtocol);
 
     }
