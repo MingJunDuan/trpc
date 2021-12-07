@@ -36,7 +36,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
 
     public TrpcNettyServer(String serverAddress,String registryAddress) {
         this.serverAddress = serverAddress;
-        this.serviceRegistry = new ServiceRegistry();
+        this.serviceRegistry = new ServiceRegistry(serverAddress);
     }
 
     public void addService(String interfaceName, String version, Object serviceBean) {

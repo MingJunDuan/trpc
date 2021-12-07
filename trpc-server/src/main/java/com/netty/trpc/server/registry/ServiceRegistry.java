@@ -24,9 +24,9 @@ public class ServiceRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRegistry.class);
     ProviderRegistryCenterRepository registryCenter;
 
-    public ServiceRegistry(RegistryCenterMetadata registryCenterMetadata){
+    public ServiceRegistry(String serverList){
         registryCenter = new ZookeeperProviderRegistryCenterRepository();
-        registryCenter.init(registryCenterMetadata);
+        registryCenter.init(new RegistryCenterMetadata(serverList));
     }
 
     public void registryService(String host, int port, Map<String,Object> serviceMap){
