@@ -8,6 +8,7 @@ package com.netty.trpc.registrycenter.common;
 import java.util.Properties;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @author dmj1161859184@126.com 2021-12-02 23:33
@@ -15,7 +16,12 @@ import lombok.Data;
  * @since 1.0
  */
 @Data
+@NoArgsConstructor
 public class RegistryCenterMetadata {
     private String serverList;
     private Properties properties;
+
+    public RegistryCenterMetadata(String serverList){
+        this.serverList = serverList;
+    }
 }

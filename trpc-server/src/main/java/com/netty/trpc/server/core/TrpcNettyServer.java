@@ -1,5 +1,10 @@
 package com.netty.trpc.server.core;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import com.netty.trpc.common.filter.TrpcFilter;
 import com.netty.trpc.common.util.ServiceUtil;
 import com.netty.trpc.common.util.threadpool.CallerRejectedExecutionHandler;
@@ -13,13 +18,9 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.WriteBufferWaterMark;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author DuanMingJun
@@ -35,7 +36,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
 
     public TrpcNettyServer(String serverAddress,String registryAddress) {
         this.serverAddress = serverAddress;
-        this.serviceRegistry = new ServiceRegistry(registryAddress);
+        this.serviceRegistry = new ServiceRegistry();
     }
 
     public void addService(String interfaceName, String version, Object serviceBean) {
@@ -78,6 +79,9 @@ public class TrpcNettyServer extends TrpcAbstractServer {
             int port = Integer.valueOf(items[1]);
             ChannelFuture future = bootstrap.bind(host, port).sync();
             //启动完成之后再进行服务注册
+
+
+
             serviceRegistry.registryService(host, port, serviceMap);
             LOGGER.info("Server started on port {}", port);
             future.channel().closeFuture().sync();
