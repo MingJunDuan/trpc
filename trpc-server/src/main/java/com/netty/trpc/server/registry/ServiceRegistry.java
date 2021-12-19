@@ -51,6 +51,6 @@ public class ServiceRegistry {
     }
 
     public void unregistryService() {
-        registryCenter.unregistry();
+        registryCenter.unregistry(null);
     }
 }
