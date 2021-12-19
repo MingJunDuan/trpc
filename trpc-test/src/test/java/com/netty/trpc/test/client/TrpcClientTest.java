@@ -38,7 +38,7 @@ public class TrpcClientTest extends BaseTest {
     @Test
     public void test() throws InterruptedException {
         IHelloService helloService = trpcClient.createService(IHelloService.class, "1.0");
-        String jack = "Jack";
+        String jack = "Jack2";
         String result = helloService.hello(jack);
         Assert.assertEquals("Hello " + jack, result);
         LOGGER.info(result);

@@ -1,6 +1,9 @@
 package com.netty.trpc.common.zookeeper;
 
+import java.util.List;
+
 import com.netty.trpc.common.constant.TrpcConstant;
+
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
@@ -11,8 +14,6 @@ import org.apache.curator.framework.state.ConnectionStateListener;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.Watcher;
-
-import java.util.List;
 
 /**
  * @author DuanMingJun
@@ -54,7 +55,7 @@ public class CuratorClient {
     }
 
     public String createPathData(String path, byte[] data) throws Exception {
-        return createPathData(path,data,CreateMode.EPHEMERAL_SEQUENTIAL);
+        return createPathData(path,data,CreateMode.EPHEMERAL);
     }
 
     public String createPathData(String path, byte[] data,CreateMode mode) throws Exception {

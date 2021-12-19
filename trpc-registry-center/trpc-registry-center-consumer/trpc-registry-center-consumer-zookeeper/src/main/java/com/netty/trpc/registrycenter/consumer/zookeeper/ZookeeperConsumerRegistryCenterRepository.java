@@ -65,10 +65,10 @@ public class ZookeeperConsumerRegistryCenterRepository implements ConsumerRegist
     }
 
     private void getRegistryMetadataAndPublishToListener() throws Exception {
-        List<String> nodeList = curatorClient.getChildren(TrpcConstant.ZK_REGISTRY_PATH);
+        List<String> nodeList = curatorClient.getChildren(TrpcConstant.ZK_DATA_PATH);
         List<RegistryMetadata> metadataArrayList = new ArrayList<>(nodeList.size());
         for (String node : nodeList) {
-            byte[] data = curatorClient.getData(TrpcConstant.ZK_REGISTRY_PATH + "/" + node);
+            byte[] data = curatorClient.getData(TrpcConstant.ZK_DATA_PATH + "/" + node);
             String str = new String(data, StandardCharsets.UTF_8);
             RegistryMetadata registryMetadata = JSONObject.parseObject(str, RegistryMetadata.class);
             metadataArrayList.add(registryMetadata);
