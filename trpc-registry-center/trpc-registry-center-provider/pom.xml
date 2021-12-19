@@ -12,7 +12,12 @@
     <artifactId>trpc-registry-center-provider</artifactId>
 
     <name>trpc-registry-center-provider</name>
-
+    <packaging>pom</packaging>
+    <modules>
+        <module>trpc-registry-center-provider-zookeeper</module>
+        <module>trpc-registry-center-provider-nacos</module>
+        <module>trpc-registry-center-provider-api</module>
+    </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

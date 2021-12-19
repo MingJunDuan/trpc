@@ -12,6 +12,12 @@
 
   <name>trpc-registry-center-consumer</name>
 
+  <packaging>pom</packaging>
+  <modules>
+    <module>trpc-registry-center-consumer-zookeeper</module>
+    <module>trpc-registry-center-consumer-api</module>
+  </modules>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
