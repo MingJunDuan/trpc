@@ -43,7 +43,7 @@ public class ZookeeperConsumerRegistryCenterRepository implements ConsumerRegist
     public void subscribe() {
         try {
             //Add watch listener
-            curatorClient.watchPathChildrenNode(TrpcConstant.ZK_REGISTRY_PATH, new PathChildrenCacheListener() {
+            curatorClient.watchPathChildrenNode(TrpcConstant.ZK_DATA_PATH, new PathChildrenCacheListener() {
                 @Override
                 public void childEvent(CuratorFramework curatorFramework, PathChildrenCacheEvent pathChildrenCacheEvent) throws Exception {
                     PathChildrenCacheEvent.Type type = pathChildrenCacheEvent.getType();

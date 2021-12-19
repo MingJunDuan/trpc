@@ -43,11 +43,13 @@ public class TrpcClientTest extends BaseTest {
         Assert.assertEquals("Hello " + jack, result);
         LOGGER.info(result);
 
-        String tom = "Tom";
-        result = helloService.hello(tom);
-        Assert.assertEquals("Hello " + tom, result);
-        LOGGER.info(result);
-        TimeUnit.SECONDS.sleep(3);
+        while (true) {
+            String tom = "Tom";
+            result = helloService.hello(tom);
+            Assert.assertEquals("Hello " + tom, result);
+            LOGGER.info(result);
+            TimeUnit.SECONDS.sleep(3);
+        }
     }
 
     @Test
