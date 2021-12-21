@@ -1,11 +1,14 @@
 package com.netty.trpc.common.serializer.hessian;
 
+import java.util.LinkedList;
+
 import com.netty.trpc.common.protocol.RpcProtocol;
+import com.netty.trpc.common.serializer.hessian.domain.EnumDomain;
+import com.netty.trpc.common.serializer.hessian.domain.TestEnum;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.LinkedList;
 
 /**
  * @author DuanMingJun
@@ -25,6 +28,15 @@ public class Hessian2SerializerTest {
         Hessian2Serializer serializer = new Hessian2Serializer();
         byte[] data = serializer.serialize(rpcProtocol);
         RpcProtocol result = serializer.deserialize(data, RpcProtocol.class);
+        LOGGER.info(result.toString());
+    }
+
+    @Test
+    public void test_enum(){
+        EnumDomain enumDomain = new EnumDomain("Test", TestEnum.TEST2);
+        Hessian2Serializer serializer = new Hessian2Serializer();
+        byte[] data = serializer.serialize(enumDomain);
+        EnumDomain result = serializer.deserialize(data, EnumDomain.class);
         LOGGER.info(result.toString());
     }
 
