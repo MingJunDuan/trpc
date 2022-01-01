@@ -21,6 +21,7 @@ service+version作为key，之后value是ip和port
 
 nacos上使用临时节点模式
 而zk上则需要手动删除?也有临时模式的，需要临时有序模式吗? 
+使用application name作为service name
 
 可以加上链路追踪的，接入PingCat
 
