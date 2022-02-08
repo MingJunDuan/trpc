@@ -26,6 +26,8 @@ nacos上使用临时节点模式
 
 (优先级降到)可以加上链路追踪的，接入PingCat
 
+最重要的是缔造有拓展性的框架，可以通过兼容nacos和zookeeper注册来检验
+
 # Dubbo问题记录
 
 URL是什么，一般的都是有request和response的bean来封装请求和返回数据，但是dubbo中的URL是什么
