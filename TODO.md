@@ -24,7 +24,7 @@ nacos上使用临时节点模式
 使用application name作为service name
 使用interface 作为service name
 
-可以加上链路追踪的，接入PingCat
+(优先级降到)可以加上链路追踪的，接入PingCat
 
 # Dubbo问题记录
 
