@@ -39,7 +39,7 @@ public class TrpcServerInitializer extends ChannelInitializer<SocketChannel> {
         ProtostuffIOSerializer serializer = new ProtostuffIOSerializer();
         ChannelPipeline pipeline = socketChannel.pipeline();
         pipeline.addLast(new IdleStateHandler(0,0,PingPongRequest.BEAT_TIMEOUT,TimeUnit.SECONDS));
-        //使用自定义协议
+        //TODO 使用自定义协议
         pipeline.addLast(new LengthFieldBasedFrameDecoder(65536,0,4,0,0));
         pipeline.addLast(new TrpcDecoder(TrpcRequest.class,serializer));
         pipeline.addLast(new TrpcEncoder(TrpcResponse.class,serializer));
