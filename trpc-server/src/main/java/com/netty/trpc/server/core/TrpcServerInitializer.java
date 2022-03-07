@@ -1,5 +1,10 @@
 package com.netty.trpc.server.core;
 
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import com.netty.trpc.common.codec.PingPongRequest;
 import com.netty.trpc.common.codec.TrpcDecoder;
 import com.netty.trpc.common.codec.TrpcEncoder;
@@ -12,11 +17,6 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
-
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author DuanMingJun
@@ -39,6 +39,7 @@ public class TrpcServerInitializer extends ChannelInitializer<SocketChannel> {
         ProtostuffIOSerializer serializer = new ProtostuffIOSerializer();
         ChannelPipeline pipeline = socketChannel.pipeline();
         pipeline.addLast(new IdleStateHandler(0,0,PingPongRequest.BEAT_TIMEOUT,TimeUnit.SECONDS));
+        //使用自定义协议
         pipeline.addLast(new LengthFieldBasedFrameDecoder(65536,0,4,0,0));
         pipeline.addLast(new TrpcDecoder(TrpcRequest.class,serializer));
         pipeline.addLast(new TrpcEncoder(TrpcResponse.class,serializer));
