@@ -24,11 +24,11 @@ import io.netty.handler.timeout.IdleStateHandler;
  * @date 2021-02-08 14:37
  */
 public class TrpcServerInitializer extends ChannelInitializer<SocketChannel> {
-    private Map<String,Object> handlerMap;
+    private Map<String, Object> handlerMap;
     private List<TrpcFilter> filters;
     private ThreadPoolExecutor executor;
 
-    public TrpcServerInitializer(Map<String, Object> handlerMap,List<TrpcFilter> filters, ThreadPoolExecutor executor) {
+    public TrpcServerInitializer(Map<String, Object> handlerMap, List<TrpcFilter> filters, ThreadPoolExecutor executor) {
         this.handlerMap = handlerMap;
         this.filters = filters;
         this.executor = executor;
@@ -38,11 +38,11 @@ public class TrpcServerInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ProtostuffIOSerializer serializer = new ProtostuffIOSerializer();
         ChannelPipeline pipeline = socketChannel.pipeline();
-        pipeline.addLast(new IdleStateHandler(0,0,PingPongRequest.BEAT_TIMEOUT,TimeUnit.SECONDS));
+        pipeline.addLast(new IdleStateHandler(30, 30, PingPongRequest.BEAT_INTERVAL, TimeUnit.SECONDS));
         //TODO 使用自定义协议
-        pipeline.addLast(new LengthFieldBasedFrameDecoder(65536,0,4,0,0));
-        pipeline.addLast(new TrpcDecoder(TrpcRequest.class,serializer));
-        pipeline.addLast(new TrpcEncoder(TrpcResponse.class,serializer));
-        pipeline.addLast(new TrpcServerHandler(handlerMap,filters,executor));
+        pipeline.addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0));
+        pipeline.addLast(new TrpcDecoder(TrpcRequest.class, serializer));
+        pipeline.addLast(new TrpcEncoder(TrpcResponse.class, serializer));
+        pipeline.addLast(new TrpcServerHandler(handlerMap, filters, executor));
     }
 }
