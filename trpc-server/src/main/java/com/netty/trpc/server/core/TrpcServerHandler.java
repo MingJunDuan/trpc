@@ -63,10 +63,10 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
                     response = applyPostFilter(trpcRequest, response, ex);
                 }
 
-                if (context.channel().isActive()&&context.channel().isWritable()) {
+                if (context.channel().isActive() && context.channel().isWritable()) {
                     CustomChannelFutureListener listener = new CustomChannelFutureListener(trpcRequest, response, ex, startTime);
                     context.channel().writeAndFlush(response).addListener(listener);
-                }else {
+                } else {
                     LOGGER.error("Message dropped because channel is unwritable!");
                 }
             }
@@ -132,7 +132,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        LOGGER.warn("server caught exception: {}", cause.getCause());
+        LOGGER.warn("server caught exception: {}", cause.getMessage(), cause);
         ctx.close();
     }
 
