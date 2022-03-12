@@ -15,6 +15,9 @@ Any contribution is welcome!
 Email: `dmj1161859184@126.com`
 
 
+## 环境
+JDK8+,Zookeeper3.6
+
 ## 泛化调用
 
 泛化调用实现方式有俩种：

@@ -14,7 +14,6 @@ import com.netty.trpc.common.filter.TrpcFilter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
 
 /**
@@ -37,7 +36,6 @@ public class TrpcServerInitializer extends ChannelInitializer<SocketChannel> {
     protected void initChannel(SocketChannel socketChannel) throws Exception {
         ChannelPipeline pipeline = socketChannel.pipeline();
         pipeline.addLast(new IdleStateHandler(30, 30, PingPongRequest.BEAT_INTERVAL, TimeUnit.SECONDS));
-        pipeline.addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0));
         pipeline.addLast(new TrpcDecoder(TrpcRequest.class));
         pipeline.addLast(new TrpcEncoder(TrpcResponse.class));
         pipeline.addLast(new TrpcServerHandler(handlerMap, filters, executor));
