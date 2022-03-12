@@ -1,14 +1,14 @@
 package com.netty.trpc.common.serializer.dyuprotostuff;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;
 import com.dyuproject.protostuff.Schema;
 import com.dyuproject.protostuff.runtime.RuntimeSchema;
 import com.netty.trpc.common.serializer.Serializer;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 /**
  * @author DuanMingJun
@@ -17,6 +17,7 @@ import java.util.function.Function;
  */
 public class DyuProtostuffSerializer implements Serializer {
     private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();
+    public static final DyuProtostuffSerializer instance = new DyuProtostuffSerializer();
 
     private <T> Schema<T> getSchema(Class<T> clazz) {
         return (Schema<T>) cachedSchema.computeIfAbsent(clazz, new Function<Class<?>, Schema<?>>() {
@@ -25,6 +26,11 @@ public class DyuProtostuffSerializer implements Serializer {
                 return RuntimeSchema.createFrom(clazz);
             }
         });
+    }
+
+    @Override
+    public short type() {
+        return 4;
     }
 
     @Override

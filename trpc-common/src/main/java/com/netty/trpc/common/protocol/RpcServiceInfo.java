@@ -1,10 +1,10 @@
 package com.netty.trpc.common.protocol;
 
+import java.io.Serializable;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 /**
  * @author DuanMingJun
@@ -17,4 +17,6 @@ import java.io.Serializable;
 public class RpcServiceInfo implements Serializable {
     private String serviceName;
     private String version;
+
+
 }

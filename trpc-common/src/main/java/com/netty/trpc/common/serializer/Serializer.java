@@ -6,6 +6,7 @@ package com.netty.trpc.common.serializer;
  * @date 2021-02-08 13:02
  */
 public interface Serializer {
+   short type();
 
    <T> byte[] serialize(T obj);
 

@@ -1,13 +1,23 @@
 package com.netty.trpc.common.codec;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.netty.trpc.common.serializer.Serializer;
+import com.netty.trpc.common.serializer.dyuprotostuff.DyuProtostuffSerializer;
+import com.netty.trpc.common.serializer.hessian.Hessian2Serializer;
+import com.netty.trpc.common.serializer.hessian.HessianSerializer;
+import com.netty.trpc.common.serializer.protostuff.ProtostuffIOSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import static com.netty.trpc.common.constant.TrpcConstant.MAGIC_NUMBER;
+import static com.netty.trpc.common.constant.TrpcConstant.TRPC_PROTOCOL_VERSION;
 
 /**
  * @author DuanMingJun
@@ -16,25 +26,44 @@ import java.util.List;
  */
 public class TrpcDecoder extends ByteToMessageDecoder {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrpcDecoder.class);
+    private static Map<Short, Serializer> serializerMap = new HashMap<>();
     private Class clazz;
-    private Serializer serializer;
 
-    public TrpcDecoder(Class clazz, Serializer serializer) {
+    public TrpcDecoder(Class clazz) {
         this.clazz = clazz;
-        this.serializer = serializer;
+        initSerializerMap();
+    }
+
+    private void initSerializerMap() {
+        serializerMap.put(ProtostuffIOSerializer.instance.type(), ProtostuffIOSerializer.instance);
+        serializerMap.put(HessianSerializer.instance.type(), HessianSerializer.instance);
+        serializerMap.put(Hessian2Serializer.instance.type(), Hessian2Serializer.instance);
+        serializerMap.put(DyuProtostuffSerializer.instance.type(), DyuProtostuffSerializer.instance);
     }
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf in, List<Object> out) throws Exception {
-        if (in.readableBytes() < 4) {
+        if (in.readableBytes() < 12) {
             return;
         }
         in.markReaderIndex();
+        int magicNumber = in.readInt();
+        if (MAGIC_NUMBER != magicNumber) {
+            in.resetReaderIndex();
+            return;
+        }
+        short version = in.readShort();
+        assert version==TRPC_PROTOCOL_VERSION;
+
+        short serializerAlgorithm = in.readShort();
+
         int dataLength = in.readInt();
         if (in.readableBytes() < dataLength) {
             in.resetReaderIndex();
             return;
         }
+        Serializer serializer = serializerMap.get(serializerAlgorithm);
+
         byte[] data = new byte[dataLength];
         in.readBytes(data);
         Object obj = null;

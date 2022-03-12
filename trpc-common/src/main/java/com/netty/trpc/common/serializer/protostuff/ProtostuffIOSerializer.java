@@ -21,6 +21,7 @@ import io.protostuff.runtime.RuntimeSchema;
  * @since 1.0
  */
 public class ProtostuffIOSerializer implements Serializer {
+    public static final ProtostuffIOSerializer instance=new ProtostuffIOSerializer();
     private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();
 
     private <T> Schema<T> getSchema(Class<T> clazz) {
@@ -30,6 +31,11 @@ public class ProtostuffIOSerializer implements Serializer {
                 return RuntimeSchema.getSchema(clazz);
             }
         });
+    }
+
+    @Override
+    public short type() {
+        return 0;
     }
 
     @Override

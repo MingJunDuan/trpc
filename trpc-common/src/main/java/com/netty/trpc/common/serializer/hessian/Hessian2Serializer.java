@@ -1,15 +1,16 @@
 package com.netty.trpc.common.serializer.hessian;
 
-import com.caucho.hessian.io.Hessian2Input;
-import com.caucho.hessian.io.Hessian2Output;
-import com.netty.trpc.common.serializer.Serializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
+
+import com.caucho.hessian.io.Hessian2Input;
+import com.caucho.hessian.io.Hessian2Output;
+import com.netty.trpc.common.serializer.Serializer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author DuanMingJun
@@ -18,6 +19,12 @@ import java.io.IOException;
  */
 public class Hessian2Serializer implements Serializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(Hessian2Serializer.class);
+    public static final Hessian2Serializer instance = new Hessian2Serializer();
+
+    @Override
+    public short type() {
+        return 1;
+    }
 
     @Override
     public <T> byte[] serialize(T obj) {
