@@ -10,10 +10,6 @@ A rpc framework based on Netty.
 
 Any contribution is welcome!
 
-## Contact
-
-Email: `dmj1161859184@126.com`
-
 
 ## 环境
 JDK8+,Zookeeper3.6
