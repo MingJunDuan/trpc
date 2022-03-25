@@ -34,7 +34,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
     private Map<String, Object> serviceMap = new HashMap<>();
     private List<TrpcFilter> filters;
 
-    public TrpcNettyServer(String serverAddress,String registryAddress) {
+    public TrpcNettyServer(String serverAddress, String registryAddress) {
         this.serverAddress = serverAddress;
         this.serviceRegistry = new ServiceRegistry(registryAddress);
     }
@@ -68,11 +68,11 @@ public class TrpcNettyServer extends TrpcAbstractServer {
                     //Nagle算法，设置为true关闭Nagle算法，Nagle算法会将多个小的tcp包合并为大的包之后一块发送，所以开启Nagle算法会有延迟
                     .option(ChannelOption.TCP_NODELAY, true)
                     //复用time_wait的socket
-                    .option(ChannelOption.SO_REUSEADDR,true)
+                    .option(ChannelOption.SO_REUSEADDR, true)
                     //这是tcp层面的keepalive，不是应用层面的心跳，但是tcp层面的keepalive是有缺陷的，所以我们还需要应用层层面的心跳
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
-                    .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK,new WriteBufferWaterMark(1024*1024,1024*1024*8))
-                    .childHandler(new TrpcServerInitializer(serviceMap,filters, executor));
+                    .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(1024 * 1024 * 2, 1024 * 1024 * 8))
+                    .childHandler(new TrpcServerInitializer(serviceMap, filters, executor));
 
             String[] items = serverAddress.split(":");
             String host = items[0];
@@ -81,19 +81,18 @@ public class TrpcNettyServer extends TrpcAbstractServer {
             //启动完成之后再进行服务注册
 
 
-
             serviceRegistry.registryService(host, port, serviceMap);
             LOGGER.info("Server started on port {}", port);
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             try {
                 serviceRegistry.unregistryService();
                 workGroup.shutdownGracefully();
                 bossGroup.shutdownGracefully();
             } catch (Exception e) {
-                LOGGER.error(e.getMessage(),e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }
