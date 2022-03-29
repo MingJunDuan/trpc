@@ -45,7 +45,9 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
         handlerPool.execute(new Runnable() {
             @Override
             public void run() {
-                LOGGER.info("Service request:{}", trpcRequest.getRequestId());
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Service request:{}", trpcRequest.getRequestId());
+                }
                 long startTime = SystemClock.currentTimeMillis();
                 TrpcResponse response = new TrpcResponse();
                 response.setRequestId(trpcRequest.getRequestId());

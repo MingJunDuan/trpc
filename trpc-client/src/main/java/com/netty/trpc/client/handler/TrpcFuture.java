@@ -46,7 +46,9 @@ public class TrpcFuture implements Future<Object> {
         if (responseTime > this.responseTimeThreshold) {
             LOGGER.warn("Service response time is too slow. Request id=" + response.getRequestId() + ", response time=" + responseTime + "ms");
         } else {
-            LOGGER.info("Service response time, requestId:{}, consume: {}ms", request.getRequestId(), responseTime);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Service response time, requestId:{}, consume: {}ms", request.getRequestId(), responseTime);
+            }
         }
     }
 

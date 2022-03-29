@@ -5,6 +5,7 @@ import com.netty.trpc.common.codec.TrpcResponse;
 import com.netty.trpc.common.util.SystemClock;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +30,8 @@ public class CustomChannelFutureListener implements ChannelFutureListener {
 
     @Override
     public void operationComplete(ChannelFuture future) throws Exception {
-        LOGGER.info("Send response for request:{}, consume:{}ms", response.getRequestId(),SystemClock.currentTimeMillis() - startTime);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.info("Send response for request:{}, consume:{}ms", response.getRequestId(),SystemClock.currentTimeMillis() - startTime);
+        }
     }
 }
