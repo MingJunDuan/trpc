@@ -38,7 +38,7 @@ public class TrpcClientBootstrapTest extends BaseTest {
         for (int i = 0; i < threads; i++) {
             executor.execute(() -> {
                 while (true) {
-                    String message = largeSizeMessage();
+                    String message = middleSizeMessage();
                     String result = helloService.hello(message);
                     Assert.assertEquals("Hello " + message, result);
                     count.increment();

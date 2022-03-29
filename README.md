@@ -25,6 +25,27 @@ JDK8+,Zookeeper3.6
 * 支持接口多版本
 * 支持自定义协议(TODO)
 
+
+## TPS
+
+    具体实现见：com.netty.trpc.test.tps.TrpcClientBootstrapTest
+
+    2022-03-30 01:00:13.720 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:29778 
+    2022-03-30 01:00:14.725 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:35013 
+    2022-03-30 01:00:15.728 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:35403 
+    2022-03-30 01:00:16.729 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:37025 
+    2022-03-30 01:00:17.733 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:36795 
+    2022-03-30 01:00:18.737 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:38758 
+    2022-03-30 01:00:19.742 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:38681 
+    2022-03-30 01:00:20.745 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:39180 
+    2022-03-30 01:00:21.748 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:39349 
+    2022-03-30 01:00:22.749 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:37372 
+    2022-03-30 01:00:23.752 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:36349 
+    2022-03-30 01:00:24.754 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:38977 
+    2022-03-30 01:00:25.757 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:35857 
+    2022-03-30 01:00:26.761 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:39295 
+    2022-03-30 01:00:27.766 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 62 TPS:36892 
+
 泛化调用
 
 泛化调用实现方式有俩种：
