@@ -7,6 +7,7 @@
 * 注册中心接入Nacos、还有实现multicast实现广播
 * 服务预热
 * grpc
+* 自定义用户线程池
 
 # Done list
 
