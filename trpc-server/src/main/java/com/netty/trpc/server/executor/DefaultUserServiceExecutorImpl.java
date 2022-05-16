@@ -25,7 +25,7 @@ public class DefaultUserServiceExecutorImpl implements UserServiceExecutor {
         int coreNum = Runtime.getRuntime().availableProcessors();
         TaskQueue<Runnable> workQueue = new TaskQueue<>(1000);
         EagerThreadPoolExecutor executor = new EagerThreadPoolExecutor(coreNum, coreNum * 2, 60, TimeUnit.SECONDS, workQueue,
-                new NamedThreadFactory("server"), new CallerRejectedExecutionHandler());
+                new NamedThreadFactory("serviceHandleThread"), new CallerRejectedExecutionHandler());
         workQueue.setExecutor(executor);
         return executor;
     }
