@@ -2,7 +2,6 @@ package com.netty.trpc.server.core;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import com.netty.trpc.common.codec.PingPongRequest;
@@ -24,12 +23,10 @@ import io.netty.handler.timeout.IdleStateHandler;
 public class TrpcServerInitializer extends ChannelInitializer<SocketChannel> {
     private Map<String, Object> handlerMap;
     private List<TrpcFilter> filters;
-    private ThreadPoolExecutor executor;
 
-    public TrpcServerInitializer(Map<String, Object> handlerMap, List<TrpcFilter> filters, ThreadPoolExecutor executor) {
+    public TrpcServerInitializer(Map<String, Object> handlerMap, List<TrpcFilter> filters) {
         this.handlerMap = handlerMap;
         this.filters = filters;
-        this.executor = executor;
     }
 
     @Override
@@ -38,6 +35,6 @@ public class TrpcServerInitializer extends ChannelInitializer<SocketChannel> {
         pipeline.addLast(new IdleStateHandler(30, 30, PingPongRequest.BEAT_INTERVAL, TimeUnit.SECONDS));
         pipeline.addLast(new TrpcDecoder(TrpcRequest.class));
         pipeline.addLast(new TrpcEncoder(TrpcResponse.class));
-        pipeline.addLast(new TrpcServerHandler(handlerMap, filters, executor));
+        pipeline.addLast(new TrpcServerHandler(handlerMap, filters));
     }
 }

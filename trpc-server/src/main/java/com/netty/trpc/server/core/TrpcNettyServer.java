@@ -3,14 +3,9 @@ package com.netty.trpc.server.core;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import com.netty.trpc.common.filter.TrpcFilter;
 import com.netty.trpc.common.util.ServiceUtil;
-import com.netty.trpc.common.util.threadpool.CallerRejectedExecutionHandler;
-import com.netty.trpc.common.util.threadpool.EagerThreadPoolExecutor;
-import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
-import com.netty.trpc.common.util.threadpool.TaskQueue;
 import com.netty.trpc.server.registry.ServiceRegistry;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -47,12 +42,6 @@ public class TrpcNettyServer extends TrpcAbstractServer {
 
     @Override
     public void start() {
-        int coreNum = Runtime.getRuntime().availableProcessors();
-        TaskQueue<Runnable> workQueue = new TaskQueue<>(1000);
-        EagerThreadPoolExecutor executor = new EagerThreadPoolExecutor(coreNum, coreNum * 2, 60, TimeUnit.SECONDS, workQueue,
-                new NamedThreadFactory("server"), new CallerRejectedExecutionHandler());
-        workQueue.setExecutor(executor);
-
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         NioEventLoopGroup workGroup = new NioEventLoopGroup();
         try {
@@ -72,7 +61,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
                     //这是tcp层面的keepalive，不是应用层面的心跳，但是tcp层面的keepalive是有缺陷的，所以我们还需要应用层层面的心跳
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
                     .childOption(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(1024 * 1024 * 2, 1024 * 1024 * 8))
-                    .childHandler(new TrpcServerInitializer(serviceMap, filters, executor));
+                    .childHandler(new TrpcServerInitializer(serviceMap, filters));
 
             String[] items = serverAddress.split(":");
             String host = items[0];

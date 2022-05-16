@@ -3,15 +3,17 @@ package com.netty.trpc.server.core;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.Executor;
 
 import com.netty.trpc.common.codec.PingPongRequest;
 import com.netty.trpc.common.codec.TrpcRequest;
 import com.netty.trpc.common.codec.TrpcResponse;
 import com.netty.trpc.common.filter.TrpcFilter;
+import com.netty.trpc.common.spi.ServiceLoaderUtil;
 import com.netty.trpc.common.util.MethodUtils;
 import com.netty.trpc.common.util.ServiceUtil;
 import com.netty.trpc.common.util.SystemClock;
+import com.netty.trpc.server.executor.UserServiceExecutor;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
@@ -28,12 +30,13 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrpcServerHandler.class);
     private Map<String, Object> handlerMap;
     private List<TrpcFilter> filters;
-    private ThreadPoolExecutor handlerPool;
+    private Executor userServiceExecutor;
 
-    public TrpcServerHandler(Map<String, Object> handlerMap, List<TrpcFilter> filters, ThreadPoolExecutor executor) {
+    public TrpcServerHandler(Map<String, Object> handlerMap, List<TrpcFilter> filters) {
         this.handlerMap = handlerMap;
         this.filters = filters;
-        this.handlerPool = executor;
+
+        userServiceExecutor = ServiceLoaderUtil.load(UserServiceExecutor.class).getExecutor();
     }
 
     @Override
@@ -42,7 +45,7 @@ public class TrpcServerHandler extends SimpleChannelInboundHandler<TrpcRequest> 
             LOGGER.info("Server read heartbeat ping pong");
             return;
         }
-        handlerPool.execute(new Runnable() {
+        userServiceExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 if (LOGGER.isDebugEnabled()) {
