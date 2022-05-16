@@ -6,6 +6,7 @@
 package com.netty.trpc.common.spi;
 
 import java.util.Iterator;
+import java.util.ServiceLoader;
 
 /**
  * @author dmj1161859184@126.com 2022-05-16 23:03
@@ -19,7 +20,7 @@ public class ServiceLoaderUtil {
     }
 
     public static <T> T load(Class<T> clazz, ClassLoader classLoader) {
-        java.util.ServiceLoader<T> serviceLoader = java.util.ServiceLoader.load(clazz, classLoader);
+        ServiceLoader<T> serviceLoader = ServiceLoader.load(clazz, classLoader);
         Iterator<T> iterator = serviceLoader.iterator();
         while (iterator.hasNext()) {
             return iterator.next();
