@@ -16,6 +16,6 @@ public class ServiceLoaderUtilTest {
     public void load() {
         SPITestInterface spiTestInterface = ServiceLoaderUtil.load(SPITestInterface.class);
         String value = spiTestInterface.hello();
-        LOGGER.info("value: {}", value);
+        LOGGER.info("value: '{}'", value);
     }
 }
