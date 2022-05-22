@@ -15,4 +15,7 @@ import lombok.NoArgsConstructor;
 public class RpcServiceMetaInfo {
     private String serviceName;
     private String version;
+
+    private int warmUp;
+    private long uptime;
 }
