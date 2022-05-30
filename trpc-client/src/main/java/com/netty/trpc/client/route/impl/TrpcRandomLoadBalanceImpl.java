@@ -24,8 +24,6 @@ public class TrpcRandomLoadBalanceImpl extends TrpcLoadBalance {
         List<RegistryMetadata> addressList = serviceMap.get(serviceKey);
 
         return warmUp(serviceKey, addressList);
-        //warm up
-        //return addressList.get(new Random().nextInt(addressList.size()));
     }
 
     private RegistryMetadata warmUp(String serviceKey, List<RegistryMetadata> registryMetadatas) {
