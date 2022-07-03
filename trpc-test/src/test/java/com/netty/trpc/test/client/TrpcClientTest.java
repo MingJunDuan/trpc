@@ -55,7 +55,7 @@ public class TrpcClientTest extends BaseTest {
     }
 
     @Test
-    public void test_pool() throws InterruptedException {
+    public void test_concurrent() throws InterruptedException {
         IHelloService helloService = trpcClient.createService(IHelloService.class, "1.0");
         String tmp="Hello";
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 10, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
