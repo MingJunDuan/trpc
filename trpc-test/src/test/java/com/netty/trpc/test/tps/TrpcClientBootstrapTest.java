@@ -32,7 +32,7 @@ public class TrpcClientBootstrapTest extends BaseTest {
     }
 
     @Test
-    public void test() throws InterruptedException {
+    public void test_tps() throws InterruptedException {
         IHelloService helloService = trpcClient.createService(IHelloService.class, "1.0");
         LongAdder count = new LongAdder();
         for (int i = 0; i < threads; i++) {
