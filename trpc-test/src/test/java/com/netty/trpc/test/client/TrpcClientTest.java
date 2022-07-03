@@ -1,6 +1,7 @@
 package com.netty.trpc.test.client;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +52,82 @@ public class TrpcClientTest extends BaseTest {
             LOGGER.info(result);
             TimeUnit.SECONDS.sleep(1);
         }
+    }
+
+    @Test
+    public void test_pool() throws InterruptedException {
+        IHelloService helloService = trpcClient.createService(IHelloService.class, "1.0");
+        String tmp="Hello";
+        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 10, 60, TimeUnit.SECONDS, new LinkedBlockingDeque<>());
+        threadPoolExecutor.prestartAllCoreThreads();
+        CountDownLatch countDownLatch=new CountDownLatch(1);
+        CountDownLatch allDone=new CountDownLatch(4);
+
+        long startTime = System.currentTimeMillis();
+        LOGGER.info("Start");
+        threadPoolExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    countDownLatch.await();
+                    int sleepTime = 3;
+                    String result = helloService.concurent(sleepTime);
+                    Assert.assertEquals(tmp+sleepTime,result);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    allDone.countDown();
+                }
+            }
+        });
+        threadPoolExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    countDownLatch.await();
+                    int sleepTime = 2;
+                    String result = helloService.concurent(sleepTime);
+                    Assert.assertEquals(tmp+sleepTime,result);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    allDone.countDown();
+                }
+            }
+        });
+        threadPoolExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    countDownLatch.await();
+                    int sleepTime = 4;
+                    String result = helloService.concurent(sleepTime);
+                    Assert.assertEquals(tmp+sleepTime,result);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    allDone.countDown();
+                }
+            }
+        });
+        threadPoolExecutor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    countDownLatch.await();
+                    int sleepTime = 5;
+                    String result = helloService.concurent(sleepTime);
+                    Assert.assertEquals(tmp+sleepTime,result);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    allDone.countDown();
+                }
+            }
+        });
+        countDownLatch.countDown();
+        allDone.await();
+        LOGGER.info("End, {}s",(System.currentTimeMillis()-startTime)/1000);
     }
 
     @Test

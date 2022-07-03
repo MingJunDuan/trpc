@@ -6,6 +6,8 @@ public interface IHelloService {
 
     String hello(String name);
 
+    String concurent(int sleepTime);
+
     String hello(Person person);
 
     String hello(String name, Integer age);

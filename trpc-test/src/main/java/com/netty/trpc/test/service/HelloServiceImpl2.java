@@ -2,6 +2,7 @@ package com.netty.trpc.test.service;
 
 import com.netty.trpc.common.annotation.TrpcService;
 import com.netty.trpc.test.api.IHelloService;
+
 import org.springframework.stereotype.Service;
 
 @TrpcService(value = IHelloService.class, version = "2.0")
@@ -11,6 +12,11 @@ public class HelloServiceImpl2 implements IHelloService {
     @Override
     public String hello(String name) {
         return "Hello2 " + name;
+    }
+
+    @Override
+    public String concurent(int sleepTime) {
+        return "hello2"+sleepTime;
     }
 
     @Override
