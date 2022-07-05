@@ -32,3 +32,6 @@ nacos上使用临时节点模式
 
 URL是什么，一般的都是有request和response的bean来封装请求和返回数据，但是dubbo中的URL是什么
 
+# TODO 记录
+
+* connection管理
