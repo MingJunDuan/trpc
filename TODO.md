@@ -13,6 +13,7 @@
 * Add client service interface integrate with spring 
 * 调研Zookeeper事件变更会不会主动推送变更内容
 * 泛化调用的实现
+* telnet协议的实现
 
 
 service+version作为key，之后value是ip和port
