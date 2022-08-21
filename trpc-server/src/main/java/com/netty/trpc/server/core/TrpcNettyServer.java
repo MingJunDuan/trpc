@@ -46,7 +46,8 @@ public class TrpcNettyServer extends TrpcAbstractServer {
         NioEventLoopGroup workGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap.group(bossGroup, workGroup).channel(NioServerSocketChannel.class)
+            bootstrap.group(bossGroup, workGroup)
+                    .channel(NioServerSocketChannel.class)
                     //用于调整linux中accept queue的大小，在tcp三次连接时使用，参考：https://www.cnbLOGGERs.com/qiumingcheng/p/9492962.html
                     .option(ChannelOption.SO_BACKLOG, 128)
                     //so_linger的值是-1、0、非0值
