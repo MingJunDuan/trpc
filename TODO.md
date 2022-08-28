@@ -6,6 +6,7 @@
 * 服务预热(实现的不优雅)
 * grpc
 * 自定义用户线程池
+* netty支持SSL
 
 # Done list
 
