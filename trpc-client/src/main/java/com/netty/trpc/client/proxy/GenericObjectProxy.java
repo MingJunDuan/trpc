@@ -1,17 +1,9 @@
 package com.netty.trpc.client.proxy;
 
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.UUID;
 
-import com.netty.trpc.client.connect.ConnectionManagerFactory;
-import com.netty.trpc.client.faulttolerance.FailBackInvoker;
-import com.netty.trpc.client.faulttolerance.Invoker;
 import com.netty.trpc.client.genericinvoke.GenericReference;
-import com.netty.trpc.client.handler.TrpcClientHandler;
-import com.netty.trpc.client.handler.TrpcFuture;
 import com.netty.trpc.common.codec.TrpcRequest;
-import com.netty.trpc.common.util.ServiceUtil;
 
 /**
  * @author DuanMingJun
