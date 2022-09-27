@@ -10,7 +10,13 @@ import com.netty.trpc.registrycenter.common.RegistryMetadata;
  */
 public interface ConsumerRegistryCenterRepository {
 
-    void init(RegistryCenterMetadata metadata,ServiceEventListener eventListener);
+    void init(RegistryCenterMetadata metadata, ServiceEventListener eventListener);
 
     void subscribe();
+
+    default void subscribe(RegistryMetadata metadata) {
+    }
+
+    default void unsubscribe(RegistryMetadata metadata) {
+    }
 }
