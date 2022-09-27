@@ -34,39 +34,41 @@ public class NacosProviderRegistryCenterRepositoryTest {
     }
 
     @Test
-    public void registry() throws InterruptedException {
+    public void test_registry() throws InterruptedException {
         init();
 
-        RegistryMetadata metadata = new RegistryMetadata();
-        metadata.setHost("localhost");
-        metadata.setPort(8890);
-        Properties properties = new Properties();
-        properties.put(NacosProviderRegistryCenterRepository.applicationName, "trpc-provider");
-        metadata.setProperties(properties);
-        repository.registry(metadata);
+        registry();
         LOGGER.info("registry done");
         TimeUnit.MINUTES.sleep(5);
     }
 
+    private void registry() {
+        RegistryMetadata metadata = getRegistryMetadata();
+        repository.registry(metadata);
+    }
+
     @Test
-    public void unregistry() {
+    public void test_unregistry() {
         init();
 
+        registry();
+
+        unregistry();
+        LOGGER.info("unregistry done");
+    }
+
+    private void unregistry() {
+        RegistryMetadata metadata = getRegistryMetadata();
+        repository.unregistry(metadata);
+    }
+
+    private RegistryMetadata getRegistryMetadata() {
         RegistryMetadata metadata = new RegistryMetadata();
         metadata.setHost("localhost");
         metadata.setPort(8890);
         Properties properties = new Properties();
         properties.put(NacosProviderRegistryCenterRepository.applicationName, "trpc-provider");
         metadata.setProperties(properties);
-        repository.registry(metadata);
-
-//        RegistryMetadata metadata = new RegistryMetadata();
-//        metadata.setHost("localhost");
-//        metadata.setPort(8890);
-//        Properties properties = new Properties();
-        properties.put(NacosProviderRegistryCenterRepository.applicationName, "trpc-provider");
-        metadata.setProperties(properties);
-        repository.unregistry(metadata);
-        LOGGER.info("unregistry done");
+        return metadata;
     }
 }
