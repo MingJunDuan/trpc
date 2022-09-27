@@ -16,6 +16,7 @@
   <modules>
     <module>trpc-registry-center-consumer-zookeeper</module>
     <module>trpc-registry-center-consumer-api</module>
+    <module>trpc-registry-center-consumer-nacos</module>
   </modules>
 
   <properties>
@@ -26,7 +27,6 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
