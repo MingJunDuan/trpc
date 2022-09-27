@@ -55,24 +55,6 @@ public class NacosProviderRegistryCenterRepository implements ProviderRegistryCe
         doHandle(metadata, callbackHandle);
     }
 
-    private void doHandle(RegistryMetadata metadata, CallbackHandle callbackHandle) {
-        int port = metadata.getPort();
-        String host = metadata.getHost();
-        String serviceName = getServiceName(metadata);
-        List<RpcServiceMetaInfo> serviceInfoList = metadata.getServiceInfoList();
-
-        Instance instance = new Instance();
-        instance.setIp(host);
-        instance.setPort(port);
-        instance.setHealthy(true);
-        instance.setWeight(100);
-        instance.setEphemeral(true);
-        instance.setServiceName(serviceName);
-        instance.setClusterName(clusterName);
-
-        callbackHandle.handle(instance);
-    }
-
     @Override
     public void unregistry(RegistryMetadata metadata) {
         CallbackHandle callbackHandle = new CallbackHandle() {
@@ -100,5 +82,23 @@ public class NacosProviderRegistryCenterRepository implements ProviderRegistryCe
     interface CallbackHandle {
 
         void handle(Instance instance);
+    }
+
+    private void doHandle(RegistryMetadata metadata, CallbackHandle callbackHandle) {
+        int port = metadata.getPort();
+        String host = metadata.getHost();
+        String serviceName = getServiceName(metadata);
+        List<RpcServiceMetaInfo> serviceInfoList = metadata.getServiceInfoList();
+
+        Instance instance = new Instance();
+        instance.setIp(host);
+        instance.setPort(port);
+        instance.setHealthy(true);
+        instance.setWeight(100);
+        instance.setEphemeral(true);
+        instance.setServiceName(serviceName);
+        instance.setClusterName(clusterName);
+
+        callbackHandle.handle(instance);
     }
 }
