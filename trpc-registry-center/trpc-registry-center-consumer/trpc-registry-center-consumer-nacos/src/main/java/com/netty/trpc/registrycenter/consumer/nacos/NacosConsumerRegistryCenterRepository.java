@@ -5,6 +5,7 @@
  */
 package com.netty.trpc.registrycenter.consumer.nacos;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.nacos.api.exception.NacosException;
@@ -59,7 +60,9 @@ public class NacosConsumerRegistryCenterRepository implements ConsumerRegistryCe
                         List<Instance> instances = ((NamingEvent) event).getInstances();
                         for (Instance instance : instances) {
                             LOGGER.info("{}", instance);
-
+                            String ip = instance.getIp();
+                            int port = instance.getPort();
+                            //serviceEventListener.publish();
                         }
                         LOGGER.info(instances.size()+"");
                     }
@@ -80,6 +83,7 @@ public class NacosConsumerRegistryCenterRepository implements ConsumerRegistryCe
                 namingService.unsubscribe(serviceName, event -> {
                     if (event instanceof NamingEvent) {
                         List<Instance> instances = ((NamingEvent) event).getInstances();
+                        List<RegistryMetadata> metadataArrayList = new ArrayList<>(instances.size());
                         for (Instance instance : instances) {
                             LOGGER.info("{}", instance);
 

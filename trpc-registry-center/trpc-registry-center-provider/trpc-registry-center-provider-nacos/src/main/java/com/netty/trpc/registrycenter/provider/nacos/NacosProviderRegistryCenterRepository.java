@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 public class NacosProviderRegistryCenterRepository implements ProviderRegistryCenterRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(NacosProviderRegistryCenterRepository.class);
     static final String applicationName = "applicationName";
-    private static final String defaultServiceName = "defaultServiceName";
     private static final String clusterName = "trpc-cluster";
     private NamingService namingService;
 
@@ -72,13 +71,6 @@ public class NacosProviderRegistryCenterRepository implements ProviderRegistryCe
         doHandle(metadata, callbackHandle);
     }
 
-    private String getServiceName(RegistryMetadata metadata) {
-        if (metadata.getProperties() != null) {
-            return metadata.getProperties().getProperty(applicationName);
-        }
-        return defaultServiceName;
-    }
-
     interface CallbackHandle {
 
         void handle(Instance instance);
@@ -87,7 +79,6 @@ public class NacosProviderRegistryCenterRepository implements ProviderRegistryCe
     private void doHandle(RegistryMetadata metadata, CallbackHandle callbackHandle) {
         int port = metadata.getPort();
         String host = metadata.getHost();
-        String serviceName = getServiceName(metadata);
         List<RpcServiceMetaInfo> serviceInfoList = metadata.getServiceInfoList();
 
         Instance instance = new Instance();
@@ -96,9 +87,11 @@ public class NacosProviderRegistryCenterRepository implements ProviderRegistryCe
         instance.setHealthy(true);
         instance.setWeight(100);
         instance.setEphemeral(true);
-        instance.setServiceName(serviceName);
         instance.setClusterName(clusterName);
 
-        callbackHandle.handle(instance);
+        for (RpcServiceMetaInfo rpcServiceMetaInfo : serviceInfoList) {
+            instance.setServiceName(rpcServiceMetaInfo.getServiceName());
+            callbackHandle.handle(instance);
+        }
     }
 }
