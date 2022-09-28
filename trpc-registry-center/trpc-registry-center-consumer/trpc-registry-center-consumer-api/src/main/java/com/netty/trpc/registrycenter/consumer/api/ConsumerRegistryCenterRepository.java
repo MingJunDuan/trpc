@@ -19,4 +19,6 @@ public interface ConsumerRegistryCenterRepository {
 
     default void unsubscribe(RegistryMetadata metadata) {
     }
+
+    void destroy();
 }

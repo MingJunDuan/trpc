@@ -64,6 +64,11 @@ public class ZookeeperConsumerRegistryCenterRepository implements ConsumerRegist
         }
     }
 
+    @Override
+    public void destroy() {
+        curatorClient.close();
+    }
+
     private void getRegistryMetadataAndPublishToListener() throws Exception {
         List<String> nodeList = curatorClient.getChildren(TrpcConstant.ZK_DATA_PATH);
         List<RegistryMetadata> metadataArrayList = new ArrayList<>(nodeList.size());

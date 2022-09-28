@@ -97,4 +97,13 @@ public class NacosConsumerRegistryCenterRepository implements ConsumerRegistryCe
             }
         }
     }
+
+    @Override
+    public void destroy() {
+        try {
+            namingService.shutDown();
+        } catch (NacosException e) {
+            LOGGER.error("Shutdown namingService", e);
+        }
+    }
 }
