@@ -10,6 +10,7 @@ import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
 import com.netty.trpc.registrycenter.common.RpcServiceMetaInfo;
 import com.netty.trpc.registrycenter.provider.api.ProviderRegistryCenterRepository;
+import com.netty.trpc.registrycenter.provider.nacos.NacosProviderRegistryCenterRepository;
 import com.netty.trpc.registrycenter.provider.zookeeper.ZookeeperProviderRegistryCenterRepository;
 
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class ServiceRegistry {
     ProviderRegistryCenterRepository registryCenter;
 
     public ServiceRegistry(String serverList){
-        registryCenter = new ZookeeperProviderRegistryCenterRepository();
+        registryCenter = new NacosProviderRegistryCenterRepository();
         registryCenter.init(new RegistryCenterMetadata(serverList));
     }
 

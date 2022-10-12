@@ -19,7 +19,7 @@ public class TrpcServerBootstrapMannul {
 
     public static void main(String[] args){
         String serverAddress = "127.0.0.1:18878";
-        String registryAddress = "localhost:2181";
+        String registryAddress = "localhost:8848";
         TrpcServer rpcServer = new TrpcServer(serverAddress, registryAddress);
         IHelloService helloService1 = new HelloServiceImpl();
         rpcServer.addService(IHelloService.class.getName(), "1.0", helloService1);
