@@ -4,7 +4,7 @@ A rpc framework based on Netty.
 
 ## Architecture
 
-![Trpc skeleton](doc/skeleton.png)
+![Trpc skeleton](doc/trpc.png)
 
 ## Contributing
 
