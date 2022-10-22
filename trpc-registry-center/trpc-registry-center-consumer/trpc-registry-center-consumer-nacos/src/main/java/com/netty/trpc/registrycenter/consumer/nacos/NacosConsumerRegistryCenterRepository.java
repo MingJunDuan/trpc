@@ -6,6 +6,7 @@
 package com.netty.trpc.registrycenter.consumer.nacos;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.alibaba.nacos.api.exception.NacosException;
@@ -62,7 +63,10 @@ public class NacosConsumerRegistryCenterRepository implements ConsumerRegistryCe
                             LOGGER.info("{}", instance);
                             String ip = instance.getIp();
                             int port = instance.getPort();
-                            //serviceEventListener.publish();
+                            RegistryMetadata registryMetadata = new RegistryMetadata();
+                            registryMetadata.setHost(ip);
+                            registryMetadata.setPort(port);
+                            serviceEventListener.publish(Arrays.asList(registryMetadata));
                         }
                         LOGGER.info(instances.size()+"");
                     }

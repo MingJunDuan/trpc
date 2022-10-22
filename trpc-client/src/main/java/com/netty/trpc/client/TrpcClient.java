@@ -3,6 +3,8 @@ package com.netty.trpc.client;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import com.netty.trpc.client.common.Holder;
@@ -20,6 +22,7 @@ import com.netty.trpc.common.util.threadpool.EagerThreadPoolExecutor;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
 import com.netty.trpc.common.util.threadpool.TaskQueue;
 
+import com.netty.trpc.registrycenter.common.RpcServiceMetaInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,6 +88,7 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         String[] beanNames = applicationContext.getBeanDefinitionNames();
+        Set<RpcServiceMetaInfo> rpcServiceMetaInfos=new HashSet<>();
         for (String beanName : beanNames) {
             Object bean = applicationContext.getBean(beanName);
             Field[] fields = bean.getClass().getDeclaredFields();
@@ -94,6 +98,10 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
                     if (trpcAutowired != null) {
                         String version = trpcAutowired.version();
                         field.setAccessible(true);
+                        RpcServiceMetaInfo rpcServiceMetaInfo = new RpcServiceMetaInfo();
+                        rpcServiceMetaInfo.setServiceName(field.getType().getCanonicalName());
+                        rpcServiceMetaInfo.setVersion(version);
+                        rpcServiceMetaInfos.add(rpcServiceMetaInfo);
                         field.set(bean, createService(field.getType(), version));
                     }
                 } catch (IllegalAccessException e) {
@@ -101,6 +109,7 @@ public class TrpcClient implements ApplicationContextAware, DisposableBean {
                 }
             }
         }
+        serviceDiscovery.subscribe(rpcServiceMetaInfos);
     }
 
     public void setGenericReference(GenericReference genericReference) {

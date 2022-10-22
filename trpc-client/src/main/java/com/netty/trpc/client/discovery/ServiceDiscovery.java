@@ -1,6 +1,8 @@
 package com.netty.trpc.client.discovery;
 
 import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
+import com.netty.trpc.registrycenter.common.RegistryMetadata;
+import com.netty.trpc.registrycenter.common.RpcServiceMetaInfo;
 import com.netty.trpc.registrycenter.consumer.api.ConsumerRegistryCenterRepository;
 import com.netty.trpc.registrycenter.consumer.api.ServiceEventListener;
 import com.netty.trpc.registrycenter.consumer.nacos.NacosConsumerRegistryCenterRepository;
@@ -8,6 +10,10 @@ import com.netty.trpc.registrycenter.consumer.zookeeper.ZookeeperConsumerRegistr
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author DuanMingJun
@@ -23,8 +29,20 @@ public class ServiceDiscovery {
         registryCenterRepository = new NacosConsumerRegistryCenterRepository();
         RegistryCenterMetadata registryCenterMetadata = new RegistryCenterMetadata();
         registryCenterMetadata.setServerList(registryAddress);
-        registryCenterRepository.init(registryCenterMetadata,serviceEventListener);
-        registryCenterRepository.subscribe();
+        registryCenterRepository.init(registryCenterMetadata, serviceEventListener);
+    }
+
+    public void subscribe(Set<RpcServiceMetaInfo> rpcServiceMetaInfos) {
+        if (rpcServiceMetaInfos.isEmpty()) {
+            return;
+        }
+        List<RpcServiceMetaInfo> rpcServiceMetaInfoLIst = new LinkedList<>();
+        for (RpcServiceMetaInfo rpcServiceMetaInfo : rpcServiceMetaInfos) {
+            rpcServiceMetaInfoLIst.add(rpcServiceMetaInfo);
+        }
+        RegistryMetadata registryMetadata = new RegistryMetadata();
+        registryMetadata.setServiceInfoList(rpcServiceMetaInfoLIst);
+        registryCenterRepository.subscribe(registryMetadata);
     }
 
     public void stop() {
