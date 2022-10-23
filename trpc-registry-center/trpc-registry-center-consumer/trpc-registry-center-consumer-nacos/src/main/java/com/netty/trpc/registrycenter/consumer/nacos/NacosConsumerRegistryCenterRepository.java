@@ -54,18 +54,15 @@ public class NacosConsumerRegistryCenterRepository implements ConsumerRegistryCe
     public void subscribe(RegistryMetadata metadata) {
         List<RpcServiceMetaInfo> serviceInfoList = metadata.getServiceInfoList();
         for (RpcServiceMetaInfo rpcServiceMetaInfo : serviceInfoList) {
-            String serviceName = rpcServiceMetaInfo.getServiceName();
+            String serviceName = rpcServiceMetaInfo.getServiceName()+":"+rpcServiceMetaInfo.getVersion();
             try {
                 namingService.subscribe(serviceName, event -> {
                     if (event instanceof NamingEvent) {
                         List<Instance> instances = ((NamingEvent) event).getInstances();
                         for (Instance instance : instances) {
                             LOGGER.info("{}", instance);
-                            String ip = instance.getIp();
-                            int port = instance.getPort();
-                            RegistryMetadata registryMetadata = new RegistryMetadata();
-                            registryMetadata.setHost(ip);
-                            registryMetadata.setPort(port);
+                            RegistryMetadata registryMetadata = getRegistryMetadata(instance);
+
                             serviceEventListener.publish(Arrays.asList(registryMetadata));
                         }
                         LOGGER.info(instances.size()+"");
@@ -76,6 +73,23 @@ public class NacosConsumerRegistryCenterRepository implements ConsumerRegistryCe
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private RegistryMetadata getRegistryMetadata(Instance instance) {
+        String ip = instance.getIp();
+        int port = instance.getPort();
+        RegistryMetadata registryMetadata = new RegistryMetadata();
+        registryMetadata.setHost(ip);
+        registryMetadata.setPort(port);
+        String tmpServiceName = instance.getServiceName();
+        String tmpStr = tmpServiceName.substring(tmpServiceName.indexOf("@@")+2);
+        tmpServiceName = tmpStr.substring(0, tmpStr.indexOf(":"));
+        String version = tmpStr.substring(tmpStr.indexOf(":") + 1);
+        RpcServiceMetaInfo rpcServiceMetaInfo1 = new RpcServiceMetaInfo();
+        rpcServiceMetaInfo1.setServiceName(tmpServiceName);
+        rpcServiceMetaInfo1.setVersion(version);
+        registryMetadata.setServiceInfoList(Arrays.asList(rpcServiceMetaInfo1));
+        return registryMetadata;
     }
 
     @Override

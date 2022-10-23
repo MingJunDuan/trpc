@@ -62,6 +62,10 @@ public class RegistryMetadata {
 
     @Override
     public int hashCode() {
-        return Objects.hash(host, port, serviceInfoList.hashCode());
+        int hashCode=0;
+        if (serviceInfoList != null) {
+            hashCode = serviceInfoList.hashCode();
+        }
+        return Objects.hash(host, port, hashCode);
     }
 }

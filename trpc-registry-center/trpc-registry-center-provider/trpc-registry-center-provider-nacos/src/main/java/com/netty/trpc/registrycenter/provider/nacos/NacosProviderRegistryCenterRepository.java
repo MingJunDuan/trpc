@@ -90,7 +90,7 @@ public class NacosProviderRegistryCenterRepository implements ProviderRegistryCe
         instance.setClusterName(clusterName);
 
         for (RpcServiceMetaInfo rpcServiceMetaInfo : serviceInfoList) {
-            instance.setServiceName(rpcServiceMetaInfo.getServiceName());
+            instance.setServiceName(rpcServiceMetaInfo.getServiceName()+":"+rpcServiceMetaInfo.getVersion());
             callbackHandle.handle(instance);
         }
     }
