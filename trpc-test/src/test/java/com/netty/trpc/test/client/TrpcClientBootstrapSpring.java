@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author DuanMingJun
  * @version 1.0
@@ -15,9 +17,10 @@ public class TrpcClientBootstrapSpring {
     public static void main(String[] args) throws InterruptedException {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("client-spring.xml");
         HelloServiceConsumer bean = applicationContext.getBean(HelloServiceConsumer.class);
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 10_0000; i++) {
             String result = bean.sayHello("Jack");
             LOGGER.info("result:{}", result);
+            TimeUnit.SECONDS.sleep(1);
         }
         //TimeUnit.DAYS.sleep(2);
         applicationContext.close();
