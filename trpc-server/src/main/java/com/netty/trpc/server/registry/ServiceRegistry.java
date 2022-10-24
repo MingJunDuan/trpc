@@ -26,7 +26,8 @@ public class ServiceRegistry {
     ProviderRegistryCenterRepository registryCenter;
 
     public ServiceRegistry(String serverList){
-        registryCenter = new NacosProviderRegistryCenterRepository();
+        //registryCenter = new NacosProviderRegistryCenterRepository();
+        registryCenter = new ZookeeperProviderRegistryCenterRepository();
         registryCenter.init(new RegistryCenterMetadata(serverList));
     }
 

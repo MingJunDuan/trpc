@@ -6,6 +6,7 @@ import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
 import com.netty.trpc.registrycenter.common.RpcServiceMetaInfo;
 import com.netty.trpc.registrycenter.provider.api.ProviderRegistryCenterRepository;
+import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,9 @@ public class ZookeeperProviderRegistryCenterRepository implements ProviderRegist
             String providerNode = TrpcConstant.ZK_DATA_PATH + "/" + serviceName + "/" + TrpcConstant.ZK_DATA_PROVIDER;
             String node = metadata.getHost() + ":" + metadata.getPort();
             try {
-                client.createPathData(providerNode, null);
+                if (!client.pathExist(providerNode)) {
+                    client.createPathData(providerNode, null,CreateMode.PERSISTENT);
+                }
                 client.createPathData(providerNode + "/" + node, null);
                 LOGGER.info("Registry new service, host:{}, port:{}, interfaceName:{}", metadata.getHost(), metadata.getPort(), metadata.getServiceInfoList());
             } catch (Exception e) {
