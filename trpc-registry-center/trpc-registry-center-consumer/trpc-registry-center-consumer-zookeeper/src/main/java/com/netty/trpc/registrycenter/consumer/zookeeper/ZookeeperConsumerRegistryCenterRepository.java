@@ -65,6 +65,11 @@ public class ZookeeperConsumerRegistryCenterRepository implements ConsumerRegist
     }
 
     @Override
+    public void subscribe(RegistryMetadata metadata) {
+
+    }
+
+    @Override
     public void destroy() {
         curatorClient.close();
     }

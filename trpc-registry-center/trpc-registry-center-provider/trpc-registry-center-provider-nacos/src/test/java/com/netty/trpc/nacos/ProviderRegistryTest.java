@@ -40,18 +40,7 @@ public class ProviderRegistryTest {
         naming.registerInstance(serviceName, "11.11.11.12", 8888);
 
 
-        Instance instance = new Instance();
-        instance.setIp("55.55.55.55");
-        instance.setPort(9999);
-        instance.setHealthy(true);
-        instance.setWeight(2.0);
-        //这个数据是存储在文件中的,而不是数据库,地址是data/naming/data/public/,所以即使注册中心挂了重启也会有数据
-        instance.setEphemeral(true);
-        instance.setServiceName("MyServiceName");
-        Map<String, String> instanceMeta = new HashMap<>();
-        instanceMeta.put("site", "et2");
-
-        instance.setMetadata(instanceMeta);
+        Instance instance = getInstance();
 
         Service service = new Service("nacos.test.4");
         service.setAppName("nacos-naming");
@@ -67,17 +56,34 @@ public class ProviderRegistryTest {
         clusterMeta.put("xxx", "yyyy");
         cluster.setMetadata(clusterMeta);
 
-        instance.setClusterName("ClusterNameTest3");
-
         naming.registerInstance("nacos.test.4", instance);
 
         LOGGER.info("registry done");
         int i=0;
         while (true) {
             TimeUnit.MILLISECONDS.sleep(3000);
-            naming.registerInstance(serviceName, "11.11.11.1"+i, 8888);
+            Instance instance1 = getInstance();
+            instance1.setIp("11.11.11.1"+i);
+            naming.registerInstance(serviceName, instance1);
             i++;
         }
+    }
+
+    private Instance getInstance() {
+        Instance instance = new Instance();
+        instance.setIp("55.55.55.55");
+        instance.setPort(9999);
+        instance.setHealthy(true);
+        instance.setWeight(2.0);
+        //这个数据是存储在文件中的,而不是数据库,地址是data/naming/data/public/,所以即使注册中心挂了重启也会有数据
+        instance.setEphemeral(true);
+        instance.setServiceName("MyServiceName");
+        Map<String, String> instanceMeta = new HashMap<>();
+        instanceMeta.put("site", "et2");
+
+        instance.setMetadata(instanceMeta);
+        instance.setClusterName("ClusterNameTest3");
+        return instance;
     }
 
     @Test
