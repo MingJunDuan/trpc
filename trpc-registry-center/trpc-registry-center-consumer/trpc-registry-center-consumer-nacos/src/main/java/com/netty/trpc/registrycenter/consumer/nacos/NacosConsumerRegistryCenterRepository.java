@@ -7,6 +7,7 @@ package com.netty.trpc.registrycenter.consumer.nacos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.alibaba.nacos.api.exception.NacosException;
@@ -59,12 +60,13 @@ public class NacosConsumerRegistryCenterRepository implements ConsumerRegistryCe
                 namingService.subscribe(serviceName, event -> {
                     if (event instanceof NamingEvent) {
                         List<Instance> instances = ((NamingEvent) event).getInstances();
+                        List<RegistryMetadata> registryMetadatas=new LinkedList<>();
                         for (Instance instance : instances) {
                             LOGGER.info("{}", instance);
                             RegistryMetadata registryMetadata = getRegistryMetadata(instance);
-
-                            serviceEventListener.publish(Arrays.asList(registryMetadata));
+                            registryMetadatas.add(registryMetadata);
                         }
+                        serviceEventListener.publish(registryMetadatas);
                         LOGGER.info(instances.size()+"");
                     }
                 });
