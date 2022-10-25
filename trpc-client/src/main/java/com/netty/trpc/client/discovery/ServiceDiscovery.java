@@ -26,7 +26,7 @@ public class ServiceDiscovery {
     private ServiceEventListener serviceEventListener = new ServiceEventClientListener();
 
     public ServiceDiscovery(String registryAddress) {
-        registryCenterRepository = new NacosConsumerRegistryCenterRepository();
+        registryCenterRepository = new ZookeeperConsumerRegistryCenterRepository();
         RegistryCenterMetadata registryCenterMetadata = new RegistryCenterMetadata();
         registryCenterMetadata.setServerList(registryAddress);
         registryCenterRepository.init(registryCenterMetadata, serviceEventListener);

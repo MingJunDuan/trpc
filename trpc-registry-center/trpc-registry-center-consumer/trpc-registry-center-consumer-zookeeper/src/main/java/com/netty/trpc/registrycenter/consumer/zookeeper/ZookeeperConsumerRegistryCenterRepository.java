@@ -93,6 +93,7 @@ public class ZookeeperConsumerRegistryCenterRepository implements ConsumerRegist
                         }
                     }
                 });
+                getRegistryMetadataAndPublishToListener(providerNode, serviceName);
             } catch (Exception e) {
                 LOGGER.error("watch zookeeper service provider node error", e);
             }
@@ -123,7 +124,7 @@ public class ZookeeperConsumerRegistryCenterRepository implements ConsumerRegist
                 rpcServiceMetaInfo.setVersion(version);
 
                 registryMetadata.setServiceInfoList(Arrays.asList(rpcServiceMetaInfo));
-                serviceEventListener.publish(registryMetadata);
+                serviceEventListener.publish(Arrays.asList(registryMetadata));
                 LOGGER.info("Service node data: {}", registryMetadata);
             }
         } catch (Exception e) {
