@@ -18,8 +18,9 @@ package com.netty.trpc.common.extension;
 
 
 import com.netty.trpc.common.annotation.Order;
+import com.netty.trpc.common.lang.Prioritized;
 
-public interface LoadingStrategy extends Order {
+public interface LoadingStrategy extends Prioritized {
 
     String directory();
 

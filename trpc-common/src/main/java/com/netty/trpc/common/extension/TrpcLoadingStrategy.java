@@ -37,13 +37,4 @@ public class TrpcLoadingStrategy implements LoadingStrategy {
         return true;
     }
 
-    @Override
-    public int order() {
-        return 0;
-    }
-
-    @Override
-    public Class<? extends Annotation> annotationType() {
-        return null;
-    }
 }
