@@ -1,6 +1,7 @@
 
 package com.netty.trpc.common.extension;
 
+import com.netty.trpc.common.exception.CustomTrpcRuntimeException;
 import com.netty.trpc.common.util.timer.ClassUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -22,10 +23,11 @@ import static java.util.ServiceLoader.load;
 import static java.util.stream.StreamSupport.stream;
 
 public class ExtensionLoader<T> {
-    private static final Logger logger = LoggerFactory.getLogger(ExtensionLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExtensionLoader.class);
 
     private static final Pattern NAME_SEPARATOR = Pattern.compile("\\s*[,]+\\s*");
 
+    private final ConcurrentMap<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<>();
     private final ConcurrentMap<Class<?>, Object> extensionInstances = new ConcurrentHashMap<>(64);
     private final ConcurrentMap<Class<?>, String> cachedNames = new ConcurrentHashMap<>();
     private final Holder<Map<String, Class<?>>> cachedClasses = new Holder<>();
@@ -41,6 +43,47 @@ public class ExtensionLoader<T> {
         return stream(load(LoadingStrategy.class).spliterator(), false)
                 .sorted()
                 .toArray(LoadingStrategy[]::new);
+    }
+
+    public T getExtension(String name) {
+        if (StringUtils.isEmpty(name)) {
+            throw new IllegalArgumentException("Extension name == null");
+        }
+        String cacheKey = name;
+        final Holder<Object> holder = getOrCreateHolder(cacheKey);
+        Object instance = holder.get();
+        if (instance == null) {
+            synchronized (holder) {
+                instance = holder.get();
+                if (instance == null) {
+                    instance = createExtension(name);
+                    holder.set(instance);
+                }
+            }
+        }
+        if (instance == null) {
+            throw new IllegalArgumentException("Not find extension: " + name);
+        }
+        return (T) instance;
+    }
+
+    private Object createExtension(String name) {
+        Class<?> clazz = getExtensionClasses().get(name);
+        try {
+            return clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            LOGGER.error("createExtension error ",e);
+            throw new CustomTrpcRuntimeException(e);
+        }
+    }
+
+    private Holder<Object> getOrCreateHolder(String name) {
+        Holder<Object> holder = cachedInstances.get(name);
+        if (holder == null) {
+            cachedInstances.putIfAbsent(name, new Holder<>());
+            holder = cachedInstances.get(name);
+        }
+        return holder;
     }
 
     public String getExtensionName(T extensionInstance) {
@@ -119,7 +162,7 @@ public class ExtensionLoader<T> {
                 }
             }
         } catch (Throwable t) {
-            logger.error("Exception occurred when loading extension class (interface: " +
+            LOGGER.error("Exception occurred when loading extension class (interface: " +
                     type + ", description file: " + fileName + ").", t);
         }
     }
@@ -162,7 +205,7 @@ public class ExtensionLoader<T> {
                 }
             }
         } catch (Throwable t) {
-            logger.error("Exception occurred when loading extension class (interface: " +
+            LOGGER.error("Exception occurred when loading extension class (interface: " +
                     type + ", class file: " + resourceURL + ") in " + resourceURL, t);
         }
     }
@@ -219,7 +262,7 @@ public class ExtensionLoader<T> {
         } else if (c != clazz) {
             // duplicate implementation is unacceptable
             String duplicateMsg = "Duplicate extension " + type.getName() + " name " + name + " on " + c.getName() + " and " + clazz.getName();
-            logger.error(duplicateMsg);
+            LOGGER.error(duplicateMsg);
             throw new IllegalStateException(duplicateMsg);
         }
     }
