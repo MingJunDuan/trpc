@@ -22,6 +22,10 @@ import java.util.regex.Pattern;
 import static java.util.ServiceLoader.load;
 import static java.util.stream.StreamSupport.stream;
 
+/**
+ * Reference from Dubbo
+ * @param <T>
+ */
 public class ExtensionLoader<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExtensionLoader.class);
 
