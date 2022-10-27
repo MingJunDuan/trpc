@@ -12,10 +12,14 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
+
+import static java.util.ServiceLoader.load;
+import static java.util.stream.StreamSupport.stream;
 
 public class ExtensionLoader<T> {
     private static final Logger logger = LoggerFactory.getLogger(ExtensionLoader.class);
@@ -24,6 +28,8 @@ public class ExtensionLoader<T> {
 
     private final ConcurrentMap<Class<?>, Object> extensionInstances = new ConcurrentHashMap<>(64);
     private final ConcurrentMap<Class<?>, String> cachedNames = new ConcurrentHashMap<>();
+    private final Holder<Map<String, Class<?>>> cachedClasses = new Holder<>();
+    private static volatile LoadingStrategy[] strategies = loadLoadingStrategies();
 
     private final Class<?> type;
 
@@ -31,13 +37,53 @@ public class ExtensionLoader<T> {
         this.type = type;
     }
 
-//    private void loadDirectory(Map<String, Class<?>> extensionClasses, LoadingStrategy strategy, String type) {
-//        loadDirectory(extensionClasses, strategy.directory(), type, strategy.preferExtensionClassLoader(),
-//                strategy.overridden(), strategy.excludedPackages());
-//        String oldType = type.replace("org.apache", "com.alibaba");
-//        loadDirectory(extensionClasses, strategy.directory(), oldType, strategy.preferExtensionClassLoader(),
-//                strategy.overridden(), strategy.excludedPackages());
-//    }
+    private static LoadingStrategy[] loadLoadingStrategies() {
+        return stream(load(LoadingStrategy.class).spliterator(), false)
+                .sorted()
+                .toArray(LoadingStrategy[]::new);
+    }
+
+    public String getExtensionName(T extensionInstance) {
+        return getExtensionName(extensionInstance.getClass());
+    }
+
+    public String getExtensionName(Class<?> extensionClass) {
+        getExtensionClasses();// load class
+        return cachedNames.get(extensionClass);
+    }
+
+
+    private Map<String, Class<?>> getExtensionClasses() {
+        Map<String, Class<?>> classes = cachedClasses.get();
+        if (classes == null) {
+            synchronized (cachedClasses) {
+                classes = cachedClasses.get();
+                if (classes == null) {
+                    classes = loadExtensionClasses();
+                    cachedClasses.set(classes);
+                }
+            }
+        }
+        return classes;
+    }
+
+    private Map<String, Class<?>> loadExtensionClasses() {
+        Map<String, Class<?>> extensionClasses = new HashMap<>();
+
+        for (LoadingStrategy strategy : strategies) {
+            loadDirectory(extensionClasses, strategy, type.getName());
+        }
+
+        return extensionClasses;
+    }
+
+    private void loadDirectory(Map<String, Class<?>> extensionClasses, LoadingStrategy strategy, String type) {
+        loadDirectory(extensionClasses, strategy.directory(), type, strategy.preferExtensionClassLoader(),
+                strategy.overridden(), strategy.excludedPackages());
+        String oldType = type.replace("org.apache", "com.alibaba");
+        loadDirectory(extensionClasses, strategy.directory(), oldType, strategy.preferExtensionClassLoader(),
+                strategy.overridden(), strategy.excludedPackages());
+    }
 
     private void loadDirectory(Map<String, Class<?>> extensionClasses, String dir, String type) {
         loadDirectory(extensionClasses, dir, type, false, false);
