@@ -3,9 +3,8 @@ package com.netty.trpc.common.extension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SPI(name = "customExtensionLoaderImpl")
-public class CustomExtensionLoaderImpl implements CustomExtensionLoader {
-    private static final Logger LOGGER = LoggerFactory.getLogger(CustomExtensionLoaderImpl.class);
+public class DefaultCustomExtensionLoaderImpl implements CustomExtensionLoader {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultCustomExtensionLoaderImpl.class);
 
     @Override
     public String sayHello() {

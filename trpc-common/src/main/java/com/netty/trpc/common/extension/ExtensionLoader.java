@@ -24,6 +24,7 @@ import static java.util.stream.StreamSupport.stream;
 
 /**
  * Reference from Dubbo
+ *
  * @param <T>
  */
 public class ExtensionLoader<T> {
@@ -73,10 +74,13 @@ public class ExtensionLoader<T> {
 
     private Object createExtension(String name) {
         Class<?> clazz = getExtensionClasses().get(name);
+        if (clazz == null) {
+            throw new CustomTrpcRuntimeException("No result for name " + name);
+        }
         try {
             return clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            LOGGER.error("createExtension error ",e);
+            LOGGER.error("createExtension error ", e);
             throw new CustomTrpcRuntimeException(e);
         }
     }
@@ -126,9 +130,6 @@ public class ExtensionLoader<T> {
 
     private void loadDirectory(Map<String, Class<?>> extensionClasses, LoadingStrategy strategy, String type) {
         loadDirectory(extensionClasses, strategy.directory(), type, strategy.preferExtensionClassLoader(),
-                strategy.overridden(), strategy.excludedPackages());
-        String oldType = type.replace("org.apache", "com.alibaba");
-        loadDirectory(extensionClasses, strategy.directory(), oldType, strategy.preferExtensionClassLoader(),
                 strategy.overridden(), strategy.excludedPackages());
     }
 
