@@ -15,4 +15,13 @@ public class RegistryUtilTest {
         Assert.assertEquals(expectedProtocol, protocol);
         System.out.println(protocol);
     }
+
+    @Test
+    public void registryAddress(){
+        String expectedProtocol = "zookeeper";
+        String zkAddress="localhost:2181";
+        String registryProtocol = expectedProtocol + "://"+zkAddress;
+        String registryAddress = RegistryUtil.registryAddress(registryProtocol);
+        Assert.assertEquals(zkAddress, registryAddress);
+    }
 }

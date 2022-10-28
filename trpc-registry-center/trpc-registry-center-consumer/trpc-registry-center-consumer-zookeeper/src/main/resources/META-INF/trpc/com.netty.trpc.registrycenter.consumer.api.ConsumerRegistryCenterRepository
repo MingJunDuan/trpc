@@ -1,1 +1,1 @@
-com.netty.trpc.registrycenter.consumer.nacos.NacosConsumerRegistryCenterRepository
+com.netty.trpc.registrycenter.consumer.zookeeper.ZookeeperConsumerRegistryCenterRepository

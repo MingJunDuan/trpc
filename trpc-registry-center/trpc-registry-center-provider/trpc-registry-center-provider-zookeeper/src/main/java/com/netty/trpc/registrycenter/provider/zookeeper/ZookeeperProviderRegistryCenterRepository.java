@@ -2,6 +2,7 @@ package com.netty.trpc.registrycenter.provider.zookeeper;
 
 import com.netty.trpc.common.constant.TrpcConstant;
 import com.netty.trpc.common.extension.SPI;
+import com.netty.trpc.common.util.RegistryUtil;
 import com.netty.trpc.common.zookeeper.CuratorClient;
 import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
@@ -26,7 +27,8 @@ public class ZookeeperProviderRegistryCenterRepository implements ProviderRegist
 
     @Override
     public void init(RegistryCenterMetadata metadata) {
-        this.client = new CuratorClient(metadata.getServerList());
+        String registryAddress = RegistryUtil.registryAddress(metadata.getServerList());
+        this.client = new CuratorClient(registryAddress);
     }
 
     @Override
