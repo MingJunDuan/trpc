@@ -12,6 +12,7 @@ import java.util.List;
 
 import com.alibaba.fastjson.JSONObject;
 import com.netty.trpc.common.constant.TrpcConstant;
+import com.netty.trpc.common.extension.SPI;
 import com.netty.trpc.common.zookeeper.CuratorClient;
 import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  * @since 1.0
  */
+@SPI(name = "zookeeper")
 public class ZookeeperConsumerRegistryCenterRepository implements ConsumerRegistryCenterRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(ZookeeperConsumerRegistryCenterRepository.class);
     private ServiceEventListener serviceEventListener;

@@ -1,6 +1,7 @@
 package com.netty.trpc.registrycenter.provider.zookeeper;
 
 import com.netty.trpc.common.constant.TrpcConstant;
+import com.netty.trpc.common.extension.SPI;
 import com.netty.trpc.common.zookeeper.CuratorClient;
 import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
@@ -18,6 +19,7 @@ import java.util.List;
  * @version 1.0
  * @date 2021-12-01 12:31
  */
+@SPI(name = "zookeeper")
 public class ZookeeperProviderRegistryCenterRepository implements ProviderRegistryCenterRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRegistry.class);
     private CuratorClient client;

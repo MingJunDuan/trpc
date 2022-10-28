@@ -1,5 +1,7 @@
 package com.netty.trpc.client.discovery;
 
+import com.netty.trpc.common.extension.ExtensionLoader;
+import com.netty.trpc.common.util.RegistryUtil;
 import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
 import com.netty.trpc.registrycenter.common.RpcServiceMetaInfo;
@@ -26,7 +28,8 @@ public class ServiceDiscovery {
     private ServiceEventListener serviceEventListener = new ServiceEventClientListener();
 
     public ServiceDiscovery(String registryAddress) {
-        registryCenterRepository = new ZookeeperConsumerRegistryCenterRepository();
+        ExtensionLoader<ConsumerRegistryCenterRepository> loaderExtensionLoader = new ExtensionLoader<>(ConsumerRegistryCenterRepository.class);
+        registryCenterRepository =  loaderExtensionLoader.getExtension(RegistryUtil.protocol(registryAddress));
         RegistryCenterMetadata registryCenterMetadata = new RegistryCenterMetadata();
         registryCenterMetadata.setServerList(registryAddress);
         registryCenterRepository.init(registryCenterMetadata, serviceEventListener);

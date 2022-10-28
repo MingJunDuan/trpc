@@ -15,6 +15,7 @@ import com.alibaba.nacos.api.naming.NamingFactory;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.listener.NamingEvent;
 import com.alibaba.nacos.api.naming.pojo.Instance;
+import com.netty.trpc.common.extension.SPI;
 import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
 import com.netty.trpc.registrycenter.common.RpcServiceMetaInfo;
@@ -29,6 +30,7 @@ import org.slf4j.LoggerFactory;
  * @version 1.0
  * @since 1.0
  */
+@SPI(name = "nacos")
 public class NacosConsumerRegistryCenterRepository implements ConsumerRegistryCenterRepository {
     private static final Logger LOGGER = LoggerFactory.getLogger(NacosConsumerRegistryCenterRepository.class);
     private ServiceEventListener serviceEventListener;
