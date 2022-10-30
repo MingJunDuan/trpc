@@ -40,9 +40,7 @@ public class ServiceDiscovery {
             return;
         }
         List<RpcServiceMetaInfo> rpcServiceMetaInfoLIst = new LinkedList<>();
-        for (RpcServiceMetaInfo rpcServiceMetaInfo : rpcServiceMetaInfos) {
-            rpcServiceMetaInfoLIst.add(rpcServiceMetaInfo);
-        }
+        rpcServiceMetaInfoLIst.addAll(rpcServiceMetaInfos);
         RegistryMetadata registryMetadata = new RegistryMetadata();
         registryMetadata.setServiceInfoList(rpcServiceMetaInfoLIst);
         registryCenterRepository.subscribe(registryMetadata);
