@@ -2,7 +2,6 @@
 
 * 微内核+插件架构，借鉴octo-rpc和dubbo,octo-rpc很多地方也是借鉴dubbo的
 * Dubbo中多协议是怎么做的，怎么实现协议转换
-* 注册中心接入Nacos、还有实现multicast实现广播
 * 服务预热(实现的不优雅)
 * grpc
 * 自定义用户线程池
@@ -15,7 +14,7 @@
 * 调研Zookeeper事件变更会不会主动推送变更内容
 * 泛化调用的实现
 * telnet协议的实现
-
+* 支持多注册中心
 
 service+version作为key，之后value是ip和port
     来做服务发现，放弃之前zk上使用的注册所有url信息

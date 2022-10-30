@@ -24,6 +24,7 @@ JDK8+,Zookeeper3.6
 * 泛化调用
 * 支持接口多版本
 * 支持自定义协议
+* 支持多注册中心(zookeeper和nacos)
 * Connection管理(TODO)
 
 
