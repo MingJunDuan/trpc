@@ -12,7 +12,7 @@ Any contribution is welcome!
 
 
 ## 环境
-JDK8+,Zookeeper3.6
+JDK8+,Zookeeper 3.6,Nacos 1.4.4
 
 ## 功能
 
