@@ -15,6 +15,7 @@ import com.netty.trpc.client.handler.TrpcClientHandler;
 import com.netty.trpc.client.handler.TrpcClientInitializer;
 import com.netty.trpc.client.route.TrpcLoadBalance;
 import com.netty.trpc.client.route.impl.TrpcLoadBalanceRoundRobin;
+import com.netty.trpc.common.util.NettyEventLoopUtil;
 import com.netty.trpc.common.util.threadpool.CallerRejectedExecutionHandler;
 import com.netty.trpc.common.util.threadpool.EagerThreadPoolExecutor;
 import com.netty.trpc.common.util.threadpool.NamedThreadFactory;
@@ -173,7 +174,7 @@ public class ConnectionManager {
             public void run() {
                 Bootstrap bootstrap = new Bootstrap();
                 bootstrap.group(eventLoopGroup)
-                        .channel(NioSocketChannel.class)
+                        .channel(NettyEventLoopUtil.socketChannelClass())
                         .option(ChannelOption.TCP_NODELAY, true)
                         .handler(new TrpcClientInitializer());
                 ChannelFuture channelFuture = bootstrap.connect(remotePeer);
