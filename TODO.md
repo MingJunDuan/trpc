@@ -3,7 +3,7 @@
 * 微内核+插件架构，借鉴octo-rpc和dubbo,octo-rpc很多地方也是借鉴dubbo的
 * Dubbo中多协议是怎么做的，怎么实现协议转换
 * 服务预热(实现的不优雅)
-* grpc
+* grpc探索
 * 自定义用户线程池
 * netty支持SSL
 
