@@ -20,6 +20,10 @@ import java.util.Comparator;
 
 import static java.lang.Integer.compare;
 
+/**
+ *
+ * Referened from dubbo
+ */
 public interface Prioritized extends Comparable<Prioritized> {
 
     /**
