@@ -6,6 +6,7 @@
 * grpc探索
 * 自定义用户线程池
 * netty支持SSL
+* extract serialization as a module
 
 # Done list
 
