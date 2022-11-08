@@ -16,6 +16,7 @@
         <module>trpc-test</module>
         <module>trpc-dependencies</module>
         <module>trpc-registry-center</module>
+        <module>trpc-serialization</module>
     </modules>
 
     <name>trpc</name>
