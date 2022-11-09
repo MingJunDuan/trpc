@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>trpc-serialization-api</module>
+        <module>trpc-serialization-hessian2</module>
     </modules>
 
 
