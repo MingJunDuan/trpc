@@ -1,0 +1,2 @@
+hessian2=com.netty.trpc.serialization.hessian2.hessian.Hessian2Serializer
+hessian=com.netty.trpc.serialization.hessian2.hessian.HessianSerializer
