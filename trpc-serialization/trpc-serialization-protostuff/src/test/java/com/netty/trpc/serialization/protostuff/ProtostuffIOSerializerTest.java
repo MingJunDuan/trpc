@@ -12,7 +12,8 @@ public class ProtostuffIOSerializerTest {
     @Test
     public void serialize() {
         ExtensionLoader<Serializer> extensionLoader = new ExtensionLoader<>(Serializer.class);
-        Serializer protobuffer = extensionLoader.getExtension("protobuffer");
-        Assert.assertNotNull(protobuffer);
+        Serializer jdkNative = extensionLoader.getExtension("protobuffer");
+        Assert.assertNotNull(jdkNative);
+
     }
 }
