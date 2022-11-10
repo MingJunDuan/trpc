@@ -11,9 +11,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
@@ -93,6 +91,19 @@ public class ExtensionLoader<T> {
         return holder;
     }
 
+    public List<T> getLoadedExtensionInstances() {
+        Map<String, Class<?>> extensionClasses = getExtensionClasses();
+        if (cachedInstances.isEmpty()) {
+            extensionClasses.forEach((key,value)->{
+                getExtension(key);
+            });
+        }
+
+        List<T> instances = new ArrayList<>();
+        cachedInstances.values().forEach(holder -> instances.add((T) holder.get()));
+        return instances;
+    }
+
     public String getExtensionName(T extensionInstance) {
         return getExtensionName(extensionInstance.getClass());
     }
@@ -102,8 +113,7 @@ public class ExtensionLoader<T> {
         return cachedNames.get(extensionClass);
     }
 
-
-    private Map<String, Class<?>> getExtensionClasses() {
+    public Map<String, Class<?>> getExtensionClasses() {
         Map<String, Class<?>> classes = cachedClasses.get();
         if (classes == null) {
             synchronized (cachedClasses) {
