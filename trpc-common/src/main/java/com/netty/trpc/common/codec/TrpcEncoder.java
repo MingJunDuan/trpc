@@ -1,13 +1,11 @@
 package com.netty.trpc.common.codec;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import com.netty.trpc.common.serializer.Serializer;
-import com.netty.trpc.common.serializer.dyuprotostuff.DyuProtostuffSerializer;
-import com.netty.trpc.common.serializer.hessian.Hessian2Serializer;
-import com.netty.trpc.common.serializer.hessian.HessianSerializer;
-import com.netty.trpc.common.serializer.protostuff.ProtostuffIOSerializer;
+import com.netty.trpc.common.extension.ExtensionLoader;
+import com.netty.trpc.serialization.api.Serializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
@@ -35,10 +33,11 @@ public class TrpcEncoder extends MessageToByteEncoder {
     }
 
     private void initSerializerMap() {
-        serializerMap.put(ProtostuffIOSerializer.instance.type(), ProtostuffIOSerializer.instance);
-        serializerMap.put(HessianSerializer.instance.type(), HessianSerializer.instance);
-        serializerMap.put(Hessian2Serializer.instance.type(), Hessian2Serializer.instance);
-        serializerMap.put(DyuProtostuffSerializer.instance.type(), DyuProtostuffSerializer.instance);
+        ExtensionLoader<Serializer> extensionLoader = new ExtensionLoader(Serializer.class);
+        List<Serializer> loadedExtensionInstances = extensionLoader.getLoadedExtensionInstances();
+        for (Serializer serializer : loadedExtensionInstances) {
+            serializerMap.put(serializer.type(),serializer);
+        }
     }
 
 
@@ -46,7 +45,6 @@ public class TrpcEncoder extends MessageToByteEncoder {
     protected void encode(ChannelHandlerContext channelHandlerContext, Object obj, ByteBuf out) throws Exception {
         if (clazz.isInstance(obj)) {
             try {
-
                 Serializer serializer = serializerMap.get(DEFAULT_SERIALIZER_ALGORITHM);
 
                 byte[] data = serializer.serialize(obj);
