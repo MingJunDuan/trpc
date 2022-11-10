@@ -5,10 +5,11 @@ package com.netty.trpc.common.serializer;
  * @version 1.0
  * @date 2021-02-08 13:02
  */
+@Deprecated
 public interface Serializer {
-   short type();
+    short type();
 
-   <T> byte[] serialize(T obj);
+    <T> byte[] serialize(T obj);
 
-   <T> T deserialize(byte[] bytes,Class<T> clazz);
+    <T> T deserialize(byte[] bytes, Class<T> clazz);
 }
