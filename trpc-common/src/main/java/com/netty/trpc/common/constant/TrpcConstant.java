@@ -1,7 +1,5 @@
 package com.netty.trpc.common.constant;
 
-import com.netty.trpc.common.serializer.protostuff.ProtostuffIOSerializer;
-
 /**
  * @author DuanMingJun
  * @version 1.0
@@ -19,6 +17,7 @@ public class TrpcConstant {
    public static final String ZK_NAMESPACE = "netty-trpc";
 
    public static final int MAGIC_NUMBER=0xcafebabe;
-   public static final short DEFAULT_SERIALIZER_ALGORITHM = ProtostuffIOSerializer.instance.type();
+   //protobuffer
+   public static final short DEFAULT_SERIALIZER_ALGORITHM = 0;
    public static final short TRPC_PROTOCOL_VERSION = 0x01;
 }
