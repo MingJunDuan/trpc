@@ -1,7 +1,6 @@
 package com.netty.trpc.serialization.hessian2.hessian;
 
 import com.netty.trpc.common.protocol.RpcProtocol;
-import com.netty.trpc.common.serializer.hessian.HessianSerializer;
 import com.netty.trpc.serialization.hessian2.hessian.domain.EnumDomain;
 import com.netty.trpc.serialization.hessian2.hessian.domain.TestEnum;
 import org.junit.Test;

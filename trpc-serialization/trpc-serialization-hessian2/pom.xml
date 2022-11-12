@@ -24,10 +24,10 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.netty.trpc</groupId>
-            <artifactId>trpc-common</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.netty.trpc</groupId>-->
+            <!--<artifactId>trpc-common</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.netty.trpc</groupId>
             <artifactId>trpc-serialization-api</artifactId>

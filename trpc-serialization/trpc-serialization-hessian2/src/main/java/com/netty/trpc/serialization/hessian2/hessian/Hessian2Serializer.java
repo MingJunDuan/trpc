@@ -3,8 +3,6 @@ package com.netty.trpc.serialization.hessian2.hessian;
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.netty.trpc.serialization.api.Serializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,7 +15,6 @@ import java.io.IOException;
  * @date 2021-02-08 13:02
  */
 public class Hessian2Serializer implements Serializer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Hessian2Serializer.class);
     public static final Hessian2Serializer instance = new Hessian2Serializer();
 
     @Override
@@ -39,7 +36,7 @@ public class Hessian2Serializer implements Serializer {
             try {
                 hessian2Output.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
+                //quietly close
             }
             close(outputStream);
         }
@@ -57,7 +54,7 @@ public class Hessian2Serializer implements Serializer {
             try {
                 hessian2Input.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
+                //quietly close
             }
             close(inputStream);
         }
@@ -68,7 +65,7 @@ public class Hessian2Serializer implements Serializer {
             try {
                 closeable.close();
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
+                //quietly close
             }
         }
     }
