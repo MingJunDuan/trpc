@@ -62,6 +62,42 @@
             </dependency>
 
             <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-registry-center-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-registry-center-consumer-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-registry-center-consumer-nacos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-registry-center-consumer-zookeeper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-registry-center-provider-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-registry-center-provider-nacos</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-registry-center-provider-zookeeper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>4.12</version>
@@ -147,6 +183,12 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>nacos-client</artifactId>
+                <version>1.4.4</version>
+            </dependency>
+
             <!--jmh-->
             <dependency>
                 <groupId>org.openjdk.jmh</groupId>
@@ -182,7 +224,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
         </dependency>
     </dependencies>
 
