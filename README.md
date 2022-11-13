@@ -1,6 +1,6 @@
 # Trpc project
 
-A rpc framework based on Netty.
+A RPC framework based on Netty.
 
 ## Architecture
 
