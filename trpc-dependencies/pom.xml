@@ -40,6 +40,26 @@
                 <artifactId>trpc-client</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-serialization-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-serialization-jdk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-serialization-protostuff</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-serialization-hessian2</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>junit</groupId>
