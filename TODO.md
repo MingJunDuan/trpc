@@ -21,14 +21,7 @@ service+version作为key，之后value是ip和port
     来做服务发现，放弃之前zk上使用的注册所有url信息
 为什么需要version，因为会存在同时部署新旧版本的问题
 
-nacos上使用临时节点模式
-而zk上则需要手动删除?也有临时模式的，需要临时有序模式吗? 
-使用application name作为service name
-使用interface 作为service name
-
 (优先级降到)可以加上链路追踪的，接入PingCat
-
-最重要的是缔造有拓展性的框架，可以通过兼容nacos和zookeeper注册来检验
 
 # Dubbo问题记录
 
