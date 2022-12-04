@@ -29,7 +29,6 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 
-import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +49,7 @@ public class ConnectionManager {
     protected volatile boolean isRunning = true;
     private CopyOnWriteArraySet<RegistryMetadata> rpcProtocolSet = new CopyOnWriteArraySet<>();
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(4);
+    private Bootstrap bootstrap;
     private ReentrantLock lock = new ReentrantLock();
     private Condition connected = lock.newCondition();
     private long waitTimeout = 5_000;
@@ -63,6 +63,16 @@ public class ConnectionManager {
 
         threadPoolExecutor.prestartAllCoreThreads();
         threadPoolExecutor.allowCoreThreadTimeOut(true);
+        this.bootstrap = initBootstrap();
+    }
+
+    private Bootstrap initBootstrap() {
+        Bootstrap bootstrap = new Bootstrap();
+        bootstrap.group(eventLoopGroup)
+                .channel(NettyEventLoopUtil.socketChannelClass())
+                .option(ChannelOption.TCP_NODELAY, true)
+                .handler(new TrpcClientInitializer());
+        return bootstrap;
     }
 
     public void removeHandler(RegistryMetadata rpcProtocol) {
@@ -102,23 +112,6 @@ public class ConnectionManager {
             return connected.await(this.waitTimeout, TimeUnit.MILLISECONDS);
         } finally {
             lock.unlock();
-        }
-    }
-
-    public void updateConnectedServer(RegistryMetadata rpcProtocol, PathChildrenCacheEvent.Type type) {
-        if (rpcProtocol == null) {
-            return;
-        }
-        if (type == PathChildrenCacheEvent.Type.CHILD_ADDED && !rpcProtocolSet.contains(rpcProtocol)) {
-            connectServerNode(rpcProtocol);
-        } else if (type == PathChildrenCacheEvent.Type.CHILD_UPDATED) {
-            //TODO 这里可以优化,如果IP和端口不变，那是不是不用重新进行connect操作
-            removeAndCloseHandler(rpcProtocol);
-            connectServerNode(rpcProtocol);
-        } else if (type == PathChildrenCacheEvent.Type.CHILD_REMOVED) {
-            removeAndCloseHandler(rpcProtocol);
-        } else {
-            throw new IllegalArgumentException("Unknow type:" + type);
         }
     }
 
@@ -171,11 +164,6 @@ public class ConnectionManager {
         threadPoolExecutor.submit(new Runnable() {
             @Override
             public void run() {
-                Bootstrap bootstrap = new Bootstrap();
-                bootstrap.group(eventLoopGroup)
-                        .channel(NettyEventLoopUtil.socketChannelClass())
-                        .option(ChannelOption.TCP_NODELAY, true)
-                        .handler(new TrpcClientInitializer());
                 ChannelFuture channelFuture = bootstrap.connect(remotePeer);
                 channelFuture.addListener(new ChannelFutureListener() {
                     @Override
