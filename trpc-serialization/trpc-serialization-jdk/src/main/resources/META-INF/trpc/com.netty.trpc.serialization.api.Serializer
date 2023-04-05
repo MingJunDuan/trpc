@@ -1,0 +1,1 @@
+jdkNative=com.netty.trpc.serialization.jdk.JDKNativeSerializer

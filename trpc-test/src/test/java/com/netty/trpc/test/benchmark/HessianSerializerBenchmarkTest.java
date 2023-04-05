@@ -2,8 +2,8 @@ package com.netty.trpc.test.benchmark;
 
 import com.netty.trpc.common.protocol.RpcProtocol;
 import com.netty.trpc.common.protocol.RpcServiceInfo;
-import com.netty.trpc.common.serializer.hessian.Hessian2Serializer;
-import com.netty.trpc.common.serializer.hessian.HessianSerializer;
+import com.netty.trpc.serialization.hessian2.hessian.Hessian2Serializer;
+import com.netty.trpc.serialization.hessian2.hessian.HessianSerializer;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;

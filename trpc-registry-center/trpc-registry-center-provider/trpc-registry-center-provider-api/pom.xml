@@ -26,7 +26,6 @@
     <dependency>
       <groupId>com.netty.trpc</groupId>
       <artifactId>trpc-registry-center-common</artifactId>
-      <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 

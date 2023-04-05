@@ -1,10 +1,10 @@
 # Trpc project
 
-A rpc framework based on Netty.
+A RPC framework based on Netty.
 
 ## Architecture
 
-![Trpc skeleton](doc/skeleton.png)
+![Trpc skeleton](doc/trpc.png)
 
 ## Contributing
 
@@ -12,7 +12,7 @@ Any contribution is welcome!
 
 
 ## 环境
-JDK8+,Zookeeper3.6
+JDK8+,Zookeeper 3.6,Nacos 1.4.4
 
 ## 功能
 
@@ -24,6 +24,7 @@ JDK8+,Zookeeper3.6
 * 泛化调用
 * 支持接口多版本
 * 支持自定义协议
+* 支持多注册中心(zookeeper和nacos)
 * Connection管理(TODO)
 
 
@@ -120,3 +121,9 @@ public interface IPersonService {
         }
     }
 ```
+
+## 开发
+    
+1.zookeeper3.5.9
+
+2.nacos1.4.4

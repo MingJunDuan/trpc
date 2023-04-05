@@ -8,7 +8,7 @@ package com.netty.trpc.test;
 public class BaseTest {
 
     protected String getRegistryAddress(){
-        return "localhost:2181";
+        return "localhost:8848";
     }
     
 }

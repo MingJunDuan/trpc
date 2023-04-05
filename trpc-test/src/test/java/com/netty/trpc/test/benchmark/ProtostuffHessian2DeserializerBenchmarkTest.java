@@ -2,9 +2,8 @@ package com.netty.trpc.test.benchmark;
 
 import com.netty.trpc.common.protocol.RpcProtocol;
 import com.netty.trpc.common.protocol.RpcServiceInfo;
-import com.netty.trpc.common.serializer.Serializer;
-import com.netty.trpc.common.serializer.hessian.Hessian2Serializer;
-import com.netty.trpc.common.serializer.dyuprotostuff.DyuProtostuffSerializer;
+import com.netty.trpc.serialization.api.Serializer;
+import com.netty.trpc.serialization.hessian2.hessian.Hessian2Serializer;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -28,11 +27,9 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 public class ProtostuffHessian2DeserializerBenchmarkTest {
     private static final int threadCount = 8;
-    private static Serializer protostuffSerializer = new DyuProtostuffSerializer();
     private static Serializer hessian2Serializer = new Hessian2Serializer();
     private static RpcProtocol projoBean = getPojoBean();
 
-    private static byte[] protostuffSerializeBytes = protostuffSerializer.serialize(getInnerProjoBean());
     private static byte[] hessian2SerializeBytes = hessian2Serializer.serialize(getInnerProjoBean());
 
     public static void main(String[] args) throws RunnerException {
@@ -64,12 +61,6 @@ public class ProtostuffHessian2DeserializerBenchmarkTest {
 
     private static RpcProtocol getInnerProjoBean() {
         return projoBean;
-    }
-
-    @Benchmark
-    @Threads(threadCount)
-    public void testProtostuffSerializerDeserialize() {
-        protostuffSerializer.deserialize(protostuffSerializeBytes, RpcProtocol.class);
     }
 
     @Benchmark

@@ -1,12 +1,21 @@
 package com.netty.trpc.client.discovery;
 
+import com.netty.trpc.common.extension.ExtensionLoader;
+import com.netty.trpc.common.util.RegistryUtil;
 import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
+import com.netty.trpc.registrycenter.common.RegistryMetadata;
+import com.netty.trpc.registrycenter.common.RpcServiceMetaInfo;
 import com.netty.trpc.registrycenter.consumer.api.ConsumerRegistryCenterRepository;
 import com.netty.trpc.registrycenter.consumer.api.ServiceEventListener;
+import com.netty.trpc.registrycenter.consumer.nacos.NacosConsumerRegistryCenterRepository;
 import com.netty.trpc.registrycenter.consumer.zookeeper.ZookeeperConsumerRegistryCenterRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author DuanMingJun
@@ -19,11 +28,22 @@ public class ServiceDiscovery {
     private ServiceEventListener serviceEventListener = new ServiceEventClientListener();
 
     public ServiceDiscovery(String registryAddress) {
-        registryCenterRepository = new ZookeeperConsumerRegistryCenterRepository();
+        ExtensionLoader<ConsumerRegistryCenterRepository> loaderExtensionLoader = new ExtensionLoader<>(ConsumerRegistryCenterRepository.class);
+        registryCenterRepository =  loaderExtensionLoader.getExtension(RegistryUtil.protocol(registryAddress));
         RegistryCenterMetadata registryCenterMetadata = new RegistryCenterMetadata();
         registryCenterMetadata.setServerList(registryAddress);
-        registryCenterRepository.init(registryCenterMetadata,serviceEventListener);
-        registryCenterRepository.subscribe();
+        registryCenterRepository.init(registryCenterMetadata, serviceEventListener);
+    }
+
+    public void subscribe(Set<RpcServiceMetaInfo> rpcServiceMetaInfos) {
+        if (rpcServiceMetaInfos.isEmpty()) {
+            return;
+        }
+        List<RpcServiceMetaInfo> rpcServiceMetaInfoLIst = new LinkedList<>();
+        rpcServiceMetaInfoLIst.addAll(rpcServiceMetaInfos);
+        RegistryMetadata registryMetadata = new RegistryMetadata();
+        registryMetadata.setServiceInfoList(rpcServiceMetaInfoLIst);
+        registryCenterRepository.subscribe(registryMetadata);
     }
 
     public void stop() {

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.netty.trpc.common.filter.TrpcFilter;
+import com.netty.trpc.common.util.NettyEventLoopUtil;
 import com.netty.trpc.common.util.ServiceUtil;
 import com.netty.trpc.server.registry.ServiceRegistry;
 import io.netty.bootstrap.ServerBootstrap;
@@ -47,7 +48,7 @@ public class TrpcNettyServer extends TrpcAbstractServer {
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(bossGroup, workGroup)
-                    .channel(NioServerSocketChannel.class)
+                    .channel(NettyEventLoopUtil.serverSocketChannelClass())
                     //用于调整linux中accept queue的大小，在tcp三次连接时使用，参考：https://www.cnbLOGGERs.com/qiumingcheng/p/9492962.html
                     .option(ChannelOption.SO_BACKLOG, 128)
                     //so_linger的值是-1、0、非0值

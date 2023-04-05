@@ -5,11 +5,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.netty.trpc.common.extension.ExtensionLoader;
+import com.netty.trpc.common.util.RegistryUtil;
 import com.netty.trpc.common.util.ServiceUtil;
 import com.netty.trpc.registrycenter.common.RegistryCenterMetadata;
 import com.netty.trpc.registrycenter.common.RegistryMetadata;
 import com.netty.trpc.registrycenter.common.RpcServiceMetaInfo;
 import com.netty.trpc.registrycenter.provider.api.ProviderRegistryCenterRepository;
+import com.netty.trpc.registrycenter.provider.nacos.NacosProviderRegistryCenterRepository;
 import com.netty.trpc.registrycenter.provider.zookeeper.ZookeeperProviderRegistryCenterRepository;
 
 import org.slf4j.Logger;
@@ -24,21 +27,22 @@ public class ServiceRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(ServiceRegistry.class);
     ProviderRegistryCenterRepository registryCenter;
 
-    public ServiceRegistry(String serverList){
-        registryCenter = new ZookeeperProviderRegistryCenterRepository();
-        registryCenter.init(new RegistryCenterMetadata(serverList));
+    public ServiceRegistry(String registryProtocol) {
+        ExtensionLoader<ProviderRegistryCenterRepository> loaderExtensionLoader = new ExtensionLoader<>(ProviderRegistryCenterRepository.class);
+        registryCenter = loaderExtensionLoader.getExtension(RegistryUtil.protocol(registryProtocol));
+        registryCenter.init(new RegistryCenterMetadata(registryProtocol));
     }
 
-    public void registryService(String host, int port, Map<String,Object> serviceMap){
+    public void registryService(String host, int port, Map<String, Object> serviceMap) {
         Set<String> keySet = serviceMap.keySet();
         List<RpcServiceMetaInfo> serviceInfoList = new LinkedList<>();
-        for (String key:keySet){
+        for (String key : keySet) {
             String[] serviceInfo = key.split(ServiceUtil.service_connect_token);
-            if (serviceInfo.length>0){
-                String version=serviceInfo.length==2?serviceInfo[1]:"";
-                serviceInfoList.add(new RpcServiceMetaInfo(serviceInfo[0],version));
-            }else {
-                LOGGER.warn("Can not get service name and version,{}",key);
+            if (serviceInfo.length > 0) {
+                String version = serviceInfo.length == 2 ? serviceInfo[1] : "";
+                serviceInfoList.add(new RpcServiceMetaInfo(serviceInfo[0], version));
+            } else {
+                LOGGER.warn("Can not get service name and version,{}", key);
             }
         }
 

@@ -1,0 +1,1 @@
+protobuffer=com.netty.trpc.serialization.protostuff.ProtostuffIOSerializer

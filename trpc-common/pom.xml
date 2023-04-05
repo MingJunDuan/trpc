@@ -54,26 +54,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.caucho</groupId>
-            <artifactId>hessian</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.dyuproject.protostuff</groupId>
-            <artifactId>protostuff-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.dyuproject.protostuff</groupId>
-            <artifactId>protostuff-runtime</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.protostuff</groupId>
-            <artifactId>protostuff-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.protostuff</groupId>
-            <artifactId>protostuff-runtime</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -104,6 +85,18 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netty.trpc</groupId>
+            <artifactId>trpc-serialization-hessian2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netty.trpc</groupId>
+            <artifactId>trpc-serialization-protostuff</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netty.trpc</groupId>
+            <artifactId>trpc-serialization-jdk</artifactId>
         </dependency>
     </dependencies>
 

@@ -1,0 +1,2 @@
+com.netty.trpc.common.extension.CustomExtensionLoaderImpl
+com.netty.trpc.common.extension.DefaultCustomExtensionLoaderImpl
