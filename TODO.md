@@ -6,7 +6,6 @@
 * grpc探索
 * 自定义用户线程池
 * netty支持SSL
-* extract serialization as a module
 
 # Done list
 
@@ -16,6 +15,8 @@
 * 泛化调用的实现
 * telnet协议的实现
 * 支持多注册中心
+* extract serialization as a module
+
 
 service+version作为key，之后value是ip和port
     来做服务发现，放弃之前zk上使用的注册所有url信息
