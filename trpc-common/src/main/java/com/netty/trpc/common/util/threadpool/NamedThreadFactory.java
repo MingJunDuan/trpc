@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class NamedThreadFactory implements ThreadFactory {
     protected static final AtomicInteger POOL_SEQ = new AtomicInteger(1);
+    private static final Thread.UncaughtExceptionHandler expectionHandler = new ThreadUncaughtExceptionHandler();
 
     protected final AtomicInteger mThreadNum = new AtomicInteger(1);
 
@@ -44,9 +45,10 @@ public class NamedThreadFactory implements ThreadFactory {
     @Override
     public Thread newThread(Runnable runnable) {
         String name = mPrefix + mThreadNum.getAndIncrement();
-        Thread ret = new Thread(mGroup, runnable, name, 0);
-        ret.setDaemon(mDaemon);
-        ret.setPriority(priority);
-        return ret;
+        Thread thread = new Thread(mGroup, runnable, name, 0);
+        thread.setDaemon(mDaemon);
+        thread.setPriority(priority);
+        thread.setUncaughtExceptionHandler(expectionHandler);
+        return thread;
     }
 }
