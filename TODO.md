@@ -1,4 +1,7 @@
 # TODO list
+* 参考dubbo extensionLoader，默认值从接口注解上获取
+* 获取Extenion实现，通过自适应拓展实现
+
 
 * 微内核+插件架构，借鉴octo-rpc和dubbo,octo-rpc很多地方也是借鉴dubbo的
 * Dubbo中多协议是怎么做的，怎么实现协议转换
