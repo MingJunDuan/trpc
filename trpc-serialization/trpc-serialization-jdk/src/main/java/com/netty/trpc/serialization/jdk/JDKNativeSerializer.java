@@ -1,7 +1,9 @@
 package com.netty.trpc.serialization.jdk;
 
+import com.netty.trpc.common.extension.SPI;
 import com.netty.trpc.serialization.api.Serializer;
 
+@SPI(name = "jdkNative")
 public class JDKNativeSerializer implements Serializer {
     @Override
     public short type() {

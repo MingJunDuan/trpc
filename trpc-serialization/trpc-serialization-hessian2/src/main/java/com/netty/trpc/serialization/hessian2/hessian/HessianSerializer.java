@@ -1,19 +1,21 @@
 package com.netty.trpc.serialization.hessian2.hessian;
 
-import com.caucho.hessian.io.HessianInput;
-import com.caucho.hessian.io.HessianOutput;
-import com.netty.trpc.serialization.api.Serializer;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.Closeable;
 import java.io.IOException;
+
+import com.caucho.hessian.io.HessianInput;
+import com.caucho.hessian.io.HessianOutput;
+import com.netty.trpc.common.extension.SPI;
+import com.netty.trpc.serialization.api.Serializer;
 
 /**
  * @author DuanMingJun
  * @version 1.0
  * @date 2021-02-08 13:02
  */
+@SPI(name = "hessian")
 public class HessianSerializer implements Serializer {
     public static final HessianSerializer instance = new HessianSerializer();
 

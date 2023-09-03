@@ -45,6 +45,7 @@ public class TrpcEncoder extends MessageToByteEncoder {
     protected void encode(ChannelHandlerContext channelHandlerContext, Object obj, ByteBuf out) throws Exception {
         if (clazz.isInstance(obj)) {
             try {
+                //TODO get from UTL parameter
                 Serializer serializer = serializerMap.get(DEFAULT_SERIALIZER_ALGORITHM);
 
                 byte[] data = serializer.serialize(obj);

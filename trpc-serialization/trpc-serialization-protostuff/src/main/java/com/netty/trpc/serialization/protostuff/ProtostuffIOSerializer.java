@@ -5,21 +5,23 @@
  */
 package com.netty.trpc.serialization.protostuff;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+
+import com.netty.trpc.common.extension.SPI;
 import com.netty.trpc.serialization.api.Serializer;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
 import io.protostuff.runtime.RuntimeSchema;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-
 /**
  * @author dmj1161859184@126.com 2021-10-09 22:22
  * @version 1.0
  * @since 1.0
  */
+@SPI(name = "protobuffer")
 public class ProtostuffIOSerializer implements Serializer {
     public static final ProtostuffIOSerializer instance=new ProtostuffIOSerializer();
     private static Map<Class<?>, Schema<?>> cachedSchema = new ConcurrentHashMap<>();
