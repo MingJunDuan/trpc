@@ -33,7 +33,7 @@ public class TrpcEncoder extends MessageToByteEncoder {
     }
 
     private void initSerializerMap() {
-        ExtensionLoader<Serializer> extensionLoader = new ExtensionLoader(Serializer.class);
+        ExtensionLoader<Serializer> extensionLoader = ExtensionLoader.getExtensionLoader(Serializer.class);
         List<Serializer> loadedExtensionInstances = extensionLoader.getLoadedExtensionInstances();
         for (Serializer serializer : loadedExtensionInstances) {
             serializerMap.put(serializer.type(),serializer);

@@ -1,20 +1,25 @@
 package com.netty.trpc.common.extension;
 
-import com.netty.trpc.common.exception.CustomTrpcRuntimeException;
-import com.netty.trpc.common.util.timer.ClassUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.regex.Pattern;
+
+import com.netty.trpc.common.exception.CustomTrpcRuntimeException;
+import com.netty.trpc.common.util.timer.ClassUtils;
+
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.util.ServiceLoader.load;
 import static java.util.stream.StreamSupport.stream;
@@ -28,13 +33,12 @@ public class ExtensionLoader<T> {
     private static final Logger LOGGER = LoggerFactory.getLogger(ExtensionLoader.class);
 
     private static final Pattern NAME_SEPARATOR = Pattern.compile("\\s*[,]+\\s*");
-
+    private static final ConcurrentHashMap<Class<?>, ExtensionLoader<?>> EXTENSION_LOADERS = new ConcurrentHashMap<Class<?>, ExtensionLoader<?>>();
+    private static volatile LoadingStrategy[] strategies = loadLoadingStrategies();
     private final ConcurrentMap<String, Holder<Object>> cachedInstances = new ConcurrentHashMap<>();
     private final ConcurrentMap<Class<?>, Object> extensionInstances = new ConcurrentHashMap<>(64);
     private final ConcurrentMap<Class<?>, String> cachedNames = new ConcurrentHashMap<>();
     private final Holder<Map<String, Class<?>>> cachedClasses = new Holder<>();
-    private static volatile LoadingStrategy[] strategies = loadLoadingStrategies();
-
     private final Class<?> type;
 
     public ExtensionLoader(Class<?> type) {
@@ -45,6 +49,31 @@ public class ExtensionLoader<T> {
         return stream(load(LoadingStrategy.class).spliterator(), false)
                 .sorted()
                 .toArray(LoadingStrategy[]::new);
+    }
+
+    public static <T> ExtensionLoader<T> getExtensionLoader(Class<T> type) {
+        if (type == null) {
+            throw new IllegalArgumentException("Extension type == null");
+        }
+        ExtensionLoader<T> loader = (ExtensionLoader<T>) EXTENSION_LOADERS.get(type);
+        if (loader == null) {
+            EXTENSION_LOADERS.putIfAbsent(type, new ExtensionLoader<>(type));
+            loader = (ExtensionLoader<T>) EXTENSION_LOADERS.get(type);
+        }
+        return loader;
+    }
+
+    private static ClassLoader findClassLoader() {
+        return ClassUtils.getClassLoader(ExtensionLoader.class);
+    }
+
+    public T getExtension() {
+        SPI annotation = type.getAnnotation(SPI.class);
+        if (annotation == null) {
+            throw new IllegalStateException("Extension SPI value is null");
+        }
+        String defaultExtensionImpl = annotation.name();
+        return getExtension(defaultExtensionImpl);
     }
 
     public T getExtension(String name) {
@@ -94,7 +123,7 @@ public class ExtensionLoader<T> {
     public List<T> getLoadedExtensionInstances() {
         Map<String, Class<?>> extensionClasses = getExtensionClasses();
         if (cachedInstances.isEmpty()) {
-            extensionClasses.forEach((key,value)->{
+            extensionClasses.forEach((key, value) -> {
                 getExtension(key);
             });
         }
@@ -179,10 +208,6 @@ public class ExtensionLoader<T> {
             LOGGER.error("Exception occurred when loading extension class (interface: " +
                     type + ", description file: " + fileName + ").", t);
         }
-    }
-
-    private static ClassLoader findClassLoader() {
-        return ClassUtils.getClassLoader(ExtensionLoader.class);
     }
 
     private void loadResource(Map<String, Class<?>> extensionClasses, ClassLoader classLoader,

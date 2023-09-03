@@ -1,12 +1,13 @@
 package com.netty.trpc.common.extension;
 
+import java.util.List;
+
 import com.netty.trpc.common.exception.CustomTrpcRuntimeException;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.List;
 
 public class ExtensionLoaderTest {
 
@@ -32,8 +33,15 @@ public class ExtensionLoaderTest {
     @Test
     public void test_success() {
         ExtensionLoader<CustomExtensionLoader> loaderExtensionLoader = new ExtensionLoader<>(CustomExtensionLoader.class);
-        CustomExtensionLoader customExtensionLoaderImpl = loaderExtensionLoader.getExtension("customExtensionLoaderImpl");
+        CustomExtensionLoader customExtensionLoaderImpl = loaderExtensionLoader.getExtension("customExtension1");
         Assert.assertNotNull(customExtensionLoaderImpl);
+    }
+
+    @Test
+    public void test_defaultExtension(){
+        CustomExtensionLoader extension = ExtensionLoader.getExtensionLoader(CustomExtensionLoader.class).getExtension();
+        Assert.assertTrue(extension instanceof CustomExtensionLoaderImpl);
+        extension.sayHello();
     }
 
     @Test
