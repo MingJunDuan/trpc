@@ -8,7 +8,7 @@ package com.netty.trpc.test;
 public class BaseTest {
 
     protected String getRegistryAddress(){
-        return "localhost:8848";
+        return "zookeeper//localhost:2181";
     }
     
 }
