@@ -6,6 +6,7 @@ import com.netty.trpc.test.api.IPersonService;
 import com.netty.trpc.test.service.HelloServiceImpl;
 import com.netty.trpc.test.service.HelloServiceImpl2;
 import com.netty.trpc.test.service.PersonServiceImpl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +20,7 @@ public class TrpcServerBootstrapMannul {
 
     public static void main(String[] args){
         String serverAddress = "127.0.0.1:18878";
-        String registryAddress = "localhost:8848";
+        String registryAddress = "zookeeper//localhost:2181";
         TrpcServer rpcServer = new TrpcServer(serverAddress, registryAddress);
         IHelloService helloService1 = new HelloServiceImpl();
         rpcServer.addService(IHelloService.class.getName(), "1.0", helloService1);
