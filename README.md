@@ -127,3 +127,13 @@ public interface IPersonService {
 1.zookeeper3.5.9
 
 2.nacos1.4.4
+
+
+## JDK21
+
+    Run—>EditConfigurations…—>Modify options—>Add VM options—>JVM options在JVM options 内添加下面指令：
+    
+    --add-opens java.base/java.lang=ALL-UNNAMED
+    --add-opens java.base/java.util=ALL-UNNAMED
+    --add-opens java.base/java.nio=ALL-UNNAMED
+    --add-opens java.base/sun.nio.ch=ALL-UNNAMED
