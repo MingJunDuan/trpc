@@ -1,19 +1,16 @@
 package com.netty.trpc.test.tps;
 
+import com.netty.trpc.test.BaseTest;
+import com.netty.trpc.test.client.HelloServiceConsumer;
+import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.LongAdder;
-
-import com.netty.trpc.client.TrpcClient;
-import com.netty.trpc.test.BaseTest;
-import com.netty.trpc.test.api.IHelloService;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author DuanMingJun
@@ -23,23 +20,24 @@ import org.slf4j.LoggerFactory;
 public class TrpcClientBootstrapTest extends BaseTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrpcClientBootstrapTest.class);
     private static final int threads = 100;
-    private TrpcClient trpcClient;
     private ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads, 60, TimeUnit.SECONDS, new SynchronousQueue<>());
+    private HelloServiceConsumer helloServiceConsumer;
 
-    @Before
     public void before() {
-        trpcClient = new TrpcClient(getRegistryAddress());
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("client-spring.xml");
+        helloServiceConsumer = applicationContext.getBean(HelloServiceConsumer.class);
     }
 
-    @Test
-    public void test_tps() throws InterruptedException {
-        IHelloService helloService = trpcClient.createService(IHelloService.class, "1.0");
+    public static void main(String[] args) throws InterruptedException {
+        TrpcClientBootstrapTest clientBootstrapTest = new TrpcClientBootstrapTest();
+        clientBootstrapTest.before();
+
         LongAdder count = new LongAdder();
         for (int i = 0; i < threads; i++) {
-            executor.execute(() -> {
+            clientBootstrapTest.executor.execute(() -> {
                 while (true) {
-                    String message = middleSizeMessage();
-                    String result = helloService.hello(message);
+                    String message = clientBootstrapTest.middleSizeMessage();
+                    String result = clientBootstrapTest.helloServiceConsumer.sayHello(message);
                     Assert.assertEquals("Hello " + message, result);
                     count.increment();
                 }
@@ -64,9 +62,8 @@ public class TrpcClientBootstrapTest extends BaseTest {
                 }
             }
         }).start();
-        synchronized (this) {
-            this.wait();
-        }
+
+        TimeUnit.HOURS.sleep(1);
     }
 
     private String smallSizeMessage(){
