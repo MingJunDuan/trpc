@@ -5,21 +5,18 @@ import com.netty.trpc.test.api.IHelloService;
 import com.netty.trpc.test.api.IPersonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
-import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  */
 @TrpcService(value = IPersonService.class,version = "1.2")
 public class PersonServiceImpl implements IPersonService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PersonServiceImpl.class);
-    @Resource(name = "helloService2")
+    @Autowired
+    @Qualifier("helloService2")
     private IHelloService helloService;
 
     @Override
