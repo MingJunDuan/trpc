@@ -19,7 +19,7 @@ public class VirtualThreadUserServiceExecutorImpl implements UserServiceExecutor
     public Executor getExecutor() {
         return Executors.newThreadPerTaskExecutor(
                 Thread.ofVirtual()
-                        .name("serviceHandleThread", 1)
+                        .name("serviceHandleVirtualThread", 1)
                         .factory());
     }
 }
