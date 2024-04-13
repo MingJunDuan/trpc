@@ -16,6 +16,7 @@
         <module>trpc-serialization-hessian2</module>
         <module>trpc-serialization-protostuff</module>
         <module>trpc-serialization-jdk</module>
+        <module>trpc-serialization-fst</module>
     </modules>
 
 
