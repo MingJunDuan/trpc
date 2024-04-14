@@ -35,6 +35,9 @@ public class TrpcDecoder extends ByteToMessageDecoder {
         ExtensionLoader<Serializer> extensionLoader = new ExtensionLoader(Serializer.class);
         List<Serializer> loadedExtensionInstances = extensionLoader.getLoadedExtensionInstances();
         for (Serializer serializer : loadedExtensionInstances) {
+            if (serializerMap.get(serializer.type()) != null) {
+                throw new IllegalArgumentException("Duplicated serialization type "+serializer.type() +" with class: "+serializer.getClass());
+            }
             serializerMap.put(serializer.type(),serializer);
         }
     }
