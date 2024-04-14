@@ -27,7 +27,6 @@ JDK8+,Zookeeper 3.6,Nacos 1.4.4
 * 支持多注册中心(zookeeper和nacos)
 * Connection管理(TODO)
 
-
 ## TPS
 
 ### Fast序列化
