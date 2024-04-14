@@ -17,19 +17,12 @@
         <module>trpc-serialization-protostuff</module>
         <module>trpc-serialization-jdk</module>
         <module>trpc-serialization-fst</module>
+        <module>trpc-serialization-kro</module>
     </modules>
 
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
 
 </project>
