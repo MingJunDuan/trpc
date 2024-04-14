@@ -30,23 +30,23 @@ JDK8+,Zookeeper 3.6,Nacos 1.4.4
 
 ## TPS
 
-    具体实现见：com.netty.trpc.test.tps.TrpcClientBootstrapTest
+    QPS能达到4w左右，具体实现见：com.netty.trpc.test.tps.TrpcClientBootstrapTest
 
-    2022-03-30 01:00:13.720 [Thread-1] INFO   TPS:29778 
-    2022-03-30 01:00:14.725 [Thread-1] INFO   TPS:35013 
-    2022-03-30 01:00:15.728 [Thread-1] INFO   TPS:35403 
-    2022-03-30 01:00:16.729 [Thread-1] INFO   TPS:37025 
-    2022-03-30 01:00:17.733 [Thread-1] INFO   TPS:36795 
-    2022-03-30 01:00:18.737 [Thread-1] INFO   TPS:38758 
-    2022-03-30 01:00:19.742 [Thread-1] INFO   TPS:38681 
-    2022-03-30 01:00:20.745 [Thread-1] INFO   TPS:39180 
-    2022-03-30 01:00:21.748 [Thread-1] INFO   TPS:39349 
-    2022-03-30 01:00:22.749 [Thread-1] INFO   TPS:37372 
-    2022-03-30 01:00:23.752 [Thread-1] INFO   TPS:36349 
-    2022-03-30 01:00:24.754 [Thread-1] INFO   TPS:38977 
-    2022-03-30 01:00:25.757 [Thread-1] INFO   TPS:35857 
-    2022-03-30 01:00:26.761 [Thread-1] INFO   TPS:39295 
-    2022-03-30 01:00:27.766 [Thread-1] INFO   TPS:36892 
+    2024-04-14 09:53:36.687 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:48328
+    2024-04-14 09:53:37.692 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:44686
+    2024-04-14 09:53:38.697 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:46780
+    2024-04-14 09:53:39.702 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:48085
+    2024-04-14 09:53:40.705 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:46796
+    2024-04-14 09:53:41.710 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:49113
+    2024-04-14 09:53:42.713 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:44150
+    2024-04-14 09:53:43.718 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:40961
+    2024-04-14 09:53:44.723 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:45640
+    2024-04-14 09:53:45.729 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:41468
+    2024-04-14 09:53:46.730 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:41819
+    2024-04-14 09:53:47.735 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:40550
+    2024-04-14 09:53:48.736 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:42277
+    2024-04-14 09:53:49.741 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:30436
+    2024-04-14 09:53:50.747 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:39527
 
 泛化调用
 
