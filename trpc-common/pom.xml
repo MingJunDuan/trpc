@@ -98,6 +98,14 @@
             <groupId>com.netty.trpc</groupId>
             <artifactId>trpc-serialization-jdk</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.netty.trpc</groupId>
+            <artifactId>trpc-serialization-kro</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.netty.trpc</groupId>
+            <artifactId>trpc-serialization-fst</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

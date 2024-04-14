@@ -30,6 +30,25 @@ JDK8+,Zookeeper 3.6,Nacos 1.4.4
 
 ## TPS
 
+### Fast序列化
+
+    QPS接近5w左右，具体实现见：com.netty.trpc.test.tps.TrpcClientBootstrapTest
+
+    2024-04-14 10:47:48.130 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:48470 
+    2024-04-14 10:47:49.135 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:52124
+    2024-04-14 10:47:50.139 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:50084
+    2024-04-14 10:47:51.144 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:49294
+    2024-04-14 10:47:52.149 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:49203
+    2024-04-14 10:47:53.154 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:42943
+    2024-04-14 10:47:54.159 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:47514
+    2024-04-14 10:47:55.165 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:49053
+    2024-04-14 10:47:56.168 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:50386
+    2024-04-14 10:47:57.173 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:51647
+    2024-04-14 10:47:58.178 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:51384
+    2024-04-14 10:47:59.183 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:51200
+
+### Protostuff序列化
+
     QPS能达到4w左右，具体实现见：com.netty.trpc.test.tps.TrpcClientBootstrapTest
 
     2024-04-14 09:53:36.687 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:48328
@@ -48,7 +67,7 @@ JDK8+,Zookeeper 3.6,Nacos 1.4.4
     2024-04-14 09:53:49.741 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:30436
     2024-04-14 09:53:50.747 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:39527
 
-泛化调用
+# 泛化调用
 
 泛化调用实现方式有俩种：
 
@@ -129,11 +148,17 @@ public interface IPersonService {
 2.nacos1.4.4
 
 
-## JDK21
+## JDK21 Virtual Thread支持
 
+1. Idea启动时添加如下JVM参数
+
+```bash
     Run—>EditConfigurations…—>Modify options—>Add VM options—>JVM options在JVM options 内添加下面指令：
     
     --add-opens java.base/java.lang=ALL-UNNAMED
     --add-opens java.base/java.util=ALL-UNNAMED
     --add-opens java.base/java.nio=ALL-UNNAMED
     --add-opens java.base/sun.nio.ch=ALL-UNNAMED
+```
+
+2.修改TrpcServer业务线程池使用VirtualThread

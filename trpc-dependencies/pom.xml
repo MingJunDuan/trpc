@@ -62,6 +62,16 @@
                 <artifactId>trpc-serialization-hessian2</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-serialization-kro</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-serialization-fst</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.netty.trpc</groupId>

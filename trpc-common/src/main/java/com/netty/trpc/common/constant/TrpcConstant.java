@@ -20,6 +20,6 @@ public class TrpcConstant {
 
    public static final int MAGIC_NUMBER=0xcafebabe;
    //protobuffer
-   public static final short DEFAULT_SERIALIZER_ALGORITHM = SerializerType.PROTOSTUFF.getValue();
+   public static final short DEFAULT_SERIALIZER_ALGORITHM = SerializerType.FAST.getValue();
    public static final short TRPC_PROTOCOL_VERSION = 0x01;
 }
