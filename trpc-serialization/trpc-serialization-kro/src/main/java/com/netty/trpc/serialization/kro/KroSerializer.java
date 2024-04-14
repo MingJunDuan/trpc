@@ -4,6 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.netty.trpc.serialization.api.Serializer;
+import com.netty.trpc.serialization.api.SerializerType;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,7 +19,7 @@ public class KroSerializer implements Serializer {
 
     @Override
     public short type() {
-        return 0;
+        return SerializerType.KRO.getValue();
     }
 
     @Override

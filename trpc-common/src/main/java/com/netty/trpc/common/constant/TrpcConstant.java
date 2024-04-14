@@ -1,5 +1,7 @@
 package com.netty.trpc.common.constant;
 
+import com.netty.trpc.serialization.api.SerializerType;
+
 /**
  * @author DuanMingJun
  * @version 1.0
@@ -18,6 +20,6 @@ public class TrpcConstant {
 
    public static final int MAGIC_NUMBER=0xcafebabe;
    //protobuffer
-   public static final short DEFAULT_SERIALIZER_ALGORITHM = 0;
+   public static final short DEFAULT_SERIALIZER_ALGORITHM = SerializerType.PROTOSTUFF.getValue();
    public static final short TRPC_PROTOCOL_VERSION = 0x01;
 }

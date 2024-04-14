@@ -3,6 +3,7 @@ package com.netty.trpc.serialization.hessian2.hessian;
 import com.caucho.hessian.io.HessianInput;
 import com.caucho.hessian.io.HessianOutput;
 import com.netty.trpc.serialization.api.Serializer;
+import com.netty.trpc.serialization.api.SerializerType;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,7 +20,7 @@ public class HessianSerializer implements Serializer {
 
     @Override
     public short type() {
-        return 2;
+        return SerializerType.HESSIAN.getValue();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.netty.trpc.serialization.fst;
 
 import com.netty.trpc.serialization.api.Serializer;
+import com.netty.trpc.serialization.api.SerializerType;
 import org.nustaq.serialization.FSTConfiguration;
 
 public class FastSerializer implements Serializer {
@@ -8,7 +9,7 @@ public class FastSerializer implements Serializer {
 
     @Override
     public short type() {
-        return 0;
+        return SerializerType.FAST.getValue();
     }
 
     @Override

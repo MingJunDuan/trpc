@@ -1,11 +1,13 @@
 package com.netty.trpc.serialization.jdk;
 
 import com.netty.trpc.serialization.api.Serializer;
+import com.netty.trpc.serialization.api.SerializerType;
 
 public class JDKNativeSerializer implements Serializer {
+
     @Override
     public short type() {
-        return 0;
+        return SerializerType.JDKNATIVE.getValue();
     }
 
     @Override

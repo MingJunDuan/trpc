@@ -6,6 +6,7 @@
 package com.netty.trpc.serialization.protostuff;
 
 import com.netty.trpc.serialization.api.Serializer;
+import com.netty.trpc.serialization.api.SerializerType;
 import io.protostuff.LinkedBuffer;
 import io.protostuff.ProtostuffIOUtil;
 import io.protostuff.Schema;
@@ -35,7 +36,7 @@ public class ProtostuffIOSerializer implements Serializer {
 
     @Override
     public short type() {
-        return 0;
+        return SerializerType.PROTOSTUFF.getValue();
     }
 
     @Override

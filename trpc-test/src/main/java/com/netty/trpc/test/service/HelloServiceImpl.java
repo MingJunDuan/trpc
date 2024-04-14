@@ -17,7 +17,7 @@ public class HelloServiceImpl implements IHelloService {
 
     @Override
     public String hello(String name) {
-        LOGGER.info("Rec:{}",name);
+        //LOGGER.info("Rec:{}",name);
         return "Hello " + name;
     }
 
