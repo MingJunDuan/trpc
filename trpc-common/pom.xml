@@ -106,6 +106,10 @@
             <groupId>com.netty.trpc</groupId>
             <artifactId>trpc-serialization-fst</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.netty.trpc</groupId>
+            <artifactId>trpc-serialization-fury</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,7 +1,8 @@
 package com.netty.trpc.serialization.api;
 
 public enum SerializerType {
-    PROTOSTUFF((short) 0),HESSIANN2((short) 1),JDKNATIVE((short) 2),FAST((short) 3),KRO((short) 4),HESSIAN((short) 5);
+    PROTOSTUFF((short) 0),HESSIANN2((short) 1),JDKNATIVE((short) 2),FAST((short) 3),KRO((short) 4),HESSIAN((short) 5),
+    FURY((short) 6);
 
     private short value;
 

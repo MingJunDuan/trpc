@@ -19,7 +19,7 @@ public class TrpcConstant {
    public static final String ZK_NAMESPACE = "netty-trpc";
 
    public static final int MAGIC_NUMBER=0xcafebabe;
-   //protobuffer
-   public static final short DEFAULT_SERIALIZER_ALGORITHM = SerializerType.FAST.getValue();
+   //default is protobuffer
+   public static final short DEFAULT_SERIALIZER_ALGORITHM = SerializerType.FURY.getValue();
    public static final short TRPC_PROTOCOL_VERSION = 0x01;
 }

@@ -18,6 +18,7 @@
         <module>trpc-serialization-jdk</module>
         <module>trpc-serialization-fst</module>
         <module>trpc-serialization-kro</module>
+        <module>trpc-serialization-fury</module>
     </modules>
 
 

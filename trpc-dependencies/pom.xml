@@ -72,6 +72,11 @@
                 <artifactId>trpc-serialization-fst</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-serialization-fury</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.netty.trpc</groupId>
@@ -170,6 +175,12 @@
                 <groupId>com.esotericsoftware</groupId>
                 <artifactId>kryo</artifactId>
                 <version>5.6.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.furyio</groupId>
+                <artifactId>fury-core</artifactId>
+                <version>0.4.1</version>
             </dependency>
 
             <dependency>
