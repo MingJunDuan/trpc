@@ -23,7 +23,7 @@ import static com.netty.trpc.common.constant.TrpcConstant.TRPC_PROTOCOL_VERSION;
  */
 public class TrpcDecoder extends ByteToMessageDecoder {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrpcDecoder.class);
-    private static Map<Short, Serializer> serializerMap = new HashMap<>();
+    private Map<Short, Serializer> serializerMap = new HashMap<>();
     private Class clazz;
 
     public TrpcDecoder(Class clazz) {

@@ -25,7 +25,7 @@ import static com.netty.trpc.common.constant.TrpcConstant.TRPC_PROTOCOL_VERSION;
 public class TrpcEncoder extends MessageToByteEncoder {
     private static final Logger LOGGER = LoggerFactory.getLogger(TrpcEncoder.class);
     private Class<?> clazz;
-    private static Map<Short, Serializer> serializerMap = new HashMap<>();
+    private Map<Short, Serializer> serializerMap = new HashMap<>();
 
     public TrpcEncoder(Class clazz){
         this.clazz = clazz;

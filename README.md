@@ -28,6 +28,7 @@ JDK8+,Zookeeper 3.6,Nacos 1.4.4
 * Connection管理(TODO)
 
 ## TPS
+框架默认使用Fast序列化协议
 
 ### Fast序列化
 ```
@@ -66,6 +67,33 @@ QPS能达到4w左右，具体实现见：com.netty.trpc.test.tps.TrpcClientBoots
 2024-04-14 09:53:49.741 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:30436
 2024-04-14 09:53:50.747 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:39527
 ```
+### Fury序列化
+```
+2024-04-16 00:01:50.453 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:39248 
+2024-04-16 00:01:51.457 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:35633 
+2024-04-16 00:01:52.458 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:34915 
+2024-04-16 00:01:53.459 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:31412 
+2024-04-16 00:01:54.463 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:32016 
+2024-04-16 00:01:55.468 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:46048 
+2024-04-16 00:01:56.472 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:45575 
+2024-04-16 00:01:57.477 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:45941 
+2024-04-16 00:01:58.482 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:41835 
+2024-04-16 00:01:59.484 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:39222 
+```
+### Hessian2序列化
+```
+2024-04-16 00:05:03.183 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:41654 
+2024-04-16 00:05:04.188 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:38499 
+2024-04-16 00:05:05.193 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:42100 
+2024-04-16 00:05:06.197 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:41327 
+2024-04-16 00:05:07.202 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:42158 
+2024-04-16 00:05:08.207 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:40033 
+2024-04-16 00:05:09.212 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:41962 
+2024-04-16 00:05:10.213 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:41748 
+2024-04-16 00:05:11.217 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:40942 
+2024-04-16 00:05:12.221 [Thread-1] INFO  c.n.t.t.tps.TrpcClientBootstrapTest run() 60 TPS:39570 
+```
+
 # 泛化调用
 
 泛化调用实现方式有俩种：

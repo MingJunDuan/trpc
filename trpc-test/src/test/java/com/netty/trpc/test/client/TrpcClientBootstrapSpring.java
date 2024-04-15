@@ -17,7 +17,7 @@ public class TrpcClientBootstrapSpring {
     public static void main(String[] args) throws InterruptedException {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("client-spring.xml");
         HelloServiceConsumer bean = applicationContext.getBean(HelloServiceConsumer.class);
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 12; i++) {
             String result = bean.sayHello("Jack");
             LOGGER.info("result:{}", result);
             TimeUnit.SECONDS.sleep(1);
