@@ -23,6 +23,7 @@
         <maven.compiler.target>1.8</maven.compiler.target>
 
         <spring.version>5.2.6.RELEASE</spring.version>
+        <apollo.client.version>2.1.0</apollo.client.version>
     </properties>
 
     <dependencyManagement>
@@ -112,6 +113,23 @@
                 <groupId>com.netty.trpc</groupId>
                 <artifactId>trpc-registry-center-provider-zookeeper</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-config-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.netty.trpc</groupId>
+                <artifactId>trpc-config-apollo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ctrip.framework.apollo</groupId>
+                <artifactId>apollo-client</artifactId>
+                <version>${apollo.client.version}</version>
             </dependency>
 
             <dependency>

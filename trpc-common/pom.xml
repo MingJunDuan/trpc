@@ -110,6 +110,10 @@
             <groupId>com.netty.trpc</groupId>
             <artifactId>trpc-serialization-fury</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.netty.trpc</groupId>
+            <artifactId>trpc-config-apollo</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
