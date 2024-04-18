@@ -2,8 +2,8 @@ package com.netty.trpc.config.api;
 
 public interface TrpcConfigApi {
 
-    default Object getProperty(String key) {
-        return getProperty(key, null);
+    default String getProperty(String key) {
+        return (String) getProperty(key, null);
     }
 
     default Object getProperty(String key, Object defaultValue) {

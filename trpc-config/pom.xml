@@ -17,6 +17,7 @@
     <modules>
         <module>trpc-config-api</module>
         <module>trpc-config-apollo</module>
+        <module>trpc-config-nacos</module>
     </modules>
 
     <properties>
