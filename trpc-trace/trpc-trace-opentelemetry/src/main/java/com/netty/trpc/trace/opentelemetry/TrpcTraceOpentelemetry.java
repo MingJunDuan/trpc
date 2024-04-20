@@ -15,7 +15,7 @@ public class TrpcTraceOpentelemetry {
     public TrpcTraceOpentelemetry(){}
 
     public void trace(){
-        //get service name from context
+        //TODO get service name from context
         Resource resource = Resource.getDefault().toBuilder().put(SERVICE_NAME, "dice-server").build();
         SdkMeterProvider sdkMeterProvider = SdkMeterProvider.builder()
                 .registerMetricReader(PrometheusHttpServer.builder().setPort(prometheusPort).build())
