@@ -18,6 +18,7 @@
         <module>trpc-registry-center</module>
         <module>trpc-serialization</module>
         <module>trpc-config</module>
+        <module>trpc-trace</module>
     </modules>
 
     <name>trpc</name>
