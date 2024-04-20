@@ -4,6 +4,9 @@ import io.opentelemetry.exporter.prometheus.PrometheusHttpServer;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.resources.Resource;
 
+/**
+ * doc refer from https://opentelemetry.io/docs/languages/java/exporters/
+ */
 public class TrpcTraceOpentelemetry {
     private static final String SERVICE_NAME = "serviceName";
     private static final int DEFAULT_PORT = 7879;
