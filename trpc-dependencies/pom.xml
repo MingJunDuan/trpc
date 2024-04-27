@@ -24,6 +24,8 @@
 
         <spring.version>5.2.6.RELEASE</spring.version>
         <apollo.client.version>2.1.0</apollo.client.version>
+        <commons.compress.version>1.23.0</commons.compress.version>
+        <snappy.version>1.1.10.3</snappy.version>
     </properties>
 
     <dependencyManagement>
@@ -130,6 +132,17 @@
                 <groupId>com.ctrip.framework.apollo</groupId>
                 <artifactId>apollo-client</artifactId>
                 <version>${apollo.client.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>${commons.compress.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.xerial.snappy</groupId>
+                <artifactId>snappy-java</artifactId>
+                <version>${snappy.version}</version>
             </dependency>
 
             <dependency>

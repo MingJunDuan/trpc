@@ -1,0 +1,4 @@
+Biz2=com.netty.trpc.compressor.Bizp2TrpcMessageCompressor
+Gzip=com.netty.trpc.compressor.GzipTrpcMessageCompressor
+Identity=com.netty.trpc.compressor.IdentityTrpcMessageCompressor
+Snappy=com.netty.trpc.compressor.SnappyTrpcMessageCompressor
