@@ -26,6 +26,7 @@
         <apollo.client.version>2.1.0</apollo.client.version>
         <commons.compress.version>1.23.0</commons.compress.version>
         <snappy.version>1.1.10.3</snappy.version>
+        <grpc.version>1.44.1</grpc.version>
     </properties>
 
     <dependencyManagement>
@@ -242,6 +243,22 @@
                 <version>1.2.75</version>
             </dependency>
 
+            <!--            grpc-->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
             <!-- Spring -->
             <dependency>
                 <groupId>org.springframework</groupId>

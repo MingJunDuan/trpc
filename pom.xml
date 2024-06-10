@@ -19,6 +19,7 @@
         <module>trpc-serialization</module>
         <module>trpc-config</module>
         <module>trpc-compressor</module>
+        <module>trpc-grpc</module>
     </modules>
 
     <name>trpc</name>
